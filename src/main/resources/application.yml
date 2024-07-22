@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USER}
+    url: ${DB_URL}
+    password: ${DB_PW}
+  application:
+    name: FanTreeHouse
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        show_sql: true
+    hibernate:
+      ddl-auto: update
+jwt:
+  secret:
+    key: ${JWT_SECRET_KEY}
+auth:
+  manager_token: ${MANAGER_TOKEN}
