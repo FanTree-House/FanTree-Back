@@ -1,4 +1,8 @@
 package com.example.fantreehouse.domain.communityfeed.repository;
 
-public class CommunityFeedRepository {
+import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CommunityFeedRepository extends JpaRepository<CommunityFeed, Long> {
+
 }

@@ -1,4 +1,7 @@
 package com.example.fantreehouse.domain.communitycomment.repository;
 
-public class CommunityCommentRepository {
+import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CommunityCommentRepository extends JpaRepository<CommunityComment, Long> {
 }

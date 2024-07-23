@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CommunityFeedRequestDto {
-
+public class CommunityFeedUpdateRequestDto {
     @NotNull
-    @Size(min = 1, message = "작성할 내용을 입력해주세요")
+    @Size(min = 1, message = "수정할 내용을 작성해주세요")
     private String contents;
+    private String nickname;
     private String post_picture;
+
 }
