@@ -54,8 +54,8 @@ public class CommunityFeedService {
 //        Todo :  user = userRepository.findByid(user.getId).orElseThrow(()
 //         -> new 오류코드)
 //        Todo : 커뮤니티 피드 레포지토리에서 피드가있나 검증하는 로직
-//         ->있다면 유저가가진 커뮤니티ID와 대조후 Update -> save -> return
-//
+//         ->있다면 유저가가진 커뮤니티ID와 대조후 Update
+//      feed.updateFeed(requestDto)
     }
 
     @Transactional // 피드 삭제
