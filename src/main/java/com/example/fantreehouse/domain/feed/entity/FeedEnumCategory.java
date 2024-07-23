@@ -8,7 +8,6 @@ import java.util.Objects;
 @Getter
 public enum FeedEnumCategory {
     // 게시글 종류
-    COMMUNITY("community"),
     ARTIST("artist"),
     NOTICE("notice"),
     SCHEDULE("schedule");
@@ -20,9 +19,7 @@ public enum FeedEnumCategory {
     }
 
     public static FeedEnumCategory getByCategory(String category) {
-        if (Objects.equals(category, COMMUNITY.category)) {
-            return COMMUNITY;
-        } else if (Objects.equals(category, ARTIST.category)) {
+        if (Objects.equals(category, ARTIST.category)) {
             return ARTIST;
         } else if (Objects.equals(category, NOTICE.category)) {
             return NOTICE;
