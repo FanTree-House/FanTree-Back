@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 
 public class UserController {
+<<<<<<< Updated upstream
     private UserSerive userSerive;
 
 
@@ -42,3 +43,6 @@ public class UserController {
 //    }
 //}
 }
+=======
+}
+>>>>>>> Stashed changes
