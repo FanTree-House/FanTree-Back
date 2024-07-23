@@ -18,7 +18,6 @@ public class Entertainment extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long id;
-
     private String entername;
     private Long enterNumber;
     private  String enterLogo;
@@ -26,7 +25,6 @@ public class Entertainment extends Timestamped {
     @OneToMany(mappedBy = "entertainment")
     private List<ArtistGroup> artistGroupsList = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne(mappedBy = "entertainment")
     private User user;
 }
