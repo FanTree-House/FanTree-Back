@@ -24,7 +24,7 @@ public class User extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, unique = true)
+    @Column(name = "user_id", nullable = false, unique = true)
     private Long id;
 
     private String loginId; // 로그인할때 쓰는 username
@@ -45,6 +45,8 @@ public class User extends Timestamped {
     private UserRoleEnum userRole;
 
     private String statusUpdate;
+
+    private String refreshToken;
 
     @OneToMany(mappedBy = "user")
     private List<Feed> feedList = new ArrayList<>();
@@ -72,5 +74,21 @@ public class User extends Timestamped {
         this.password = password;
         this.status = UserStatusEnum.ACTIVE_USER;
         this.userRole = userRole;
+    }
+
+    public void withDraw() {
+        this.status = UserStatusEnum.WITHDRAW_USER;
+        this.statusUpdate = this.getModifiedAt();
+        this.refreshToken = null;
+    }
+
+    public boolean logout() {
+        refreshToken = null;
+        return refreshToken == null ? true : false;
+    }
+
+
+    public void saveRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

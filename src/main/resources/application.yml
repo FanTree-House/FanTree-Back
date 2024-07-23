@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    url: jdbc:mysql://localhost:3306/FanTree
-    password: k1045314!
+    username: ${DB_USER}
+    url: ${DB_URL}
+    password: ${DB_PW}
   application:
     name: FanTreeHouse
   jpa:
