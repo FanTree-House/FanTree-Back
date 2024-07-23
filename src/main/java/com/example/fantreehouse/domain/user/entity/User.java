@@ -2,8 +2,11 @@ package com.example.fantreehouse.domain.user.entity;
 
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
+import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.merch.pickup.entity.PickUp;
+import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Builder;
@@ -49,6 +52,16 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user")
     private List<PickUp> pickUpList = new ArrayList<>();
 
+    @OneToOne
+    @JoinColumn(name = "entertainment_id")
+    private Entertainment entertainment;
+
+    @OneToOne
+    @JoinColumn(name = "artist_id")
+    private Artist artist;
+
+    @OneToMany(mappedBy = "user")
+    private List<Subscription> subscriptions;
 
     @Builder
     public User(String loginId, String name, String nickname, String email, String password, UserRoleEnum userRole) {
