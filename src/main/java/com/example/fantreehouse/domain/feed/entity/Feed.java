@@ -37,6 +37,7 @@ public class Feed extends Timestamped {
     @OneToMany(mappedBy = "feed")
     private List<Comment> comments = new ArrayList<>();
 
+
     // 사용자랑 다대일
     @ManyToOne
     @JoinColumn(name = "user_id")

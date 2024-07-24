@@ -3,6 +3,7 @@ package com.example.fantreehouse.domain.artistgroup.entity;
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
+import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,6 @@ public class ArtistGroup extends Timestamped {
     private Long id;
 
     private String group_name;
-
     private String artistProfilePicture;
 
     //group과 enter의 다대일관계
@@ -29,6 +29,9 @@ public class ArtistGroup extends Timestamped {
     private Entertainment entertainment;
 
     //group과 Artist와의 일대다관계
-    @OneToMany(mappedBy = "artist_group", orphanRemoval = true)
+    @OneToMany(mappedBy = "artistGroup", orphanRemoval = true)
     private List<Artist> artistAccountList;
+
+    @OneToMany(mappedBy = "artistGroup")
+    private List<Subscription> subscriptions;
 }
