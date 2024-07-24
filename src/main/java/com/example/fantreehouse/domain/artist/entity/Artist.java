@@ -25,7 +25,7 @@ public class Artist extends Timestamped {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String groupName;
+    private String artistName;
 
     private int rank;
 
@@ -34,24 +34,20 @@ public class Artist extends Timestamped {
     @Column(nullable = false)
     private String artistProfilePicture;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 
     @OneToOne(mappedBy = "artist")
     private User user;
 
-    //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "artist")
-//    private List<Subscription> subscriptioinList = new ArrayList<>();
-
-//    // Feed 와 일대다 연관관계
-//    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Feed> feedList = new ArrayList<>();
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "entertainment_id", nullable = false)
-//    private Entertainment entertainment;
+    public void setArtistGroup(ArtistGroup artistGroup) {
+        if (this.artistGroup != null) {
+            this.artistGroup.getArtists().remove(this);
+        }
+        this.artistGroup = artistGroup;
+        if (artistGroup != null) {
+            artistGroup.getArtists().add(this);
+        }
+    }
 }
-
-
