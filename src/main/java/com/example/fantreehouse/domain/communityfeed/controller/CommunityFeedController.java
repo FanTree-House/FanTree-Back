@@ -9,6 +9,7 @@ import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequ
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
 import com.example.fantreehouse.domain.communityfeed.service.CommunityFeedService;
+import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,22 +19,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("https://www.fantree.com/artist/{group_name}/feed")
+@RestController("/fantree/artist/feed")
 @RequiredArgsConstructor
 public class CommunityFeedController {
 
     private CommunityFeedService feedService;
     /***
      * 구독자 커뮤니티 생성
-     * @param requestDto
-     * @param userDetails
-     * @return
-     */
+//     * @param requestDto
+//     * @param userDetails
+//     * @return
+//     */
     @PostMapping
     public ResponseEntity<ResponseMessageDto> createFeed(@Valid @RequestBody CommunityFeedRequestDto requestDto
             /*Todo : @AuthenticationPrincipal UserDetailsImpl userDetails*/
     ) {
-        feedService.createFeed(requestDto  /*Todo : userDetails.getUser() 유저값 받아오기*/ );
+        User user = User.builder().build();
+        feedService.createFeed(requestDto, user  /*Todo : userDetails.getUser() 유저값 받아오기*/ );
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CREATRE_SUCCESS));
     }
 
@@ -56,8 +58,9 @@ public class CommunityFeedController {
                                         @PathVariable Long community_feed_id)
     {
         CommunityFeed feed = feedService.findFeed(community_feed_id /*userDetails.getUser()*/);
-        CommunityFeedResponseDto responseDto = new CommunityFeedResponseDto(feed);
-        return ResponseEntity.ok(responseDto);
+//        CommunityFeedResponseDto responseDto = new CommunityFeedResponseDto(feed);
+//        return ResponseEntity.ok(responseDto);
+        return null;
     }
     /***
      * 커뮤니티 피드 수정
