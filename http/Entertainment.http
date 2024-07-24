@@ -4,7 +4,40 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "enterName": "소속사이름",
+  "enterName": "SM",
   "enterNumber": 123345,
   "enterLogo": "image"
 }
+
+
+### 아티스트 그룹 생성
+POST http://localhost:8080/entertainments/SM
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "groupName": "seventeen",
+  "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
+  "artistIds": [1]
+}
+
+### 특정 아티스트 그룹 조회
+GET http://localhost:8080/entertainments/SM/aespa
+
+###아티스트 그룹 전체 조회
+GET http://localhost:8080/entertainments/SM/groupName
+
+### 아티스트 그룹 수정
+PATCH http://localhost:8080/entertainments/SM/aespa
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "groupName": "aespa",
+  "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
+  "artistIds": [1,2]
+}
+
+### 아티스트 그룹 삭제
+DELETE http://localhost:8080/entertainments/SM/aespa
+Authorization: {{Authorization}}

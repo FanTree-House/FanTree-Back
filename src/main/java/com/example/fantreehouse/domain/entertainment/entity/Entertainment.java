@@ -19,7 +19,7 @@ public class Entertainment extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
-    private Long entertainment_id;
+    private Long id;
 
     @Column(length = 20, nullable = false, unique = true)
     private String enterName;
