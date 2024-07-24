@@ -4,7 +4,6 @@ import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
-import com.example.fantreehouse.domain.user.dto.LoginRequestDto;
 import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
 import com.example.fantreehouse.domain.user.dto.SignUpResponseDto;
 import com.example.fantreehouse.domain.user.entity.User;
@@ -13,9 +12,6 @@ import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +24,7 @@ public class UserService {
 
 //    @Value("${auth.manager_token}")
     private String ADMIN_TOKEN;
-
+    private String ENTERTAINMENT_TOKEN = "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc";
 
     public SignUpResponseDto signUp(SignUpRequestDto requestDto) {
         String id = requestDto.getId();
@@ -48,11 +44,11 @@ public class UserService {
         }
 
         UserRoleEnum role = UserRoleEnum.USER;
-        if(requestDto.isAdmin()) {
-            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())){
-                throw new MismatchException(ErrorType.MISMATCH_ADMINTOKEN);
+        if(requestDto.isEntertainment()){
+            if(!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())){
+                throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
             }
-            role = UserRoleEnum.ADMIN;
+            role = UserRoleEnum.ENTERTAINMENT;
         }
 
         User user = new User(

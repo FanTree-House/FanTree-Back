@@ -27,7 +27,7 @@ public class Artist extends Timestamped {
     @Column(nullable = false, unique = true)
     private String artistName;
 
-    private int rank;
+    private Long artistRank;
 
     private Long subscriberCount;
 
@@ -38,7 +38,8 @@ public class Artist extends Timestamped {
     @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 
-    @OneToOne(mappedBy = "artist")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     public void setArtistGroup(ArtistGroup artistGroup) {
