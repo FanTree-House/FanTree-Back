@@ -21,10 +21,10 @@ public class Entertainment extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long entertainment_id;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 20, nullable = false, unique = true)
     private String enterName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Long enterNumber;
 
     @Column(nullable = false)

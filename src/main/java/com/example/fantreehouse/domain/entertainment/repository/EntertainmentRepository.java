@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EntertainmentRepository extends JpaRepository<Entertainment, Long> {
+    Entertainment findByEnterName(String enterName);
 }

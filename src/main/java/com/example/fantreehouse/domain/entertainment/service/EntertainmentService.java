@@ -1,5 +1,7 @@
 package com.example.fantreehouse.domain.entertainment.service;
 
+import com.example.fantreehouse.common.enums.ErrorType;
+import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentRequestDto;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentResponseDto;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
@@ -24,5 +26,12 @@ public class EntertainmentService {
     }
 
 
+    public EntertainmentResponseDto getEnter(String enterName) {
 
+        Entertainment enter = enterRepository.findByEnterName(enterName);
+        // [예외 1] - 존재하지 않는 엔터테이먼트 계정
+        // orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
+
+        return null;
+    }
 }
