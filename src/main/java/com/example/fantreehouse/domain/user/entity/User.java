@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Entity
@@ -38,6 +39,8 @@ public class User extends Timestamped {
 
     private String password;
 
+    private String profilePicture;
+
     @Enumerated(EnumType.STRING)
     private UserStatusEnum status;
 
@@ -54,7 +57,10 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user")
     private List<PickUp> pickUpList = new ArrayList<>();
 
-    @OneToOne
+    @Column
+    private Long enter_id;
+
+    @OneToOne         // 주인
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
@@ -66,12 +72,14 @@ public class User extends Timestamped {
     private List<Subscription> subscriptions;
 
     @Builder
-    public User(String loginId, String name, String nickname, String email, String password, UserRoleEnum userRole) {
+    public User(String loginId, String name, String nickname,
+        String email, String password, String profilePicture, UserRoleEnum userRole) {
         this.loginId = loginId;
         this.name = name;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
+        this.profilePicture = profilePicture;
         this.status = UserStatusEnum.ACTIVE_USER;
         this.userRole = userRole;
     }
@@ -87,8 +95,12 @@ public class User extends Timestamped {
         return refreshToken == null ? true : false;
     }
 
-
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public void update(Optional<String> email, Optional<String> newEncodePw) {
+        this.email = email.orElse(this.email);
+        this.password = newEncodePw.orElse(this.password);
     }
 }
