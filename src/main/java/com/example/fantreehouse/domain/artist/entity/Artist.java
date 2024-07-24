@@ -38,7 +38,8 @@ public class Artist extends Timestamped {
     @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 
-    @OneToOne(mappedBy = "artist")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

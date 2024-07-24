@@ -82,12 +82,12 @@ public class CommunityFeedService {
 
     //유저가 아티스트 그룹에 가입되어있는지 확인하는 로직
     public void fanCheck(User user, ArtistGroup artistGroup) {
-        user = userRepository.findById(user.getId()).orElseThrow(()
-                -> new CustomException(ErrorType.USER_NOT_FOUND));
-        artistGroup = artistGroupRepository.findById(artistGroup.getId()).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
-        if (!user.getArtist().getArtistGroup().getId().equals(artistGroup.getId())) {
-            throw new CustomException(ErrorType.NOT_MATCH_USER);
-        }
+//        user = userRepository.findById(user.getId()).orElseThrow(()
+//                -> new CustomException(ErrorType.USER_NOT_FOUND));
+//        artistGroup = artistGroupRepository.findById(artistGroup.getId()).orElseThrow(()
+//                -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
+//        if (!user.getArtist().getArtistGroup().getId().equals(artistGroup.getId())) {
+//            throw new CustomException(ErrorType.NOT_MATCH_USER);
+//        }
     }
 }
