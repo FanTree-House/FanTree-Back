@@ -32,11 +32,10 @@ public class EntertainmentService {
 
 
     public EntertainmentResponseDto getEnter(String enterName) {
+        Entertainment enter = enterRepository.findByEnterName(enterName)
+                .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
 
-        Entertainment enter = enterRepository.findByEnterName(enterName);
-        // [예외 1] - 존재하지 않는 엔터테이먼트 계정
-        // orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
-
-        return null;
+        return new EntertainmentResponseDto(enter);
     }
+
 }

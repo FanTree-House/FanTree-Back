@@ -34,7 +34,7 @@ public class Artist extends Timestamped {
     @Column(nullable = false)
     private String artistProfilePicture;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 
@@ -42,6 +42,13 @@ public class Artist extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void setArtistGroup(ArtistGroup artistGroup) {
+        if (this.artistGroup != null) {
+            this.artistGroup.getArtists().remove(this);
+        }
+        this.artistGroup = artistGroup;
+        if (artistGroup != null) {
+            artistGroup.getArtists().add(this);
+        }
+    }
 }
-
-

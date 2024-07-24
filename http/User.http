@@ -3,13 +3,13 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
-  "name": "김우진",
-  "nickname": "김우진",
+  "id": "winter12",
+  "name": "윈터",
+  "nickname": "윈터",
   "email": "rladnwlsok@naver.com",
-  "password": "rladnwls",
+  "password": "winter12",
   "entertainment": true,
-  "entertainmentToken": "qwer1234qwer1234"
+  "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
 }
 
 ### 로그인 (Enter)
@@ -17,8 +17,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
-  "password": "rladnwls"
+  "id": "winter12",
+  "password": "winter12"
 }
 
 > {%
@@ -27,4 +27,3 @@ Content-Type: application/json
     client.global.set("Authorization", response.headers.valueOf("Authorization"));
     client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
 %}
-
