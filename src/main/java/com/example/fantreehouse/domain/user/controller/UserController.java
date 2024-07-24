@@ -1,20 +1,13 @@
 package com.example.fantreehouse.domain.user.controller;
 
-import com.example.fantreehouse.common.dto.ResponseMessageDto;
-import com.example.fantreehouse.common.enums.ResponseStatus;
-import com.example.fantreehouse.domain.user.dto.LoginRequestDto;
-import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
 import com.example.fantreehouse.domain.user.service.UserSerive;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 
-public class UserController {
-<<<<<<< Updated upstream
+public class UserController{
     private UserSerive userSerive;
 
 
@@ -43,6 +36,3 @@ public class UserController {
 //    }
 //}
 }
-=======
-}
->>>>>>> Stashed changes

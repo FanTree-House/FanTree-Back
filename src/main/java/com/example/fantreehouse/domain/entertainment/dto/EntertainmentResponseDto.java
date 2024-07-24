@@ -11,7 +11,7 @@ public class EntertainmentResponseDto {
     private String enterLogo;
 
     public EntertainmentResponseDto(Entertainment entertainment) {
-        this.enterName = entertainment.getEntername();
+        this.enterName = entertainment.getEnterName();
         this.enterNumber = entertainment.getEnterNumber();
         this.enterLogo = entertainment.getEnterLogo();
     }
