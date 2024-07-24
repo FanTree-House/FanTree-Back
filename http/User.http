@@ -3,11 +3,11 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
-  "name": "김우진",
-  "nickname": "김우진",
+  "id": "winter12",
+  "name": "윈터",
+  "nickname": "윈터",
   "email": "rladnwlsok@naver.com",
-  "password": "rladnwls",
+  "password": "winter12",
   "entertainment": true,
   "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
 }
@@ -17,8 +17,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
-  "password": "rladnwls"
+  "id": "winter12",
+  "password": "winter12"
 }
 
 > {%
