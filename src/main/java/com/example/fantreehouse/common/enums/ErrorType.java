@@ -35,9 +35,22 @@ public enum ErrorType implements ErrorCode {
     REFRESH_TOKEN_MISMATCH(HttpStatus.NOT_FOUND,
         "REFRESH_TOKEN 값이 일치 하지 않습니다."),
     MISMATCH_ADMINTOKEN(HttpStatus.OK, "Admin 토큰값이 일치하지 않습니다."),
+    MISMATCH_ARTISTTOKEN(HttpStatus.OK, "Artist 토큰값이 일치하지 않습니다."),
+    MISMATCH_ENTERTAINMENTTOKEN(HttpStatus.OK, "Entertainment 토큰값이 일치하지 않습니다."),
 
     // Entertainment
-    NOT_FOUND_ENTER(HttpStatus.NOT_FOUND, "존재하지 않는 엔터테인먼트입니다.")
+    NOT_FOUND_ENTER(HttpStatus.NOT_FOUND, "존재하지 않는 엔터테인먼트입니다."),
+
+
+    //유저 커뮤니티
+    NOT_FOUND_FEED(HttpStatus.NOT_FOUND, "피드를 찾을수 없습니다"),
+    NOT_USER_FEED(HttpStatus.NOT_ACCEPTABLE, "유저가 작성한 피드가 아닙니다."),
+    NOT_MATCH_USER(HttpStatus.NOT_ACCEPTABLE, "해당 유저는 아티스트그룹을 구독하지 않았습니다."),
+
+    //아티스트그룹
+    NOT_FOUND_ARTISTGROUP(HttpStatus.NOT_FOUND, "아티스트그룹을 찾지 못했습니다."),
+
+
     ;
 
 

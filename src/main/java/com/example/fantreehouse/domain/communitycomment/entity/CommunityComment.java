@@ -15,8 +15,6 @@ public class CommunityComment extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String contents;
-
     @ManyToOne
     @JoinColumn(name = "community_feed_id")
     private CommunityFeed communityFeed;

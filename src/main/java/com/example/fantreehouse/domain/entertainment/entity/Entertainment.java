@@ -5,7 +5,6 @@ import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentRequestDto;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,7 +27,7 @@ public class Entertainment extends Timestamped {
     private Long enterNumber;
 
     @Column(nullable = false)
-    private  String enterLogo;
+    private String enterLogo;
 
     @OneToMany(mappedBy = "entertainment")
     private List<ArtistGroup> artistGroupsList = new ArrayList<>();
