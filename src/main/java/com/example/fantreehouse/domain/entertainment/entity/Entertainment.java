@@ -16,6 +16,7 @@ import java.util.List;
 @Entity
 @Table (name = "entertainment")
 public class Entertainment extends Timestamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long entertainment_id;

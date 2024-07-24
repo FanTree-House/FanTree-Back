@@ -32,10 +32,12 @@ public class ArtistGroup extends Timestamped {
     //group과 Artist와의 일대다관계
     @OneToMany(mappedBy = "artistGroup", orphanRemoval = true)
     private List<Artist> artistAccountList;
+
     //구독자와 일대다 관계
     @OneToMany(mappedBy = "artistGroup")
     private List<Subscription> subscriptions;
     //구독자 커뮤니티 피드와 일대다관계
-//    @OneToMany(mappedBy = "artistGroup")
-//    private List<CommunityFeed> communityFeeds;
+    @OneToMany(mappedBy = "artistGroup")
+    private List<CommunityFeed> communityFeeds;
+
 }
