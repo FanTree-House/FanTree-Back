@@ -3,16 +3,16 @@ package com.example.fantreehouse.domain.artistgroup.entity;
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
+import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
 @Table(name = "artist_group")
 public class ArtistGroup extends Timestamped {
 
@@ -42,6 +42,16 @@ public class ArtistGroup extends Timestamped {
         artists.add(artist);
         artist.setArtistGroup(this);
     }
+    //group과 Artist와의 일대다관계
+    @OneToMany(mappedBy = "artistGroup", orphanRemoval = true)
+    private List<Artist> artistAccountList;
+    //구독자와 일대다 관계
+    @OneToMany(mappedBy = "artistGroup")
+    private List<Subscription> subscriptions;
+    //구독자 커뮤니티 피드와 일대다관계
+//    @OneToMany(mappedBy = "artistGroup")
+//    private List<CommunityFeed> communityFeeds;
+}
 
     // 기존 아티스트 목록 초기화 메서드
     public void clearArtists() {

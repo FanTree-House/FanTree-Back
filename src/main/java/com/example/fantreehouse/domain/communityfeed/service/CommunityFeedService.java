@@ -2,74 +2,95 @@ package com.example.fantreehouse.domain.communityfeed.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
+import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
+import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@NoArgsConstructor
+@RequiredArgsConstructor
+
 public class CommunityFeedService {
 
-    public CommunityFeedRepository feedRepository;
-    public UserRepository userRepository;
-    public ArtistGroupRepository artistGroupRepository;
+    private final CommunityFeedRepository feedRepository;
+    private final UserRepository userRepository;
+    private final ArtistGroupRepository artistGroupRepository;
 
     @Transactional //피드생성
-    public void createFeed(CommunityFeedRequestDto requestDto, /*Todo : User user*/User user) {
-// Todo :  user = userRepository.findByid(user.getId).orElseThrow(()
-//  -> new 오류코드)
-//        유저가 가진 아티스트그룹 키 값이 아티스트그룹레포지토리에 있는지 검증후 없다면 예외터트리기
-//       2차검증이 끝나면 커뮤니티피드를 생성하는 생성자로직 + 레포지토리에 세이브
+    public CommunityFeedResponseDto createFeed(CommunityFeedRequestDto requestDto, User user, ArtistGroup artistGroup) {
+        //아티스트그룹을 구독했는지 검증
+        fanCheck(user, artistGroup);
         CommunityFeed feed = new CommunityFeed(requestDto, user);
-        CommunityFeed createFeed = feedRepository.save(feed);
+        feedRepository.save(feed);
+        return new CommunityFeedResponseDto(feed);
     }
 
-    //피드 전체 조회
-    public List<CommunityFeedResponseDto> findAllFeed(/*User user*/) {
-//        List<CommunityFeed> feedList = feedRepository.findAllUserId(/*Todo : 유저검증*/);
-//
-//        if (feedList.isEmpty()) {
-//            throw new CustomException(ErrorType.NOT_FOUND_USER_FEED);
-//        }
-//        return feedList.stream()
-//                .map(CommunityFeedResponseDto::new)
-//                .toList();
-        return null;
+//    피드 전체 조회
+    public List<CommunityFeedResponseDto> findAllFeed(User user, ArtistGroup artistGroup) {
+        fanCheck(user, artistGroup);
+        List<CommunityFeed> feedList = feedRepository.findAllByUserId(user.getId());
+
+        if (feedList.isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUND_FEED);
+        }
+        return feedList.stream()
+                .map(CommunityFeedResponseDto::new)
+                .toList();
     }
 
     //피드 선택 조회
-    public CommunityFeed findFeed(Long communityFeedId  /*User user*/) {
-        CommunityFeed feed = feedRepository.findById(communityFeedId).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_FOUND_USER_FEED));
-        // 피드가 가진 유저아이디가 조회하는 유저아이디와 일치하는지 검증필요
+    public CommunityFeed findFeed(Long community_feed_id, User user, ArtistGroup artistGroup) {
+       fanCheck(user,artistGroup);
+        CommunityFeed feed = feedRepository.findById(community_feed_id).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_FEED));
         return feed;
+        }
+
+    //피드 업데이트
+    @Transactional
+    public void updateFeed(CommunityFeedUpdateRequestDto requestDto, Long community_feed_id, User user, ArtistGroup artistGroup) {
+        fanCheck(user, artistGroup);
+        CommunityFeed feed = feedRepository.findById(community_feed_id).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_FEED));
+        if (!feed.getUser().getId().equals(user.getId())) {
+            throw new CustomException(ErrorType.NOT_USER_FEED);
+        }
+        feed.updateFeed(requestDto);
     }
 
-    @Transactional //피드 업데이트
-    public void updateFeed(CommunityFeedUpdateRequestDto requestDto, Long community_feed_id) {
-//        Todo :  user = userRepository.findByid(user.getId).orElseThrow(()
-//         -> new 오류코드)
-//        Todo : 커뮤니티 피드 레포지토리에서 피드가있나 검증하는 로직
-//         ->있다면 유저가가진 커뮤니티ID와 대조후 Update
-//      feed.updateFeed(requestDto)
+    // 피드 삭제
+    @Transactional
+    public void deleteFeed(Long community_feed_id, User user, ArtistGroup artistGroup) {
+        fanCheck(user, artistGroup);
+        CommunityFeed feed = feedRepository.findById(community_feed_id).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_FEED));
+        if (!feed.getUser().getId().equals(user.getId())) {
+            throw new CustomException(ErrorType.NOT_USER_FEED);
+        }
+        feedRepository.delete(feed);
     }
 
-    @Transactional // 피드 삭제
-    public void deleteFeed(Long communityFeedId) {
-        //        Todo :  user = userRepository.findByid(user.getId).orElseThrow(()
-//         -> new 오류코드)
-//        Todo : 커뮤니티 피드 레포지토리에서 피드가있나 검증하는 로직
-//         ->있다면 유저가가진 커뮤니티ID와 대조후 Update -> save -> return
-//            communityFeedRepository.delete(communityFeed)
+    //유저가 아티스트 그룹에 가입되어있는지 확인하는 로직
+    public void fanCheck(User user, ArtistGroup artistGroup) {
+        user = userRepository.findById(user.getId()).orElseThrow(()
+                -> new CustomException(ErrorType.USER_NOT_FOUND));
+        artistGroup = artistGroupRepository.findById(artistGroup.getId()).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
+        if (!user.getArtist().getArtistGroup().getId().equals(artistGroup.getId())) {
+            throw new CustomException(ErrorType.NOT_MATCH_USER);
+        }
     }
 }
