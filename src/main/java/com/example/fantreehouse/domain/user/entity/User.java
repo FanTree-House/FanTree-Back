@@ -5,7 +5,7 @@ import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
-import com.example.fantreehouse.domain.merch.pickup.entity.PickUp;
+import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

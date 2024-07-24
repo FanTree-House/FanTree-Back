@@ -1,7 +1,7 @@
-package com.example.fantreehouse.domain.merch.pickup.entity;
+package com.example.fantreehouse.domain.product.pickup.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
-import com.example.fantreehouse.domain.merch.product.entity.Product;
+import com.example.fantreehouse.domain.product.product.entity.Product;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;

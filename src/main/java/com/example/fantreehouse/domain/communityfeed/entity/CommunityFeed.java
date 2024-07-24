@@ -1,11 +1,13 @@
 package com.example.fantreehouse.domain.communityfeed.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
+import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +32,10 @@ public class CommunityFeed extends Timestamped {
 
     @OneToMany(mappedBy = "communityFeed")
     private List<CommunityComment> communityComments;
+
+//    @ManyToOne
+//    @JoinColumn(name = "artist_group_id")
+//    private ArtistGroup artistGroup;
 
     public CommunityFeed(CommunityFeedRequestDto requestDto, User user) {
         this.nickname = user.getNickname();
