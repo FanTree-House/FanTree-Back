@@ -37,7 +37,7 @@ public class CommunityFeedController {
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails,
                                                          ArtistGroup artistGroup) {
         feedService.createFeed(requestDto, userDetails.getUser(), artistGroup);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CREATRE_SUCCESS));
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CREATE_SUCCESS_FEED));
     }
 
     /**

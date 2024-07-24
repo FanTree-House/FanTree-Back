@@ -33,7 +33,7 @@ public class UserService {
 
     private String ARTIST_TOKEN;
 
-    private String ENTERTAINMENT_TOKEN = "qwer1234qwer1234";
+    private String ENTERTAINMENT_TOKEN = "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc";
 
     //회원가입
     public SignUpResponseDto signUp(SignUpRequestDto requestDto) {
