@@ -29,9 +29,9 @@ public class UserService {
 
 
   //    @Value("${auth.manager_token}")
-    private String ADMIN_TOKEN;
+  private String ADMIN_TOKEN = "1np0t2ncesuuuud3rTaMeng5" ;
 
-    private String ARTIST_TOKEN;
+    private String ARTIST_TOKEN = "acRos3knitterUp2eTt1ng5";
 
     private String ENTERTAINMENT_TOKEN = "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc";
 

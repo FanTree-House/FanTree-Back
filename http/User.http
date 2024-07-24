@@ -9,7 +9,7 @@ Content-Type: application/json
   "email": "rladnwlsok@naver.com",
   "password": "rladnwls",
   "entertainment": true,
-  "entertainmentToken": "qwer1234qwer1234"
+  "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
 }
 
 ### 로그인 (Enter)
@@ -27,4 +27,3 @@ Content-Type: application/json
     client.global.set("Authorization", response.headers.valueOf("Authorization"));
     client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
 %}
-

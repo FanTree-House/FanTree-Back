@@ -33,16 +33,9 @@ public class ArtistGroupService {
         this.artistRepository = artistRepository;
     }
 
-    /**
-     * [createArtistGroup] 아티스트 그룹 생성
-     * @param entername 엔터테인먼트 이름
-     * @param request 요청 객체 (ArtistGroupRequestDto)
-     * @return 생성된 ArtistGroup 객체
-     * @throws CustomException 엔터테인먼트 또는 아티스트를 찾을 수 없는 경우 예외 발생
-     **/
     @Transactional
     public ArtistGroup createArtistGroup(String entername, ArtistGroupRequestDto request) {
-        Entertainment entertainment = entertainmentRepository.findByEntername(entername)
+        Entertainment entertainment = entertainmentRepository.findByEnterName(entername)
                 .orElseThrow(() -> new CustomException(ErrorType.ENTERTAINMENT_NOT_FOUND));
 
         ArtistGroup artistGroup = new ArtistGroup(request.getGroupName(), request.getArtistProfilePicture(), entertainment);
@@ -56,23 +49,11 @@ public class ArtistGroupService {
         return artistGroupRepository.save(artistGroup);
     }
 
-    /**
-     * [getArtistGroupResponseDto] 특정 아티스트 그룹 조회
-     * @param entername 엔터테인먼트 이름
-     * @param groupName 아티스트 그룹 이름
-     * @return 조회된 ArtistGroupResponseDto 객체
-     * @throws CustomException 아티스트 그룹을 찾을 수 없는 경우 예외 발생
-     **/
     public ArtistGroupResponseDto getArtistGroupResponseDto(String entername, String groupName) {
         ArtistGroup artistGroup = getArtistGroup(entername, groupName);
         return convertToResponseDto(artistGroup);
     }
 
-    /**
-     * [getAllArtistGroupResponseDtos] 특정 엔터테인먼트의 모든 아티스트 그룹 조회
-     * @param entername 엔터테인먼트 이름
-     * @return 조회된 모든 ArtistGroupResponseDto 객체의 리스트
-     **/
     public List<ArtistGroupResponseDto> getAllArtistGroupResponseDtos(String entername) {
         List<ArtistGroup> artistGroups = getAllArtistGroups(entername);
         return artistGroups.stream()
@@ -80,14 +61,6 @@ public class ArtistGroupService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * [updateArtistGroup] 특정 아티스트 그룹 정보 업데이트
-     * @param entername 엔터테인먼트 이름
-     * @param groupName 아티스트 그룹 이름
-     * @param request 업데이트 요청 객체 (ArtistGroupRequestDto)
-     * @return 업데이트된 ArtistGroup 객체
-     * @throws CustomException 아티스트 그룹 또는 아티스트를 찾을 수 없는 경우 예외 발생
-     **/
     @Transactional
     public ArtistGroup updateArtistGroup(String entername, String groupName, ArtistGroupRequestDto request) {
         ArtistGroup artistGroup = getArtistGroup(entername, groupName);
@@ -104,46 +77,23 @@ public class ArtistGroupService {
         return artistGroupRepository.save(artistGroup);
     }
 
-    /**
-     * [deleteArtistGroup] 특정 아티스트 그룹 삭제
-     * @param entername 엔터테인먼트 이름
-     * @param groupName 아티스트 그룹 이름
-     * @throws CustomException 아티스트 그룹을 찾을 수 없는 경우 예외 발생
-     **/
     @Transactional
     public void deleteArtistGroup(String entername, String groupName) {
         ArtistGroup artistGroup = getArtistGroup(entername, groupName);
         artistGroupRepository.delete(artistGroup);
     }
 
-    /**
-     * [getArtistGroup] 특정 아티스트 그룹 조회
-     * @param entername 엔터테인먼트 이름
-     * @param groupName 아티스트 그룹 이름
-     * @return 조회된 ArtistGroup 객체
-     * @throws CustomException 아티스트 그룹을 찾을 수 없는 경우 예외 발생
-     **/
     public ArtistGroup getArtistGroup(String entername, String groupName) {
-        return artistGroupRepository.findByEntertainmentEnternameAndGroupName(entername, groupName)
+        return artistGroupRepository.findByEntertainmentEnterNameAndGroupName(entername, groupName)
                 .orElseThrow(() -> new CustomException(ErrorType.ARTIST_GROUP_NOT_FOUND));
     }
 
-    /**
-     * [getAllArtistGroups] 특정 엔터테인먼트의 모든 아티스트 그룹 조회
-     * @param entername 엔터테인먼트 이름
-     * @return 조회된 모든 ArtistGroup 객체의 리스트
-     **/
     public List<ArtistGroup> getAllArtistGroups(String entername) {
-        return artistGroupRepository.findAllByEntertainmentEntername(entername);
+        return artistGroupRepository.findAllByEntertainmentEnterName(entername);
     }
 
-    /**
-     * [convertToResponseDto] ArtistGroup 엔터티를 ArtistGroupResponseDto로 변환
-     * @param artistGroup 변환할 ArtistGroup 엔터티
-     * @return 변환된 ArtistGroupResponseDto 객체
-     **/
     private ArtistGroupResponseDto convertToResponseDto(ArtistGroup artistGroup) {
-        EntertainmentResponseDto entertainmentDto = new EntertainmentResponseDto(artistGroup.getEntertainment().getId(), artistGroup.getEntertainment().getEntername());
+        EntertainmentResponseDto entertainmentDto = new EntertainmentResponseDto(artistGroup.getEntertainment());
         List<ArtistResponseDto> artistDtos = artistGroup.getArtists().stream()
                 .map(artist -> new ArtistResponseDto(artist.getId(), artist.getArtistName()))
                 .collect(Collectors.toList());

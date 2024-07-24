@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface EntertainmentRepository extends JpaRepository<Entertainment, Long> {
-    Entertainment findByEnterName(String enterName);
-    Optional<Entertainment> findByEntername(String entername);
+    Optional<Entertainment> findByEnterName(String enterName);
 }

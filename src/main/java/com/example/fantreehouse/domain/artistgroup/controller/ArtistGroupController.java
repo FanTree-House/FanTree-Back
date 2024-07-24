@@ -35,7 +35,7 @@ public class ArtistGroupController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_GROUP_RETRIEVE_SUCCESS, artistGroup));
     }
 
-    @GetMapping("/{entername}/group_name")
+    @GetMapping("/{entername}/groupName")
     public ResponseEntity<ResponseDataDto<List<ArtistGroupResponseDto>>> getAllArtistGroups(@PathVariable String entername) {
         List<ArtistGroupResponseDto> artistGroups = artistGroupService.getAllArtistGroupResponseDtos(entername);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_GROUP_RETRIEVE_SUCCESS, artistGroups));
