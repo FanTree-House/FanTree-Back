@@ -71,9 +71,26 @@ public class EntertainmentService {
         } else if (null == enterRequestDto.getEnterName() && null == enterRequestDto.getEnterNumber() && null != enterRequestDto.getEnterLogo()) {
             enter.updateEnterLogo(enterRequestDto.getEnterLogo());
         }
+
+        enterRepository.save(enter);
     }
 
+    /**
+     * 엔터 계정 삭제
+     * @param enterName
+     * @param user
+     */
+    public void deleteEnter(String enterName, User user) {
+        // [예외1] - Entertainment, Admin 권한 체크
+        if (!(UserRoleEnum.ADMIN.equals(user.getUserRole()) || UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole()))) {
+            throw new CustomException(ErrorType.NOT_AVAILABLE_PERMISSION);
+        }
 
+        // [예외 2] - 존재하지 않는 엔터테이먼트 계정
+        Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
+
+        enterRepository.delete(enter);
+    }
 
     // Entertainment 권한 체크
     private void checkEntertainmentAuthority(User user) {

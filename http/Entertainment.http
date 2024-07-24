@@ -1,5 +1,5 @@
 ### endterName 설정
-@enterName = easpa
+@enterName = easpa0123
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
@@ -42,3 +42,7 @@ Content-Type: application/json
 {
   "enterLogo": "image123"
 }
+
+### 엔터 계정 삭제
+DELETE http://localhost:8080/enter/{{enterName}}
+Authorization: {{Authorization}}

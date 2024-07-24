@@ -40,7 +40,7 @@ public enum ErrorType implements ErrorCode {
     MISMATCH_ENTERTAINMENTTOKEN(HttpStatus.OK, "Entertainment 토큰값이 일치하지 않습니다."),
 
     // Entertainment
-    NOT_FOUND_ENTER(HttpStatus.NOT_FOUND, "존재하지 않는 엔터테인먼트입니다."),
+    NOT_FOUND_ENTER(HttpStatus.NOT_FOUND, "존재하지 않는 엔터테인먼트 계정입니다."),
     ALREADY_EXIST_ENTER_NAME(HttpStatus.NOT_FOUND, "이미 존재하는 엔터테인먼트 이름입니다."),
     ALREADY_EXIST_ENTER_NUMBER(HttpStatus.NOT_FOUND, "이미 존재하는 사업자번호입니다."),
 

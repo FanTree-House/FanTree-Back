@@ -67,8 +67,16 @@ public class EntertainmentController {
 
     /**
      * 엔터테이먼트 계정 삭제
+     * @param enterName
+     * @param userDetails
+     * @return
      */
-//    @DeleteMapping("/{enterName}")
-//    public ResponseEntity<ResponseMessageDto> deleteEnter()
+    @DeleteMapping("/{enterName}")
+    public ResponseEntity<ResponseMessageDto> deleteEnter(
+            @PathVariable String enterName,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        entertainmentService.deleteEnter(enterName, userDetails.getUser());
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ENTERTAINMENT_DELETE_SUCCESS));
+    }
 
 }
