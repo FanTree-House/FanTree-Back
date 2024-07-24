@@ -24,10 +24,10 @@ public class User extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, unique = true)
-    private Long userId;
+    @Column(name = "user_id", nullable = false, unique = true)
+    private Long id;
 
-    private String id; // 로그인할때 쓰는 username
+    private String loginId; // 로그인할때 쓰는 username
 
     private String name; // 실명
 
@@ -45,6 +45,8 @@ public class User extends Timestamped {
     private UserRoleEnum userRole;
 
     private String statusUpdate;
+
+    private String refreshToken;
 
     @OneToMany(mappedBy = "user")
     private List<Feed> feedList = new ArrayList<>();
@@ -64,13 +66,29 @@ public class User extends Timestamped {
     private List<Subscription> subscriptions;
 
     @Builder
-    public User(String id, String name, String nickname, String email, String password, UserRoleEnum userRole) {
-        this.id = id;
+    public User(String loginId, String name, String nickname, String email, String password, UserRoleEnum userRole) {
+        this.loginId = loginId;
         this.name = name;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.status = UserStatusEnum.ACTIVE_USER;
         this.userRole = userRole;
+    }
+
+    public void withDraw() {
+        this.status = UserStatusEnum.WITHDRAW_USER;
+        this.statusUpdate = this.getModifiedAt();
+        this.refreshToken = null;
+    }
+
+    public boolean logout() {
+        refreshToken = null;
+        return refreshToken == null ? true : false;
+    }
+
+
+    public void saveRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
