@@ -15,8 +15,9 @@ import java.util.List;
 @Entity
 @Table (name = "entertainment")
 public class Entertainment extends Timestamped {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String entername;
     private Long enterNumber;
@@ -25,7 +26,6 @@ public class Entertainment extends Timestamped {
     @OneToMany(mappedBy = "entertainment")
     private List<ArtistGroup> artistGroupsList = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "entertainment")
     private User user;
 }
