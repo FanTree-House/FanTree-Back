@@ -24,7 +24,7 @@ Content-Type: application/json
 ### 특정 아티스트 그룹 조회
 GET http://localhost:8080/entertainments/SM/aespa
 
-###아티스트 그룹 전체 조회 - 이거 왜 에러? javax.net.ssl.SSLException: Unsupported or unrecognized SSL message
+###아티스트 그룹 전체 조회
 GET http://localhost:8080/entertainments/SM/groupName
 
 ### 아티스트 그룹 수정
