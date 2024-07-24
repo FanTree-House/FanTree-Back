@@ -1,21 +1,19 @@
 spring:
   datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    url: jdbc:mysql://localhost:3306/FanTree
-    password: k1045314!
-  application:
-    name: FanTreeHouse
   jpa:
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-        show_sql: true
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
-auth:
-  manager_token: ${MANAGER_TOKEN}
+server:
+  port: ${SERVER_PORT}
