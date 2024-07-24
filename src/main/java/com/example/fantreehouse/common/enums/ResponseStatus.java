@@ -37,6 +37,13 @@ public enum ResponseStatus {
     //RefreshToken
     UPDATE_TOKEN_SUCCESS_MESSAGE(HttpStatus.OK, "토큰이 재발급되었습니다."),
 
+    // 엔터테이먼트 계정
+    ENTERTAINMENT_CREATE_SUCCESS(HttpStatus.OK,  "엔터테인먼트 계정 생성에 성공하였습니다."),
+    ENTERTAINMENT_READ_SUCCESS(HttpStatus.OK,  "엔터테인먼트 계정 조회에 성공하였습니다."),
+    ENTERTAINMENT_UPDATAE_SUCCESS(HttpStatus.OK,  "엔터테인먼트 계정 수정에 성공하였습니다."),
+    ENTERTAINMENT_DELETE_SUCCESS(HttpStatus.OK,  "엔터테인먼트 계정 삭제에 성공하였습니다."),
+    UPDATE_TOKEN_SUCCESS_MESSAGE(HttpStatus.OK, "토큰이 재발급되었습니다."),
+
     // 아티스트 그룹
     ARTIST_GROUP_CREATE_SUCCESS(HttpStatus.OK, "아티스트 그룹 생성에 성공하였습니다."),
     ARTIST_GROUP_RETRIEVE_SUCCESS(HttpStatus.OK, "아티스트 그룹 조회에 성공하였습니다."),

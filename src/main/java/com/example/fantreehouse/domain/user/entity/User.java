@@ -9,13 +9,13 @@ import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import java.util.Optional;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Entity
@@ -57,7 +57,10 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user")
     private List<PickUp> pickUpList = new ArrayList<>();
 
-    @OneToOne
+    @Column
+    private Long enter_id;
+
+    @OneToOne         // 주인
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
