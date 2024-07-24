@@ -37,7 +37,6 @@ public enum ErrorType implements ErrorCode {
     MISMATCH_ADMINTOKEN(HttpStatus.OK, "Admin 토큰값이 일치하지 않습니다."),
     MISMATCH_ARTISTTOKEN(HttpStatus.OK, "Artist 토큰값이 일치하지 않습니다."),
     MISMATCH_ENTERTAINMENTTOKEN(HttpStatus.OK, "Entertainment 토큰값이 일치하지 않습니다."),
-    MISMATCH_ENTERTAINMENTTOKEN(HttpStatus.OK, "Entertainment 토큰값이 일치하지 않습니다."),
 
     // 엔터테인먼트 및 아티스트 관련 에러
     ENTERTAINMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "엔터테인먼트를 찾을 수 없습니다."),

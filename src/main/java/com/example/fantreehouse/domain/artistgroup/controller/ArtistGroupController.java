@@ -1,10 +1,10 @@
 package com.example.fantreehouse.domain.artistgroup.controller;
 
-import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.dto.ResponseDataDto;
+import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupRequestDto;
-import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
+import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupResponseDto;
 import com.example.fantreehouse.domain.artistgroup.service.ArtistGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +30,14 @@ public class ArtistGroupController {
     }
 
     @GetMapping("/{entername}/{groupName}")
-    public ResponseEntity<ResponseDataDto<ArtistGroup>> getArtistGroup(@PathVariable String entername, @PathVariable String groupName) {
-        ArtistGroup artistGroup = artistGroupService.getArtistGroup(entername, groupName);
+    public ResponseEntity<ResponseDataDto<ArtistGroupResponseDto>> getArtistGroup(@PathVariable String entername, @PathVariable String groupName) {
+        ArtistGroupResponseDto artistGroup = artistGroupService.getArtistGroupResponseDto(entername, groupName);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_GROUP_RETRIEVE_SUCCESS, artistGroup));
     }
 
     @GetMapping("/{entername}/group_name")
-    public ResponseEntity<ResponseDataDto<List<ArtistGroup>>> getAllArtistGroups(@PathVariable String entername) {
-        List<ArtistGroup> artistGroups = artistGroupService.getAllArtistGroups(entername);
+    public ResponseEntity<ResponseDataDto<List<ArtistGroupResponseDto>>> getAllArtistGroups(@PathVariable String entername) {
+        List<ArtistGroupResponseDto> artistGroups = artistGroupService.getAllArtistGroupResponseDtos(entername);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_GROUP_RETRIEVE_SUCCESS, artistGroups));
     }
 

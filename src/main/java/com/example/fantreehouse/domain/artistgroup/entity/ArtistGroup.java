@@ -45,10 +45,6 @@ public class ArtistGroup extends Timestamped {
     @OneToMany(mappedBy = "artistGroup")
     private List<CommunityFeed> communityFeeds;
 
-}
-    //    @OneToMany(mappedBy = "artistGroup")
-    //    private List<CommunityFeed> communityFeeds;
-
     public ArtistGroup(String groupName, String artistProfilePicture, Entertainment entertainment) {
         this.groupName = groupName;
         this.artistProfilePicture = artistProfilePicture;
