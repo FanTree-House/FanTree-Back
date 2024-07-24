@@ -15,8 +15,5 @@ spring:
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
-auth:
-  admin_token: ${MANAGER_TOKEN}
-
 server:
   port: ${SERVER_PORT}
