@@ -1,0 +1,10 @@
+### 엔터 계정 생성
+POST http://localhost:8080/enter
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "enterName": "소속사이름",
+  "enterNumber": 123345,
+  "enterLogo": "image"
+}

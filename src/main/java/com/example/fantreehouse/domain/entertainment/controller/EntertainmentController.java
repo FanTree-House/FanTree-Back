@@ -4,12 +4,14 @@ package com.example.fantreehouse.domain.entertainment.controller;
 import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
+import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentRequestDto;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentResponseDto;
 import com.example.fantreehouse.domain.entertainment.service.EntertainmentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,9 +28,9 @@ public class EntertainmentController {
      */
     @PostMapping
     public ResponseEntity<ResponseMessageDto> createEnter(
-            @Valid @RequestBody EntertainmentRequestDto enterRequestDto/*,
-            @AuthenticationPrincipal UserDetailsImpl userDetails*/) {
-        entertainmentService.createEnter(enterRequestDto /*, userDetails.getUser()*/);
+            @Valid @RequestBody EntertainmentRequestDto enterRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        entertainmentService.createEnter(enterRequestDto , userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ENTERTAINMENT_CREATE_SUCCESS));
     }
 

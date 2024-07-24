@@ -35,10 +35,10 @@ public class Entertainment extends Timestamped {
     @OneToOne(mappedBy = "entertainment")
     private User user;
 
-    public Entertainment(EntertainmentRequestDto enterRequestDto/*, User user*/) {
+    public Entertainment(EntertainmentRequestDto enterRequestDto, User user) {
         this.enterName = enterRequestDto.getEnterName();
         this.enterNumber = enterRequestDto.getEnterNumber();
         this.enterLogo = enterRequestDto.getEnterLogo();
-        //this.user = enterRequestDto.getUser();
+        this.user = user;
     }
 }
