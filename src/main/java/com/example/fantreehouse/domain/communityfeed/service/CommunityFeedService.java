@@ -2,6 +2,7 @@ package com.example.fantreehouse.domain.communityfeed.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
+import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
@@ -20,27 +21,28 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@NoArgsConstructor
 @RequiredArgsConstructor
 
 public class CommunityFeedService {
 
-    public CommunityFeedRepository feedRepository;
-    public UserRepository userRepository;
-    public ArtistGroupRepository artistGroupRepository;
+    private final CommunityFeedRepository feedRepository;
+    private final UserRepository userRepository;
+    private final ArtistGroupRepository artistGroupRepository;
 
     @Transactional //피드생성
-    public void createFeed(CommunityFeedRequestDto requestDto, User user, ArtistGroup artistGroup) {
+    public CommunityFeedResponseDto createFeed(CommunityFeedRequestDto requestDto, User user, ArtistGroup artistGroup) {
         //아티스트그룹을 구독했는지 검증
         fanCheck(user, artistGroup);
         CommunityFeed feed = new CommunityFeed(requestDto, user);
         feedRepository.save(feed);
+        return new CommunityFeedResponseDto(feed);
     }
 
 //    피드 전체 조회
     public List<CommunityFeedResponseDto> findAllFeed(User user, ArtistGroup artistGroup) {
         fanCheck(user, artistGroup);
         List<CommunityFeed> feedList = feedRepository.findAllUserId(user.getId());
+
         if (feedList.isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_FEED);
         }
@@ -57,9 +59,8 @@ public class CommunityFeedService {
         return feed;
         }
 
-
-
-    @Transactional //피드 업데이트
+    //피드 업데이트
+    @Transactional
     public void updateFeed(CommunityFeedUpdateRequestDto requestDto, Long community_feed_id, User user, ArtistGroup artistGroup) {
         fanCheck(user, artistGroup);
         CommunityFeed feed = feedRepository.findById(community_feed_id).orElseThrow(()
@@ -70,7 +71,8 @@ public class CommunityFeedService {
         feed.updateFeed(requestDto);
     }
 
-    @Transactional // 피드 삭제
+    // 피드 삭제
+    @Transactional
     public void deleteFeed(Long community_feed_id, User user, ArtistGroup artistGroup) {
         fanCheck(user, artistGroup);
         CommunityFeed feed = feedRepository.findById(community_feed_id).orElseThrow(()
