@@ -18,7 +18,7 @@ import java.util.List;
 public class Entertainment extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
-    private Long entertainment_id;
+    private Long id;
 
     @Column(length = 20, nullable = false, unique = true)
     private String enterName;
@@ -41,4 +41,16 @@ public class Entertainment extends Timestamped {
         this.enterLogo = enterRequestDto.getEnterLogo();
         this.user = user;
     }
+
+    public void updateEnterName(String enterName) {
+        this.enterName = enterName;
+    }
+
+    public void updateEnterNumber(Long enterNumber) {
+        this.enterNumber = enterNumber;
+    }
+    public void updateEnterLogo(String enterLogo) {
+        this.enterLogo = enterLogo;
+    }
+
 }

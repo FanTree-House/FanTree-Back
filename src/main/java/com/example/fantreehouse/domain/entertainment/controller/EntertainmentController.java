@@ -24,6 +24,7 @@ public class EntertainmentController {
     /**
      * 엔터테이먼트 계정 생성
      * @param enterRequestDto
+     * @param userDetails
      * @return
      */
     @PostMapping
@@ -36,19 +37,33 @@ public class EntertainmentController {
 
     /**
      * 엔터테이먼트 계정 조회
+     * @param enterName
+     * @param userDetails
+     * @return
      */
     @GetMapping("/{enterName}")
-    public ResponseEntity<ResponseDataDto<EntertainmentResponseDto>> getEnter(@PathVariable String enterName/*,
-    @AuthenticationPrincipal UserDetailsImpl userDetails*/) {
-        EntertainmentResponseDto responseDto = entertainmentService.getEnter(enterName/*, userDetails*/);
+    public ResponseEntity<ResponseDataDto<EntertainmentResponseDto>> getEnter(
+            @PathVariable String enterName,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        EntertainmentResponseDto responseDto = entertainmentService.getEnter(enterName, userDetails.getUser());
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ENTERTAINMENT_READ_SUCCESS, responseDto));
     }
 
     /**
      * 엔터테이먼트 계정 수정
+     * @param enterName
+     * @param enterRequestDto
+     * @param userDetails
+     * @return
      */
-//    @PatchMapping("/{enterName}")
-//   public ResponseEntity<ResponseMessageDto> updateEnter()
+    @PatchMapping("/{enterName}")
+    public ResponseEntity<ResponseMessageDto> updateEnter(
+            @PathVariable String enterName,
+            @RequestBody EntertainmentRequestDto enterRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        entertainmentService.updateEnter(enterName, enterRequestDto , userDetails.getUser());
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ENTERTAINMENT_UPDATAE_SUCCESS));
+    }
 
     /**
      * 엔터테이먼트 계정 삭제

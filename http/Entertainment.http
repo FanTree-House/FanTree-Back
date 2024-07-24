@@ -1,10 +1,44 @@
+### endterName 설정
+@enterName = easpa
+
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "enterName": "소속사이름",
-  "enterNumber": 123345,
+  "enterName": "easpa0123AA",
+  "enterNumber": 123345678,
   "enterLogo": "image"
+}
+
+### 엔터 계정 조회
+GET http://localhost:8080/enter/{{enterName}}
+Authorization: {{Authorization}}
+
+### 엔터 계정 수정 (엔터 네임)
+PATCH http://localhost:8080/enter/{{enterName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "enterName": "dentist"
+}
+
+### 엔터 계정 수정 (엔터 넘버)
+PATCH http://localhost:8080/enter/{{enterName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "enterNumber": 321234
+}
+
+### 엔터 계정 수정 (엔터 로고)
+PATCH http://localhost:8080/enter/{{enterName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "enterLogo": "image123"
 }

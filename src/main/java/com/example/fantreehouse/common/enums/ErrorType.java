@@ -23,6 +23,7 @@ public enum ErrorType implements ErrorCode {
     DUPLICATE_LIKE(HttpStatus.NOT_ACCEPTABLE, "좋아요는 한번만 가능합니다."),
     USER_MISMATCH(HttpStatus.NOT_ACCEPTABLE, "유저와 좋아요가 일치하지 않습니다."),
     CONTENT_TYPE_MISMATCH(HttpStatus.NOT_ACCEPTABLE, "컨텐츠 타입이 일치하지 않습니다."),
+    NOT_AVAILABLE_PERMISSION(HttpStatus.LOCKED, "권한이 없습니다."),
 
     //user
     USER_NOT_FOUND(HttpStatus.OK, "유저를 찾을 수 없습니다."),
@@ -40,6 +41,8 @@ public enum ErrorType implements ErrorCode {
 
     // Entertainment
     NOT_FOUND_ENTER(HttpStatus.NOT_FOUND, "존재하지 않는 엔터테인먼트입니다."),
+    ALREADY_EXIST_ENTER_NAME(HttpStatus.NOT_FOUND, "이미 존재하는 엔터테인먼트 이름입니다."),
+    ALREADY_EXIST_ENTER_NUMBER(HttpStatus.NOT_FOUND, "이미 존재하는 사업자번호입니다."),
 
 
     //유저 커뮤니티
