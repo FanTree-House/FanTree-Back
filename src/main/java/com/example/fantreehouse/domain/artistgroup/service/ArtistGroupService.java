@@ -29,6 +29,13 @@ public class ArtistGroupService {
         this.artistRepository = artistRepository;
     }
 
+    /**
+     * [createArtistGroup] 아티스트 그룹 생성
+     * @param entername 엔터테인먼트 이름
+     * @param request 요청 객체 (ArtistGroupRequestDto)
+     * @return 생성된 ArtistGroup 객체
+     * @throws CustomException 엔터테인먼트 또는 아티스트를 찾을 수 없는 경우 예외 발생
+     **/
     @Transactional
     public ArtistGroup createArtistGroup(String entername, ArtistGroupRequestDto request) {
         Entertainment entertainment = entertainmentRepository.findByEntername(entername)
@@ -45,15 +52,35 @@ public class ArtistGroupService {
         return artistGroupRepository.save(artistGroup);
     }
 
+    /**
+     * [getArtistGroup] 특정 아티스트 그룹 조회
+     * @param entername 엔터테인먼트 이름
+     * @param groupName 아티스트 그룹 이름
+     * @return 조회된 ArtistGroup 객체
+     * @throws CustomException 아티스트 그룹을 찾을 수 없는 경우 예외 발생
+     **/
     public ArtistGroup getArtistGroup(String entername, String groupName) {
         return artistGroupRepository.findByEntertainmentEnternameAndGroupName(entername, groupName)
                 .orElseThrow(() -> new CustomException(ErrorType.ARTIST_GROUP_NOT_FOUND));
     }
 
+    /**
+     * [getAllArtistGroups] 특정 엔터테인먼트의 모든 아티스트 그룹 조회
+     * @param entername 엔터테인먼트 이름
+     * @return 조회된 모든 ArtistGroup 객체의 리스트
+     **/
     public List<ArtistGroup> getAllArtistGroups(String entername) {
         return artistGroupRepository.findAllByEntertainmentEntername(entername);
     }
 
+    /**
+     * [updateArtistGroup] 특정 아티스트 그룹 정보 업데이트
+     * @param entername 엔터테인먼트 이름
+     * @param groupName 아티스트 그룹 이름
+     * @param request 업데이트 요청 객체 (ArtistGroupRequestDto)
+     * @return 업데이트된 ArtistGroup 객체
+     * @throws CustomException 아티스트 그룹 또는 아티스트를 찾을 수 없는 경우 예외 발생
+     **/
     @Transactional
     public ArtistGroup updateArtistGroup(String entername, String groupName, ArtistGroupRequestDto request) {
         ArtistGroup artistGroup = getArtistGroup(entername, groupName);
@@ -70,6 +97,12 @@ public class ArtistGroupService {
         return artistGroupRepository.save(artistGroup);
     }
 
+    /**
+     * [deleteArtistGroup] 특정 아티스트 그룹 삭제
+     * @param entername 엔터테인먼트 이름
+     * @param groupName 아티스트 그룹 이름
+     * @throws CustomException 아티스트 그룹을 찾을 수 없는 경우 예외 발생
+     **/
     @Transactional
     public void deleteArtistGroup(String entername, String groupName) {
         ArtistGroup artistGroup = getArtistGroup(entername, groupName);
