@@ -27,7 +27,7 @@ public class Artist extends Timestamped {
     @Column(nullable = false, unique = true)
     private String groupName;
 
-    private int rank;
+    private Long artistRank;
 
     private Long subscriberCount;
 

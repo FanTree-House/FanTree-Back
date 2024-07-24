@@ -36,6 +36,7 @@ public class ArtistGroup extends Timestamped {
     @OneToMany(mappedBy = "artistGroup")
     private List<Subscription> subscriptions;
     //구독자 커뮤니티 피드와 일대다관계
-//    @OneToMany(mappedBy = "artistGroup")
-//    private List<CommunityFeed> communityFeeds;
+    @OneToMany(mappedBy = "artistGroup")
+    private List<CommunityFeed> communityFeeds;
+
 }
