@@ -31,8 +31,7 @@ public enum ResponseStatus {
     WITHDRAW_SUCCESS(HttpStatus.OK, "회원탈퇴에 성공하였습니다."),
     SIGNUP_SUCCESS(HttpStatus.OK, "회원가입에 성공하였습니다."),
     //RefreshToken
-    UPDATE_TOKEN_SUCCESS_MESSAGE(HttpStatus.OK, "토큰이 재발급되었습니다.")
-    GET_USER_SUCCESS(HttpStatus.OK, "유저정보 조회에 성공하였습니다."),
+    UPDATE_TOKEN_SUCCESS_MESSAGE(HttpStatus.OK, "토큰이 재발급되었습니다."),
 
     // 아티스트 그룹
     ARTIST_GROUP_CREATE_SUCCESS(HttpStatus.OK, "아티스트 그룹 생성에 성공하였습니다."),
