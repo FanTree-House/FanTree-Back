@@ -1,0 +1,29 @@
+### 회원가입 (Enter)
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "id": "winter12",
+  "name": "윈터",
+  "nickname": "윈터",
+  "email": "rladnwlsok@naver.com",
+  "password": "winter12",
+  "entertainment": true,
+  "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
+}
+
+### 로그인 (Enter)
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "winter12",
+  "password": "winter12"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}

@@ -5,6 +5,7 @@ import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
+import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,9 +25,9 @@ public class Artist extends Timestamped {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String groupName;
+    private String artistName;
 
-    private int rank;
+    private Long artistRank;
 
     private Long subscriberCount;
 
@@ -34,20 +35,20 @@ public class Artist extends Timestamped {
     private String artistProfilePicture;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "entertainment_id", nullable = false)
-    private Entertainment entertainment;
-
-    @ManyToOne
     @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "artist")
-    private List<Subscription> subscriptioinList = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-
-    // Feed 와 일대다 연관관계
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Feed> feedList = new ArrayList<>();
-
+    public void setArtistGroup(ArtistGroup artistGroup) {
+        if (this.artistGroup != null) {
+            this.artistGroup.getArtists().remove(this);
+        }
+        this.artistGroup = artistGroup;
+        if (artistGroup != null) {
+            artistGroup.getArtists().add(this);
+        }
+    }
 }

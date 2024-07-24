@@ -2,8 +2,11 @@ package com.example.fantreehouse.domain.user.entity;
 
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
+import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
-import com.example.fantreehouse.domain.merch.pickup.entity.PickUp;
+import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
+import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Builder;
@@ -12,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Entity
@@ -21,7 +25,7 @@ public class User extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, unique = true)
+    @Column(name = "user_id", nullable = false, unique = true)
     private Long id;
 
     private String loginId; // 로그인할때 쓰는 username
@@ -35,6 +39,8 @@ public class User extends Timestamped {
 
     private String password;
 
+    private String profilePicture;
+
     @Enumerated(EnumType.STRING)
     private UserStatusEnum status;
 
@@ -43,21 +49,58 @@ public class User extends Timestamped {
 
     private String statusUpdate;
 
+    private String refreshToken;
+
     @OneToMany(mappedBy = "user")
     private List<Feed> feedList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<PickUp> pickUpList = new ArrayList<>();
 
+    @Column
+    private Long enter_id;
+
+    @OneToOne         // 주인
+    @JoinColumn(name = "entertainment_id")
+    private Entertainment entertainment;
+
+    @OneToOne
+    @JoinColumn(name = "artist_id")
+    private Artist artist;
+
+    @OneToMany(mappedBy = "user")
+    private List<Subscription> subscriptions;
 
     @Builder
-    public User(String loginId, String name, String nickname, String email, String password, UserRoleEnum userRole) {
+    public User(String loginId, String name, String nickname,
+        String email, String password, String profilePicture, UserRoleEnum userRole) {
         this.loginId = loginId;
         this.name = name;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
+        this.profilePicture = profilePicture;
         this.status = UserStatusEnum.ACTIVE_USER;
         this.userRole = userRole;
+    }
+
+    public void withDraw() {
+        this.status = UserStatusEnum.WITHDRAW_USER;
+        this.statusUpdate = this.getModifiedAt();
+        this.refreshToken = null;
+    }
+
+    public boolean logout() {
+        refreshToken = null;
+        return refreshToken == null ? true : false;
+    }
+
+    public void saveRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void update(Optional<String> email, Optional<String> newEncodePw) {
+        this.email = email.orElse(this.email);
+        this.password = newEncodePw.orElse(this.password);
     }
 }

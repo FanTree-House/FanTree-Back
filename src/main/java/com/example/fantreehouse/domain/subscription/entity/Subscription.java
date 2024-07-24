@@ -7,9 +7,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Entity
 @NoArgsConstructor
@@ -22,9 +19,11 @@ public class Subscription extends Timestamped {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nickname", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "subscription", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ArtistGroup> artistGroupList = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "artist_group")
+    private ArtistGroup artistGroup;
+
 }
