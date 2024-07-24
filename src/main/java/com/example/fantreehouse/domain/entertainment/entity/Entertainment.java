@@ -15,12 +15,13 @@ import java.util.List;
 @Entity
 @Table (name = "entertainment")
 public class Entertainment extends Timestamped {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String entername;
     private Long enterNumber;
-    private  String enterLogo;
+    private String enterLogo;
 
     @OneToMany(mappedBy = "entertainment")
     private List<ArtistGroup> artistGroupsList = new ArrayList<>();

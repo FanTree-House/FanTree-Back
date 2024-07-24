@@ -14,6 +14,4 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
     private Long id;
-
-
 }

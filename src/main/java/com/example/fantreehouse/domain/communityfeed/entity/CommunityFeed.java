@@ -33,9 +33,9 @@ public class CommunityFeed extends Timestamped {
     @OneToMany(mappedBy = "communityFeed")
     private List<CommunityComment> communityComments;
 
-//    @ManyToOne
-//    @JoinColumn(name = "artist_group_id")
-//    private ArtistGroup artistGroup;
+    @ManyToOne
+    @JoinColumn(name = "artist_group_id")
+    private ArtistGroup artistGroup;
 
     public CommunityFeed(CommunityFeedRequestDto requestDto, User user) {
         this.nickname = user.getNickname();
