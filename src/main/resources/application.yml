@@ -20,3 +20,7 @@ auth:
 
 server:
   port: ${SERVER_PORT}
+auth:
+  admin_token: ${ADMIN_TOKEN}
+  artist_token: ${ARTIST_TOKEN}
+  entertainment_token: ${ENTERTAINMENT_TOKEN}
