@@ -2,7 +2,6 @@ package com.example.fantreehouse.domain.communityfeed.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
-import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
@@ -10,10 +9,8 @@ import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDt
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
-import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
