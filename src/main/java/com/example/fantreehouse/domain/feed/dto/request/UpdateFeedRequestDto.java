@@ -2,7 +2,9 @@ package com.example.fantreehouse.domain.feed.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
 
+@Getter
 public class UpdateFeedRequestDto {
 
     @NotBlank(message = "내용을 입력해 주세요.")
