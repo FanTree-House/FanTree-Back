@@ -33,7 +33,7 @@ public class UserService {
 
     private String ARTIST_TOKEN;
 
-    private String ENTERTAINMENT_TOKEN;
+    private String ENTERTAINMENT_TOKEN = "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc";
 
     //회원가입
     public SignUpResponseDto signUp(SignUpRequestDto requestDto) {
@@ -73,6 +73,7 @@ public class UserService {
             if(!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())){
               throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
             }
+            role = UserRoleEnum.ENTERTAINMENT;
         }
 
         User user = new User(
