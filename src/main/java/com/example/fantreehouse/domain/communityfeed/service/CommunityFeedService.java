@@ -41,7 +41,7 @@ public class CommunityFeedService {
 //    피드 전체 조회
     public List<CommunityFeedResponseDto> findAllFeed(User user, ArtistGroup artistGroup) {
         fanCheck(user, artistGroup);
-        List<CommunityFeed> feedList = feedRepository.findAllUserId(user.getId());
+        List<CommunityFeed> feedList = feedRepository.findAllByUserId(user.getId());
 
         if (feedList.isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_FEED);

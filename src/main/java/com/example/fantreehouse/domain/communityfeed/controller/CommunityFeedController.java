@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/fantree/artist/feeds")
 @RequiredArgsConstructor
+
 public class CommunityFeedController {
 
     private final CommunityFeedService feedService;
