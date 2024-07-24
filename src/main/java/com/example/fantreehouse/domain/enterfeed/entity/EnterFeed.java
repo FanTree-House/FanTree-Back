@@ -7,8 +7,7 @@ import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -35,17 +34,21 @@ public class EnterFeed extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Setter
     @Column(nullable = false)
     private String contents;
 
+    @Setter
     private String postPicture;
 
+    @Setter
     @Column(nullable = false)
     private String category;
 
-    private Instant date;
+    @Setter
+    private String date;
 
-    public EnterFeed(String feedId, Entertainment entertainment, ArtistGroup artistGroup, User user, String contents, String postPicture, String category, Instant date) {
+    public EnterFeed(String feedId, Entertainment entertainment, ArtistGroup artistGroup, User user, String contents, String postPicture, String category, String date) {
         this.feedId = feedId;
         this.entertainment = entertainment;
         this.artistGroup = artistGroup;
