@@ -20,11 +20,12 @@ public class Entertainment extends Timestamped {
     private Long id;
     private String entername;
     private Long enterNumber;
-    private  String enterLogo;
+    private String enterLogo;
 
     @OneToMany(mappedBy = "entertainment")
     private List<ArtistGroup> artistGroupsList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "entertainment")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 }
