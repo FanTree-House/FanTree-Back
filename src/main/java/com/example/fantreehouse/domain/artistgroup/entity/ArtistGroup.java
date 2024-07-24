@@ -21,7 +21,7 @@ public class ArtistGroup extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String group_name;
+    private String groupName;
     private String artistProfilePicture;
 
     //group과 enter의 다대일관계
@@ -31,7 +31,7 @@ public class ArtistGroup extends Timestamped {
 
     //group과 Artist와의 일대다관계
     @OneToMany(mappedBy = "artistGroup", orphanRemoval = true)
-    private List<Artist> artistAccountList;
+    private List<Artist> artistList;
 
     //구독자와 일대다 관계
     @OneToMany(mappedBy = "artistGroup")
