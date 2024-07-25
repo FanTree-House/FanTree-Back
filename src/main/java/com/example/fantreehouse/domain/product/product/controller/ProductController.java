@@ -10,6 +10,7 @@ import com.example.fantreehouse.domain.product.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -35,20 +36,26 @@ public class ProductController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.PRODUCT_CREATE_SUCCESS));
     }
 
-    // 상품 조회
+    /**
+     * 상품 조회
+     * @param productId
+     * @return
+     */
     @GetMapping("/{productId}")
     private ResponseEntity<ResponseDataDto<ProductResponseDto>> getProduct(@PathVariable Long productId) {
         ProductResponseDto responseDto = productService.getProduct(productId);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.PRODUCT_READ_SUCCESS, responseDto));
     }
-/*
+
     // 상품 전체 조회(Page로 3개씩)
     @GetMapping
-    public ResponseEntity<ResponseDataDto<Page<ProductResponseDto>>> getDeckList() {
-
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.PRODUCT_READ_SUCCESS, responseDto)
+    public ResponseEntity<ResponseDataDto<Page<ProductResponseDto>>> getProductList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size) {
+        Page<ProductResponseDto> responseDto = productService.getProductList(page, size);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.PRODUCT_READ_SUCCESS, responseDto));
     }
-
+/*
     // 상품 수정
     @PatchMapping("/{productId}")
     private ResponseEntity<ResponseMessageDto> updateProduct() {
