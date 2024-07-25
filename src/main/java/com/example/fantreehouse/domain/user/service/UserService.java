@@ -31,11 +31,11 @@ public class UserService {
 
 
     @Value("${auth.admin_token}")
-    private String ADMIN_TOKEN = "1np0t2ncesuuuud3rTaMeng5" ;
+    private String ADMIN_TOKEN;
     @Value("${auth.artist_token}")
-    private String ARTIST_TOKEN = "acRos3knitterUp2eTt1ng5";
+    private String ARTIST_TOKEN;
     @Value("${auth.entertainment_token}")
-    private String ENTERTAINMENT_TOKEN = "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc";
+    private String ENTERTAINMENT_TOKEN;
 
     //회원가입
     public SignUpResponseDto signUp(SignUpRequestDto requestDto) {
