@@ -4,10 +4,17 @@ package com.example.fantreehouse.domain.user.service;
 
 import com.example.fantreehouse.auth.JwtTokenHelper;
 import com.example.fantreehouse.domain.user.dto.KakaoUserInfoDto;
+import com.example.fantreehouse.domain.user.entity.User;
+import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
+import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -34,12 +41,20 @@ public class KakaoService {
 
   public String kakaoLogin(String code) throws JsonProcessingException {
     // 1. "인가 코드"로 "액세스 토큰" 요청
-    String accessToken = getToken(code);
+    String kakaoAccessToken = getToken(code);
 
     // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
-    KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
+    KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(kakaoAccessToken);
+    log.info("User API 요청 성공 : " + kakaoUserInfo.getEmail());
 
-    return null;
+    // 3. 필요시에 회원가입
+    User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
+
+    // 4. JWT 토큰 반환
+    String createKakaoToken = jwtUtil.createToken(kakaoUser.getName(),
+       kakaoUser.getStatus(), kakaoUser.getUserRole());
+
+    return createKakaoToken;
   }
 
   private String getToken(String code) throws JsonProcessingException {
@@ -111,8 +126,52 @@ public class KakaoService {
     String email = jsonNode.get("kakao_account")
         .get("email").asText();
 
-    log.info("카카오 사용자 정보: " + id + ", " + nickname + ", " + email);
+    log.debug("카카오 사용자 정보: " + id + ", " + nickname + ", " + email);
     return new KakaoUserInfoDto(id, nickname, email);
+  }
+
+  private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
+
+    // DB 에 중복된 Kakao Id 가 있는지 확인
+    Long kakaoId = kakaoUserInfo.getId();   // 카카오 DB 에서 가져온 User 'id'
+    User kakaoUser = userRepository.findByKakaoId(kakaoId).orElse(null);
+
+    // 카카오로 로그인, 우리 사이트는 처음인 상태
+    log.debug("kakaoUser 상태 : " + kakaoUser);
+    if (kakaoUser == null) {
+      // 카카오 사용자 email 동일한 email 가진 회원이 있는지 확인
+      String kakaoEmail = kakaoUserInfo.getEmail();
+      log.debug("사용자 Email 확인");
+      User sameEmailUser = userRepository.findByEmail(kakaoEmail).orElse(null);
+      if (sameEmailUser != null) {
+        log.debug("기존 사용자");
+        // 이미 회원임, 근데 카카오 로그인만 처음
+        kakaoUser = sameEmailUser;
+        // 기존 회원정보에 카카오 Id 추가
+        kakaoUser.kakaoIdUpdate(kakaoId);
+      } else {
+        log.debug("신규 사용자");
+        // 우리 사이트 회원가입을 하려는 상태
+        // 신규 회원가입
+        // password: random UUID
+        String password = UUID.randomUUID().toString();
+        String encodedPassword = passwordEncoder.encode(password);
+
+        kakaoUser = new User(
+            kakaoUserInfo.getEmail(),// 계정 아이디
+            kakaoUserInfo.getNickname(),
+            kakaoUserInfo.getNickname(),    // 계정 성명
+            kakaoUserInfo.getEmail(),              // 계정 이메일
+            encodedPassword,    // 계정 비밀번호
+            UserRoleEnum.USER,
+            UserStatusEnum.ACTIVE_USER,
+            kakaoUserInfo.getId()
+        );
+      }
+      userRepository.save(kakaoUser);
+    }
+    log.debug("완료");
+    return kakaoUser;
   }
 
 }
