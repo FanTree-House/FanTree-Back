@@ -2,8 +2,11 @@ package com.example.fantreehouse.domain.artist.service;
 
 import com.example.fantreehouse.common.exception.errorcode.AuthorizedException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
+import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
+import com.example.fantreehouse.domain.artist.dto.ArtistResponseDto;
 import com.example.fantreehouse.domain.artist.dto.request.CreateArtistRequestDto;
+import com.example.fantreehouse.domain.artist.dto.response.ArtistProfileResponseDto;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artist.repository.ArtistRepository;
 import com.example.fantreehouse.domain.user.entity.User;
@@ -47,7 +50,19 @@ public class ArtistService {
         // artist 등록
         Artist newArtist = Artist.of(requestDto, loginUser);
         artistRepository.save(newArtist);
-//        loginUser.setArtist(newArtist);
+    }
+
+    // 아티스트 프로필 조회 - 가입한 유저
+    public ArtistProfileResponseDto getArtist(Long artistId, UserDetailsImpl userDetails) {
+
+        User loginUser = userDetails.getUser();
+        checkUserStatus(loginUser.getStatus());
+
+        // 찾는 아티스트가 DB에 있는지 확인
+        Artist foundArtist = artistRepository.findById(artistId)
+                .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
+
+        return ArtistProfileResponseDto.of(foundArtist);
     }
 
     // 활성화 유저인지 확인
@@ -56,7 +71,6 @@ public class ArtistService {
             throw new AuthorizedException(UNAUTHORIZED);
         }
     }
-
     // 아티스트인지 확인
     private void checkUserRole(UserRoleEnum userRoleEnum) {
         if (!userRoleEnum.equals(UserRoleEnum.ARTIST)) {

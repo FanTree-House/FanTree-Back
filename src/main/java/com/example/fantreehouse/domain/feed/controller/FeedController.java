@@ -83,7 +83,7 @@ public class FeedController {
     }
 
     /**
-     * Feed 조회
+     * Feed 단건 조회
      * @param groupName
      * @param artistFeedId
      * @return

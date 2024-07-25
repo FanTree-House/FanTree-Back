@@ -32,7 +32,7 @@ public class Artist extends Timestamped {
     @Column(nullable = false)
     private String artistProfilePicture;
 
-//    private Long subscriberCount;
+    private Long subscriberCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_group_id")
