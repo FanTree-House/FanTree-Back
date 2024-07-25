@@ -1,6 +1,7 @@
 ### 변수 정의
 @enterName = hybe
 @groupName = seventeen
+@feedId = 1
 
 ### 공지사항 생성
 POST http://localhost:8080/feed/{{groupName}}/notice
@@ -8,8 +9,8 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "title": "seventeen 공지사항",
-  "contents": "공지사항2",
+  "title": "seventeen 공지사항111",
+  "contents": "공지사항223232",
   "postPicture": "http://example.com/pic.jpg",
   "category": "NOTICE"
 }
@@ -20,16 +21,25 @@ GET http://localhost:8080/feed/{{groupName}}/notice/{{feedId}}
 ### 전체 공지사항 조회
 GET http://localhost:8080/feed/{{groupName}}/notice
 
-### 공지사항 수정
+### 공지사항 제목 또는 내용 수정
 PATCH http://localhost:8080/feed/{{groupName}}/notice/{{feedId}}
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
   "title": "seventeen 공지사항 수정",
-  "contents": "공지사항1 수정 됨",
-  "postPicture": "http://example.com/pic.jpg",
-  "category": "NOTICE"
+  "contents": "공지사항1 수정 됨"
+}
+
+### 공지사항  이미지 수정
+PATCH http://localhost:8080/feed/{{groupName}}/notice/{{feedId}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "title": "seventeen 공지사항 수정",
+  "contents": "공지사항2 수정 됨",
+  "postPicture": "example.com/pic.jpg"
 }
 
 ### 공지사항삭제
@@ -50,12 +60,22 @@ Content-Type: application/json
 }
 
 ### 특정 스케줄 조회
-GET http://localhost:8080/feed/{{groupName}}/schedule/6
+GET http://localhost:8080/feed/{{groupName}}/schedule/{{feedId}}
 
 ### 전체 스케줄 조회
 GET http://localhost:8080/feed/{{groupName}}/schedule
 
-### 스케줄 수정
+### 스케줄 제목 또는 내용 수정
+PATCH http://localhost:8080/feed/{{groupName}}/schedule/{{feedId}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "title": "우지 스케줄",
+  "contents": "불참"
+}
+
+### 스케줄 이미지 파일 수정
 PATCH http://localhost:8080/feed/{{groupName}}/schedule/{{feedId}}
 Authorization: {{Authorization}}
 Content-Type: application/json
@@ -63,8 +83,17 @@ Content-Type: application/json
 {
   "title": "우지 스케줄",
   "contents": "불참",
-  "postPicture": "https://www.youtube.com/watch?v=DssBP24ig2Y",
-  "category": "SCHEDULE",
+  "postPicture": "https://w.com/watch?v=DssBP24ig2Y"
+}
+
+### 스케줄 날짜 수정
+PATCH http://localhost:8080/feed/{{groupName}}/schedule/{{feedId}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "title": "우지 스케줄",
+  "contents": "불참",
   "date": "2024-08-03"
 }
 
