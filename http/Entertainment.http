@@ -1,11 +1,15 @@
+### 변수 정의
+@enterName = hybe
+@groupName = seventeen
+
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "enterName": "easpa0123AA",
-  "enterNumber": 123345678,
+  "enterName": "hybe",
+  "enterNumber": 12334678,
   "enterLogo": "image"
 }
 
@@ -46,24 +50,24 @@ Authorization: {{Authorization}}
 
 
 ### 아티스트 그룹 생성
-POST http://localhost:8080/entertainments/SM
+POST http://localhost:8080/entertainments/{{enterName}}
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
   "groupName": "seventeen",
   "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "artistIds": [1]
+  "artistIds": [2]
 }
 
 ### 특정 아티스트 그룹 조회
-GET http://localhost:8080/entertainments/SM/seventeen
+GET http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
 
 ###아티스트 그룹 전체 조회
-GET http://localhost:8080/entertainments/SM/groupName
+GET http://localhost:8080/entertainments/{{enterName}}/groupName
 
 ### 아티스트 그룹 수정
-PATCH http://localhost:8080/entertainments/SM/seventeen
+PATCH http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -74,5 +78,5 @@ Content-Type: application/json
 }
 
 ### 아티스트 그룹 삭제
-DELETE http://localhost:8080/entertainments/SM/aespa
+DELETE http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
 Authorization: {{Authorization}}

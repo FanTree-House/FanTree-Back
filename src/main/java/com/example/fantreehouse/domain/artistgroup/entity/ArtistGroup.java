@@ -22,6 +22,7 @@ public class ArtistGroup extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String groupName;
 
     private String artistProfilePicture;

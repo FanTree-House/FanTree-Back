@@ -50,7 +50,6 @@ public enum ErrorType implements ErrorCode {
     ARTIST_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "아티스트 그룹을 찾을 수 없습니다."),
 
     //유저 커뮤니티 피드
-
     NOT_FOUND_FEED(HttpStatus.NOT_FOUND, "피드를 찾을수 없습니다"),
     NOT_USER_FEED(HttpStatus.NOT_ACCEPTABLE, "유저가 작성한 피드가 아닙니다."),
     NOT_MATCH_USER(HttpStatus.NOT_ACCEPTABLE, "해당 유저는 아티스트그룹을 구독하지 않았습니다."),
@@ -62,6 +61,8 @@ public enum ErrorType implements ErrorCode {
     //아티스트그룹
     NOT_FOUND_ARTISTGROUP(HttpStatus.NOT_FOUND, "아티스트그룹을 찾지 못했습니다."),
 
+    //엔터피드
+    ENTER_FEED_NOT_FOUND(HttpStatus.NOT_FOUND, "피드를 찾을 수 없습니다.")
 
     ;
 
