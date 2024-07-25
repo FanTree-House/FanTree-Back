@@ -4,12 +4,15 @@ import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
+import com.example.fantreehouse.domain.subscription.dto.SubscriptionResponseDto;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import com.example.fantreehouse.domain.subscription.repository.SubcriptionRepository;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -49,5 +52,18 @@ public class SubscriptionService {
             throw new CustomException(ErrorType.DUPLICATE_USER);
         }
         subcriptionRepository.delete(subscription);
+    }
+
+    public List<SubscriptionResponseDto> findAllSubscript(User user) {
+        user = userRepository.findById(user.getId()).orElseThrow(()
+                -> new CustomException(ErrorType.USER_NOT_FOUND));
+        List<Subscription> subscriptionList = subcriptionRepository.findAllByUserId(user.getId());
+
+        if (subscriptionList.isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUNT_SUBSCRIPTION);
+        }
+        return subscriptionList.stream()
+                .map(SubscriptionResponseDto::new)
+                .toList();
     }
 }

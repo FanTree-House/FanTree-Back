@@ -44,14 +44,11 @@ public class EnterFeedService {
     public void createFeed(String groupName, EnterFeedRequestDto request, User user) {
         verifyEntertainmentAuthority(user);
 
-        // 아티스트 그룹 이름으로 해당 그룹을 찾습니다.
         ArtistGroup artistGroup = artistGroupRepository.findByGroupName(groupName)
                 .orElseThrow(() -> new CustomException(ErrorType.ARTIST_GROUP_NOT_FOUND));
 
-        // 아티스트 그룹과 연관된 엔터테인먼트를 찾습니다.
         Entertainment entertainment = artistGroup.getEntertainment();
 
-        // 새로운 EnterFeed 객체를 생성합니다.
         EnterFeed enterFeed = new EnterFeed(
                 entertainment,
                 artistGroup,
@@ -63,7 +60,6 @@ public class EnterFeedService {
                 request.getDate()
         );
 
-        // 엔터피드를 저장합니다.
         enterFeedRepository.save(enterFeed);
     }
 
@@ -101,11 +97,10 @@ public class EnterFeedService {
      */
     @Transactional
     public void updateFeed(String groupName, Long feedId, EnterFeedRequestDto request, User user) {
-        verifyEntertainmentAuthority(user);
+        verifyEntertainmentOrAdminAuthority(user);
 
         EnterFeed enterFeed = getEnterFeed(groupName, feedId, request.getCategory());
 
-        // 피드의 내용을 업데이트합니다.
         enterFeed.updateContents(
                 request.getTitle(),
                 request.getContents(),
@@ -114,7 +109,6 @@ public class EnterFeedService {
                 request.getDate()
         );
 
-        // 수정된 피드를 저장합니다.
         enterFeedRepository.save(enterFeed);
     }
 
@@ -127,21 +121,32 @@ public class EnterFeedService {
      */
     @Transactional
     public void deleteFeed(String groupName, Long feedId, User user, FeedCategory category) {
-        verifyEntertainmentAuthority(user);
+        verifyEntertainmentOrAdminAuthority(user);
 
         EnterFeed enterFeed = getEnterFeed(groupName, feedId, category);
         enterFeedRepository.delete(enterFeed);
     }
 
     /**
-     * [verifyEntertainmentAuthority] 사용자가 엔터테인먼트 권한을 가지고 있는지 확인합니다.
+     * [verifyEntertainmentAuthority] 사용자가 엔터테인먼트 권한 가지고 있는지 확인합니다.
      * @param user 사용자 객체
      */
     private void verifyEntertainmentAuthority(User user) {
         if (!UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole())) {
-            throw new CustomException(ErrorType.NOT_FOUND_ENTER);
+            throw new CustomException(ErrorType.UNAUTHORIZED_ACCESS);
         }
     }
+
+    /**
+     * [verifyEntertainmentOrAdminAuthority] 사용자가 엔터테인먼트 권한 또는 관리자 가지고 있는지 확인합니다.
+     * @param user 사용자 객체
+     */
+    private void verifyEntertainmentOrAdminAuthority(User user) {
+        if (!UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole()) && !UserRoleEnum.ADMIN.equals(user.getUserRole())) {
+            throw new CustomException(ErrorType.UNAUTHORIZED_ACCESS);
+        }
+    }
+
 
     /**
      * [getEnterFeed] 특정 피드를 조회합니다.

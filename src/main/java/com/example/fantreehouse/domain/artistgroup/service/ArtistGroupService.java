@@ -93,8 +93,7 @@ public class ArtistGroupService {
      */
     @Transactional
     public ArtistGroup updateArtistGroup(String entername, String groupName, ArtistGroupRequestDto request, User user) {
-        verifyEntertainmentAuthority(user);
-
+        verifyEntertainmentOrAdminAuthority(user);
         ArtistGroup artistGroup = getArtistGroup(entername, groupName);
         artistGroup.setGroupName(request.getGroupName());
         artistGroup.setArtistProfilePicture(request.getArtistProfilePicture());
@@ -117,7 +116,7 @@ public class ArtistGroupService {
      */
     @Transactional
     public void deleteArtistGroup(String entername, String groupName, User user) {
-        verifyEntertainmentAuthority(user);
+        verifyEntertainmentOrAdminAuthority(user);
 
         ArtistGroup artistGroup = getArtistGroup(entername, groupName);
         artistGroupRepository.delete(artistGroup);
@@ -129,7 +128,17 @@ public class ArtistGroupService {
      */
     private void verifyEntertainmentAuthority(User user) {
         if (!UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole())) {
-            throw new CustomException(ErrorType.NOT_FOUND_ENTER);
+            throw new CustomException(ErrorType.UNAUTHORIZED_ACCESS);
+        }
+    }
+
+    /**
+     * [verifyEntertainmentAuthority] 엔터테인먼트 권한 확인
+     * @param user 로그인한 사용자 정보
+     */
+    private void verifyEntertainmentOrAdminAuthority(User user) {
+        if (!UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole()) && !UserRoleEnum.ADMIN.equals(user.getUserRole())) {
+            throw new CustomException(ErrorType.UNAUTHORIZED_ACCESS);
         }
     }
 
