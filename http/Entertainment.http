@@ -1,5 +1,6 @@
-### enterName 정의
-@enterName = easpaqwe
+### 변수 정의
+@enterName = hybe
+@groupName = seventeen
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
@@ -7,8 +8,8 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "enterName": "easpaqwe",
-  "enterNumber": 12334567118,
+  "enterName": "hybe",
+  "enterNumber": 12334678,
   "enterLogo": "image"
 }
 

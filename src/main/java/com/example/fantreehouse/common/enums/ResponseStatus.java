@@ -49,6 +49,16 @@ public enum ResponseStatus {
     ARTIST_GROUP_UPDATE_SUCCESS(HttpStatus.OK, "아티스트 그룹 수정에 성공하였습니다."),
     ARTIST_GROUP_DELETE_SUCCESS(HttpStatus.OK, "아티스트 그룹 삭제에 성공하였습니다."),
 
+    // 엔터 피드
+    NOTICE_CREATE_SUCCESS(HttpStatus.OK, "공지사항 생성에 성공하였습니다."),
+    NOTICE_RETRIEVE_SUCCESS(HttpStatus.OK, "공지사항 조회에 성공하였습니다."),
+    NOTICE_UPDATE_SUCCESS(HttpStatus.OK, "공지사항 수정에 성공하였습니다."),
+    NOTICE_DELETE_SUCCESS(HttpStatus.OK, "공지사항 삭제에 성공하였습니다."),
+    SCHEDULE_CREATE_SUCCESS(HttpStatus.OK, "스케줄 생성에 성공하였습니다."),
+    SCHEDULE_RETRIEVE_SUCCESS(HttpStatus.OK, "스케줄 조회에 성공하였습니다."),
+    SCHEDULE_UPDATE_SUCCESS(HttpStatus.OK, "스케줄 수정에 성공하였습니다."),
+    SCHEDULE_DELETE_SUCCESS(HttpStatus.OK, "스케줄 삭제에 성공하였습니다."),
+
     // 상품
     PRODUCT_CREATE_SUCCESS(HttpStatus.OK, "상품 등록에 성공하였습니다."),
     PRODUCT_READ_SUCCESS(HttpStatus.OK, "상품 조회에 성공하였습니다."),
