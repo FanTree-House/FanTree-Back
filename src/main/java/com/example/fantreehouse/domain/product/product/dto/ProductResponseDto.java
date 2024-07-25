@@ -1,4 +1,4 @@
 package com.example.fantreehouse.domain.product.product.dto;
 
-public class MerchDto {
+public class ProductResponseDto {
 }

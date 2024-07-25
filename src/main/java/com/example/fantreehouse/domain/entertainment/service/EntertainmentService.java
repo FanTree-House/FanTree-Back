@@ -10,10 +10,12 @@ import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class EntertainmentService {
+
     private final EntertainmentRepository enterRepository;
 
     /**
@@ -21,6 +23,7 @@ public class EntertainmentService {
      * @param enterRequestDto
      * @param user
      */
+    @Transactional
     public void createEnter(EntertainmentRequestDto enterRequestDto, User user) {
         // [예외1] - Entertainment 권한 체크
         checkEntertainmentAuthority(user);
@@ -57,6 +60,7 @@ public class EntertainmentService {
      * @param enterRequestDto
      * @param user
      */
+    @Transactional
     public void updateEnter(String enterName, EntertainmentRequestDto enterRequestDto, User user) {
         // [예외1] - Entertainment 권한 체크
         checkEntertainmentAuthority(user);
@@ -80,6 +84,7 @@ public class EntertainmentService {
      * @param enterName
      * @param user
      */
+    @Transactional
     public void deleteEnter(String enterName, User user) {
         // [예외1] - Entertainment, Admin 권한 체크
         if (!(UserRoleEnum.ADMIN.equals(user.getUserRole()) || UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole()))) {

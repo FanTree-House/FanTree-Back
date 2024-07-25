@@ -1,10 +1,13 @@
+### enterName 정의
+@enterName = easpa
+
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "enterName": "easpa0123AA",
+  "enterName": "easpa",
   "enterNumber": 123345678,
   "enterLogo": "image"
 }

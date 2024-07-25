@@ -1,0 +1,13 @@
+### 상품 등록
+POST http://localhost:8080/shop/product
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "productName": "상품명",
+  "stock": 123,
+  "type": "타입",
+  "artist": "아티스트",
+  "productPicture": "상품사진",
+  "price": 123123
+}
