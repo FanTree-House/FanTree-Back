@@ -63,7 +63,12 @@ public enum ResponseStatus {
     PRODUCT_CREATE_SUCCESS(HttpStatus.OK, "상품 등록에 성공하였습니다."),
     PRODUCT_READ_SUCCESS(HttpStatus.OK, "상품 조회에 성공하였습니다."),
     PRODUCT_UPDATE_SUCCESS(HttpStatus.OK, "상품 수정에 성공하였습니다."),
-    PRODUCT_DELETE_SUCCESS(HttpStatus.OK, "상품 삭제에 성공하였습니다.")
+    PRODUCT_DELETE_SUCCESS(HttpStatus.OK, "상품 삭제에 성공하였습니다."),
+
+    // 어드민 권한
+    TRANSFORM_BLACKLIST_SUCCESS(HttpStatus.OK, "블랙리스트 전환에 성공하였습니다."),
+    USER_ROLE_UPDATE_SUCCESS(HttpStatus.OK, "회원권환 수정에 성공하였습니다."),
+
     ;
 
     private final HttpStatus httpStatus;

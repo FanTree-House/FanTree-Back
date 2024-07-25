@@ -8,6 +8,7 @@ import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
+import com.example.fantreehouse.domain.user.dto.AdminRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Builder;
@@ -100,5 +101,9 @@ public class User extends Timestamped {
     public void update(Optional<String> email, Optional<String> newEncodePw) {
         this.email = email.orElse(this.email);
         this.password = newEncodePw.orElse(this.password);
+    }
+
+    public void transBlacklist() {
+        this.status = UserStatusEnum.BLACK_LIST;
     }
 }

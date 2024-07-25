@@ -13,10 +13,11 @@ import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-
 
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,8 +27,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-  private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Value("${auth.admin_token}")
@@ -47,108 +48,104 @@ public class UserService {
         String profile = requestDto.getProfileImage();
 
         //ID 검증
-        if (userRepository.findByLoginId(id).isPresent()){
+        if (userRepository.findByLoginId(id).isPresent()) {
             throw new DuplicatedException(ErrorType.DUPLICATE_ID);
         }
 
         //닉네임 검증
-        if (userRepository.findByNickname(nickname).isPresent()){
+        if (userRepository.findByNickname(nickname).isPresent()) {
             throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
         }
 
         UserRoleEnum role = UserRoleEnum.USER;
-        if(requestDto.isAdmin()) {
-            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())){
+        if (requestDto.isAdmin()) {
+            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
                 throw new MismatchException(ErrorType.MISMATCH_ADMINTOKEN);
             }
             role = UserRoleEnum.ADMIN;
-        }
-
-        else if(requestDto.isArtist()){
-            if(!ARTIST_TOKEN.equals(requestDto.getArtistToken())){
+        } else if (requestDto.isArtist()) {
+            if (!ARTIST_TOKEN.equals(requestDto.getArtistToken())) {
                 throw new MismatchException(ErrorType.MISMATCH_ARTISTTOKEN);
             }
             role = UserRoleEnum.ARTIST;
-        }
-
-        else if(requestDto.isEntertainment()){
-            if(!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())){
-              throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
+        } else if (requestDto.isEntertainment()) {
+            if (!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())) {
+                throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
             }
             role = UserRoleEnum.ENTERTAINMENT;
         }
 
         User user = new User(
-            id,
-            name,
-            nickname,
-            email,
-            password,
-            profile,
-            role
+                id,
+                name,
+                nickname,
+                email,
+                password,
+                profile,
+                role
         );
         userRepository.save(user);
         return new SignUpResponseDto(user);
     }
 
 
-  //회원 탈퇴
-  @Transactional
-  public void withDraw(Long userId, String password) {
-    User user = findById(userId);
-    if (!passwordEncoder.matches(password, user.getPassword())) {
-      throw new MismatchException(ErrorType.MISMATCH_PASSWORD);
-    }
-    if (user.getStatus().equals(UserStatusEnum.WITHDRAW_USER)) {
-      throw new NotFoundException(ErrorType.WITHDRAW_USER);
-    }
-    user.withDraw();
-  }
-
-  // 로그아웃
-  @Transactional
-  public boolean logout(Long id) {
-    User user = findById(id);
-    return user.logout();
-  }
-
-  //refreshToken 확인
-  public void refreshTokenCheck(String id, String refreshToken) {
-    User user = userRepository.findByLoginId(id).orElseThrow(
-        () -> new NotFoundException(ErrorType.USER_NOT_FOUND)
-    );
-
-    if (!user.getRefreshToken().equals(refreshToken)) {
-      throw new MismatchException(ErrorType.REFRESH_TOKEN_MISMATCH);
-    }
-  }
-
-  //유저 프로필 수정
-  @Transactional
-  public ProfileResponseDto updateProfile(Long userId, ProfileRequestDto requestDto) {
-    User user = findById(userId);
-    String newEncodePw = null;
-
-    if (requestDto.getPassword() != null) {
-      if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
-        newEncodePw = passwordEncoder.encode(requestDto.getNewPassword());
-      }
+    //회원 탈퇴
+    @Transactional
+    public void withDraw(Long userId, String password) {
+        User user = findById(userId);
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new MismatchException(ErrorType.MISMATCH_PASSWORD);
+        }
+        if (user.getStatus().equals(UserStatusEnum.WITHDRAW_USER)) {
+            throw new NotFoundException(ErrorType.WITHDRAW_USER);
+        }
+        user.withDraw();
     }
 
-    user.update(Optional.ofNullable(requestDto.getEmail()),
-        Optional.ofNullable(newEncodePw));
-    return new ProfileResponseDto(user);
+    // 로그아웃
+    @Transactional
+    public boolean logout(Long id) {
+        User user = findById(id);
+        return user.logout();
     }
 
-  //유저 프로필 조회
-  public ProfileResponseDto getProfile(Long userId) {
-    return new ProfileResponseDto(findById(userId));
-  }
+    //refreshToken 확인
+    public void refreshTokenCheck(String id, String refreshToken) {
+        User user = userRepository.findByLoginId(id).orElseThrow(
+                () -> new NotFoundException(ErrorType.USER_NOT_FOUND)
+        );
+
+        if (!user.getRefreshToken().equals(refreshToken)) {
+            throw new MismatchException(ErrorType.REFRESH_TOKEN_MISMATCH);
+        }
+    }
+
+    //유저 프로필 수정
+    @Transactional
+    public ProfileResponseDto updateProfile(Long userId, ProfileRequestDto requestDto) {
+        User user = findById(userId);
+        String newEncodePw = null;
+
+        if (requestDto.getPassword() != null) {
+            if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+                newEncodePw = passwordEncoder.encode(requestDto.getNewPassword());
+            }
+        }
+
+        user.update(Optional.ofNullable(requestDto.getEmail()),
+                Optional.ofNullable(newEncodePw));
+        return new ProfileResponseDto(user);
+    }
+
+    //유저 프로필 조회
+    public ProfileResponseDto getProfile(Long userId) {
+        return new ProfileResponseDto(findById(userId));
+    }
 
 
-  private User findById(Long id) {
-    return userRepository.findById(id).orElseThrow(
-        () -> new NotFoundException(ErrorType.USER_NOT_FOUND)
-    );
-  }
+    private User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(ErrorType.USER_NOT_FOUND)
+        );
+    }
 }
