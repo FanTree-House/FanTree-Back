@@ -4,8 +4,7 @@ import com.example.fantreehouse.common.exception.errorcode.AuthorizedException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
-import com.example.fantreehouse.domain.artist.dto.ArtistResponseDto;
-import com.example.fantreehouse.domain.artist.dto.request.CreateArtistRequestDto;
+import com.example.fantreehouse.domain.artist.dto.request.ArtistRequestDto;
 import com.example.fantreehouse.domain.artist.dto.response.ArtistProfileResponseDto;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artist.repository.ArtistRepository;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
-import static java.lang.reflect.Array.set;
 
 @Slf4j
 @Service
@@ -29,7 +27,7 @@ public class ArtistService {
     private final ArtistRepository artistRepository;
 
     @Transactional
-    public void createArtist(UserDetailsImpl userDetails, CreateArtistRequestDto requestDto) {
+    public void createArtist(UserDetailsImpl userDetails, ArtistRequestDto requestDto) {
         User loginUser = userDetails.getUser();
 
         checkUserStatus(loginUser.getStatus());
@@ -52,7 +50,32 @@ public class ArtistService {
         artistRepository.save(newArtist);
     }
 
-    // 아티스트 프로필 조회 - 가입한 유저
+    // 아티스트 프로필 수정
+    @Transactional
+    public void updateArtist(Long artistId, UserDetailsImpl userDetails, ArtistRequestDto requestDto) {
+        User loginUser = userDetails.getUser();
+
+        checkUserStatus(loginUser.getStatus());
+        checkUserRole(loginUser.getUserRole());
+
+        // 로그인한 유저와 수정하고자하는 artist 가 동일한 유저인지 확인
+        // -> 로그인한 유저의 ID로 DB에 있는 artist 인지 확인 후, 그 artist 가 login 유저인지
+        Artist foundArtist = artistRepository.findByUserId(userDetails.getUser().getId())
+                .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
+        if (!foundArtist.getId().equals(artistId)) {
+            throw new AuthorizedException(UNAUTHORIZED);
+        }
+
+        foundArtist.updateArtist(requestDto);
+
+    }
+
+    /**
+     * 아티스트 프로필 조회 - 가입한 유저
+     * @param artistId
+     * @param userDetails
+     * @return
+     */
     public ArtistProfileResponseDto getArtist(Long artistId, UserDetailsImpl userDetails) {
 
         User loginUser = userDetails.getUser();
@@ -64,7 +87,6 @@ public class ArtistService {
 
         return ArtistProfileResponseDto.of(foundArtist);
     }
-
     // 활성화 유저인지 확인
     private void checkUserStatus(UserStatusEnum userStatusEnum) {
         if (!userStatusEnum.equals(UserStatusEnum.ACTIVE_USER)) {
@@ -72,6 +94,7 @@ public class ArtistService {
         }
     }
     // 아티스트인지 확인
+
     private void checkUserRole(UserRoleEnum userRoleEnum) {
         if (!userRoleEnum.equals(UserRoleEnum.ARTIST)) {
             throw new AuthorizedException(UNAUTHORIZED);

@@ -5,10 +5,10 @@ import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artist.dto.ArtistResponseDto;
-import com.example.fantreehouse.domain.artist.dto.request.CreateArtistRequestDto;
+import com.example.fantreehouse.domain.artist.dto.request.ArtistRequestDto;
+import com.example.fantreehouse.domain.artist.dto.request.UpdateArtistRequestDto;
 import com.example.fantreehouse.domain.artist.dto.response.ArtistProfileResponseDto;
 import com.example.fantreehouse.domain.artist.service.ArtistService;
-import com.example.fantreehouse.domain.feed.dto.response.FeedResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,18 +34,24 @@ public class ArtistController {
     @PostMapping
     public ResponseEntity<ResponseMessageDto> createArtist(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestBody final CreateArtistRequestDto requestDto) {
+            @Valid @RequestBody final ArtistRequestDto requestDto) {
 
         artistService.createArtist(userDetails, requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_CREATED));
     }
 
-    //아티스트 프로필 수정
+    /**
+     * 아티스트 프로필 수정
+     * @param artistId
+     * @param userDetails
+     * @param requestDto
+     * @return
+     */
     @PatchMapping("/{artistId}")
     public ResponseEntity<ResponseMessageDto> updateArtist(
             @PathVariable Long artistId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestBody final UpdateArtistRequestDto requestDto
+            @Valid @RequestBody final ArtistRequestDto requestDto
     ) {
 
         artistService.updateArtist(artistId, userDetails, requestDto);

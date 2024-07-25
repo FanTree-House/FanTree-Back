@@ -77,7 +77,7 @@ public class Feed extends Timestamped {
                 .artistGroup(artistGroup)
                 .build();
     }
-    //filePath 설정 후 사용할 것
+    //filePath 설정 후 사용
 //    public Feed updateFeed(UpdateFeedRequestDto requestDto, String filePath) {
 //        return Feed.builder()
 //                .contents(requestDto.getContents())

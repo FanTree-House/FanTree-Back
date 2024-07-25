@@ -100,7 +100,6 @@ public class FeedService {
 //        Feed updatedFeed = foundFeed.updateFeed(requestDto, filePath);
         foundFeed.updateFeed(requestDto); //file 기능 전 임시 사용
 
-
         return UpdateFeedResponseDto.of(foundFeed);
     }
 
