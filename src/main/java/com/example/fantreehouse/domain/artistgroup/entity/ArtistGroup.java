@@ -31,12 +31,8 @@ public class ArtistGroup extends Timestamped {
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
-    @OneToMany(mappedBy = "artistGroup", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "artistGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Artist> artists = new ArrayList<>();
-
-    //group과 Artist와의 일대다관계
-    @OneToMany(mappedBy = "artistGroup", orphanRemoval = true)
-    private List<Artist> artistList;
 
     //구독자와 일대다 관계
     @OneToMany(mappedBy = "artistGroup")

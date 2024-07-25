@@ -39,6 +39,10 @@ public enum ErrorType implements ErrorCode {
     MISMATCH_ARTISTTOKEN(HttpStatus.OK, "Artist 토큰값이 일치하지 않습니다."),
     MISMATCH_ENTERTAINMENTTOKEN(HttpStatus.OK, "Entertainment 토큰값이 일치하지 않습니다."),
 
+    //Feed
+    FEED_NOT_FOUND(HttpStatus.NOT_FOUND,"찾는 글이 없습니다."),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"접근 권한이 없습니다."),
+
     // Entertainment
     NOT_FOUND_ENTER(HttpStatus.NOT_FOUND, "존재하지 않는 엔터테인먼트 계정입니다."),
     ALREADY_EXIST_ENTER_NAME(HttpStatus.NOT_FOUND, "이미 존재하는 엔터테인먼트 이름입니다."),
@@ -48,6 +52,8 @@ public enum ErrorType implements ErrorCode {
     ENTERTAINMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "엔터테인먼트를 찾을 수 없습니다."),
     ARTIST_NOT_FOUND(HttpStatus.NOT_FOUND, "아티스트를 찾을 수 없습니다."),
     ARTIST_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "아티스트 그룹을 찾을 수 없습니다."),
+    ENROLLED_USER_AS_ARTIST(HttpStatus.UNAUTHORIZED, "이미 아티스트 등록을 하셨습니다."),
+    ENROLLED_ARTIST_NAME(HttpStatus.UNAUTHORIZED, "이미 아티스트 등록을 하셨습니다."),
 
     //유저 커뮤니티 피드
     NOT_FOUND_FEED(HttpStatus.NOT_FOUND, "피드를 찾을수 없습니다"),
@@ -69,8 +75,6 @@ public enum ErrorType implements ErrorCode {
     NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다."),
 
     ;
-
-
 
     private final HttpStatus httpStatus;
     private final String message;
