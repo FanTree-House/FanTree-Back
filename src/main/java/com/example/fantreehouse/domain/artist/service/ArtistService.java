@@ -26,6 +26,7 @@ public class ArtistService {
 
     private final ArtistRepository artistRepository;
 
+    // 아티스트 계정 생성
     @Transactional
     public void createArtist(UserDetailsImpl userDetails, ArtistRequestDto requestDto) {
         User loginUser = userDetails.getUser();
@@ -50,11 +51,10 @@ public class ArtistService {
         artistRepository.save(newArtist);
     }
 
-    // 아티스트 프로필 수정
+    // 아티스트 프로필(계정) 수정
     @Transactional
     public void updateArtist(Long artistId, UserDetailsImpl userDetails, ArtistRequestDto requestDto) {
         User loginUser = userDetails.getUser();
-
         checkUserStatus(loginUser.getStatus());
         checkUserRole(loginUser.getUserRole());
 
@@ -70,16 +70,8 @@ public class ArtistService {
 
     }
 
-    /**
-     * 아티스트 프로필 조회 - 가입한 유저
-     * @param artistId
-     * @param userDetails
-     * @return
-     */
-    public ArtistProfileResponseDto getArtist(Long artistId, UserDetailsImpl userDetails) {
-
-        User loginUser = userDetails.getUser();
-        checkUserStatus(loginUser.getStatus());
+    //아티스트 프로필(계정) 조회 - 비가입자 가능
+    public ArtistProfileResponseDto getArtist(Long artistId) {
 
         // 찾는 아티스트가 DB에 있는지 확인
         Artist foundArtist = artistRepository.findById(artistId)
@@ -87,14 +79,37 @@ public class ArtistService {
 
         return ArtistProfileResponseDto.of(foundArtist);
     }
+
+
+
+
+
+
+
+
+    // 아티스트 계정 삭제
+    @Transactional
+    public void deleteFeed(Long artistId, UserDetailsImpl userDetails) {
+        User loginUser = userDetails.getUser();
+        checkUserStatus(loginUser.getStatus());
+
+        Artist foundArtist = artistRepository.findByUserId(userDetails.getUser().getId())
+                .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
+        if (!foundArtist.getId().equals(artistId)) {
+            throw new AuthorizedException(UNAUTHORIZED);
+        }
+
+        artistRepository.delete(foundArtist);
+    }
+
     // 활성화 유저인지 확인
     private void checkUserStatus(UserStatusEnum userStatusEnum) {
         if (!userStatusEnum.equals(UserStatusEnum.ACTIVE_USER)) {
             throw new AuthorizedException(UNAUTHORIZED);
         }
     }
-    // 아티스트인지 확인
 
+    // 아티스트인지 확인
     private void checkUserRole(UserRoleEnum userRoleEnum) {
         if (!userRoleEnum.equals(UserRoleEnum.ARTIST)) {
             throw new AuthorizedException(UNAUTHORIZED);

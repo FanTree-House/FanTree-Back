@@ -61,28 +61,23 @@ public class ArtistController {
     /**
      * 아티스트 단건 조회
      * @param artistId
-     * @param userDetails
      * @return
      */
     @GetMapping("/{artistId}")
     public ResponseEntity<ResponseDataDto> getArtist(
-            @PathVariable Long artistId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
+            @PathVariable Long artistId
     ) {
-        ArtistProfileResponseDto responseDto = artistService.getArtist (artistId, userDetails);
+        ArtistProfileResponseDto responseDto = artistService.getArtist (artistId);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_READ_SUCCESS, responseDto));
     }
 
-    //아티스트 전체 조회 - FanTree내 6명씩 페이지네이션 (구독자수)
+    //아티스트 전체 조회 - FanTree내 6명씩 페이지네이션 (구독자수) / 비가입자 가능
     @GetMapping
     public ResponseEntity<ResponseDataDto> getAllArtist(
-            @RequestParam Long artistGroupId,
-            @RequestParam(required = false) Long entertainmentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam int page
-
     ) {
-        Page<ArtistResponseDto> pageArtist = artistService.getAllArtist (artistGroupId, entertainmentId, userDetails, page);
+        Page<ArtistResponseDto> pageArtist = artistService.getAllArtist (userDetails, page);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_READ_SUCCESS, pageArtist));
     }
 
