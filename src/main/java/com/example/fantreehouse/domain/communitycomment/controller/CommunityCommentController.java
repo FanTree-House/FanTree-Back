@@ -43,9 +43,10 @@ public class CommunityCommentController {
      * @param userDetails
      * @return
      */
+    @GetMapping
     public ResponseEntity<?> findComment(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<CommunityCommentResponseDto> responseDtos = commentService.findAllComment(userDetails.getUser());
-        return ResponseEntity.ok(responseDtos);
+        List<CommunityCommentResponseDto> responseDto = commentService.findAllComment(userDetails.getUser());
+        return ResponseEntity.ok(responseDto);
     }
 
     /**
@@ -56,12 +57,12 @@ public class CommunityCommentController {
      * @return
      */
     @PatchMapping("/{comment_id}")
-    public ResponseEntity<ResponseMessageDto> updateComment(@Valid CommunityCommentRequestDto requestDto,
+    public ResponseEntity<?> updateComment(@Valid CommunityCommentRequestDto requestDto,
                                                             @PathVariable Long comment_id,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         CommunityComment comment = commentService.updateComment(comment_id, requestDto, userDetails.getUser());
         CommunityCommentResponseDto responseDto = new CommunityCommentResponseDto(comment);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.UPDATE_SUCCESS_COMMENT));
+        return ResponseEntity.ok(responseDto);
     }
 
     /**

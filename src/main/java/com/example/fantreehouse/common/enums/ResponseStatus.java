@@ -23,10 +23,11 @@ public enum ResponseStatus {
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃에 성공하였습니다."),
     GET_USER_SUCCESS(HttpStatus.OK, "유저정보 조회에 성공하였습니다."),
 
-    // 구독자 커뮤니티
+    // 구독자 커뮤니티 피드
     CREATE_SUCCESS_FEED(HttpStatus.OK, "게시글이 생성되었습니다."),
     USER_COMMUNITY_UPDATE_SUCCESS(HttpStatus.OK, "게시글이 수정되었습니다."),
     USER_COMMUNITY_DELETE_SUCCESS(HttpStatus.OK, "게시글이 삭제되었습니다."),
+    // 구독자 커뮤니티 댓글
     CREATE_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 생성되었습니다."),
     UPDATE_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 수정되었습니다."),
     DELETE_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 삭제되었습니다."),
@@ -34,6 +35,9 @@ public enum ResponseStatus {
     WITHDRAW_SUCCESS(HttpStatus.OK, "회원탈퇴에 성공하였습니다."),
     SIGNUP_SUCCESS(HttpStatus.OK, "회원가입에 성공하였습니다."),
     PROFILE_UPDATE(HttpStatus.OK, "프로필이 변경되었습니다."),
+     //구독활성, 비활성화
+    USER_SUCCESS_SUBSCRIPT(HttpStatus.OK, "해당 그룹을 구독하였습니다."),
+    USER_DELETE_SUBSCRIPT(HttpStatus.OK, "해당 그룹의 구독을 해지했습니다."),
     //RefreshToken
     UPDATE_TOKEN_SUCCESS_MESSAGE(HttpStatus.OK, "토큰이 재발급되었습니다."),
 

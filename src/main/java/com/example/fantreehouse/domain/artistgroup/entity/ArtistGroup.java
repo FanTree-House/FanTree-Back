@@ -21,7 +21,7 @@ public class ArtistGroup extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String group_name;
+    private String groupName;
     private String artistProfilePicture;
 
     //group과 enter의 다대일관계
