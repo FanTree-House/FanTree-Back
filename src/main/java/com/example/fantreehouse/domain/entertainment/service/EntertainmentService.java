@@ -47,7 +47,9 @@ public class EntertainmentService {
         checkEntertainmentAuthority(user);
 
         // [예외 2] - 존재하지 않는 엔터테이먼트 계정
-        Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
+        Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() ->
+                new CustomException(ErrorType.NOT_FOUND_ENTER)
+        );
 
         EntertainmentResponseDto enterResponseDto = new EntertainmentResponseDto(enter);
 

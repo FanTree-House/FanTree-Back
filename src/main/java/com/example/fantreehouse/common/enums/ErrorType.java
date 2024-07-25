@@ -62,6 +62,8 @@ public enum ErrorType implements ErrorCode {
     //아티스트그룹
     NOT_FOUND_ARTISTGROUP(HttpStatus.NOT_FOUND, "아티스트그룹을 찾지 못했습니다."),
 
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
+
 
     ;
 

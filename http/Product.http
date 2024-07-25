@@ -1,3 +1,6 @@
+### productId 설정
+@productId = 1
+
 ### 상품 등록
 POST http://localhost:8080/shop/product
 Authorization: {{Authorization}}
@@ -11,3 +14,6 @@ Content-Type: application/json
   "productPicture": "상품사진",
   "price": 123123
 }
+
+### 상품 조회
+GET http://localhost:8080/shop/product/{{productId}}
