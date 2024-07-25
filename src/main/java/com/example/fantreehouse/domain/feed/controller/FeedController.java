@@ -9,16 +9,11 @@ import com.example.fantreehouse.domain.feed.dto.request.UpdateFeedRequestDto;
 import com.example.fantreehouse.domain.feed.dto.response.CreateFeedResponseDto;
 import com.example.fantreehouse.domain.feed.dto.response.FeedResponseDto;
 import com.example.fantreehouse.domain.feed.dto.response.UpdateFeedResponseDto;
-import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feed.service.FeedService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,14 +21,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-
-import static com.example.fantreehouse.common.enums.PageSize.FEED_PAGE_SIZE;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/www.fantree.com/{groupName}")
+@RequestMapping("/{groupName}")
 public class FeedController {
 
     private final FeedService feedService;
@@ -42,22 +34,25 @@ public class FeedController {
      * Feed 생성
      *
      * @param groupName
-     * @param file
+//     * @param file
      * @param requestDto
      * @return
      * @throws IOException
      */
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ResponseDataDto<?>> createFeed(
+//    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping
+    public ResponseEntity<ResponseDataDto<CreateFeedResponseDto>> createFeed(
             @PathVariable final String groupName,
-            @RequestPart(value = "file", required = false) MultipartFile file,
+//            @RequestPart(value = "file", required = false) MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody final CreateFeedRequestDto requestDto
-    ) throws IOException {
+//    ) throws IOException {
+    ) {
 
-        CreateFeedResponseDto responseDto = feedService.createFeed(groupName, userDetails, file, requestDto);
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.CREATED, responseDto));
+//        CreateFeedResponseDto responseDto = feedService.createFeed(groupName, userDetails, file, requestDto);
+        CreateFeedResponseDto responseDto = feedService.createFeed(groupName, userDetails, requestDto);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_CREATED, responseDto));
     }
 
     /**
@@ -65,7 +60,7 @@ public class FeedController {
      *
      * @param groupName
      * @param artistFeedId
-     * @param file
+//     * @param file
      * @param requestDto
      * @return
      * @throws IOException
@@ -75,14 +70,16 @@ public class FeedController {
     public ResponseEntity<ResponseDataDto<?>> updateFeed(
             @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
-            @RequestPart(value = "file", required = false) MultipartFile file,
+//            @RequestPart(value = "file", required = false) MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody final UpdateFeedRequestDto requestDto
-    ) throws IOException {
+//    ) throws IOException {
+    ) {
 
-        UpdateFeedResponseDto responseDto = feedService.updateFeed(groupName, artistFeedId, userDetails, file, requestDto);
+//        UpdateFeedResponseDto responseDto = feedService.updateFeed(groupName, artistFeedId, userDetails, file, requestDto);
+        UpdateFeedResponseDto responseDto = feedService.updateFeed(groupName, artistFeedId, userDetails, requestDto);
 
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.UPDATED, responseDto));
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_UPDATED, responseDto));
     }
 
     /**
@@ -99,7 +96,7 @@ public class FeedController {
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         FeedResponseDto responseDto = feedService.getFeed (groupName, artistFeedId, userDetails);
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.SUCCESS, responseDto));
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDto));
     }
 
 
@@ -112,7 +109,7 @@ public class FeedController {
     ) {
         Page<FeedResponseDto> pagedFeed = feedService.getAllFeed(groupName, userDetails, page);
 
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.SUCCESS, pagedFeed));
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, pagedFeed));
     }
 
     /**
@@ -128,7 +125,7 @@ public class FeedController {
             @AuthenticationPrincipal UserDetailsImpl UserDetails
     ) {
         feedService.deleteFeed(groupName, artistFeedId, UserDetails);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.DELETED));
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_DELETED));
     }
 
 }

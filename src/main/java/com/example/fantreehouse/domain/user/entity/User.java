@@ -66,6 +66,10 @@ public class User extends Timestamped {
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
+//    public void setArtist(Artist artist) {
+//        this.artist = artist;
+//    }
+
     @OneToMany(mappedBy = "user")
     private List<Subscription> subscriptions;
 

@@ -7,11 +7,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ResponseStatus {
-    //Feed
-    CREATED(HttpStatus.CREATED, "생성되었습니다."),
-    UPDATED(HttpStatus.OK, "수정되었습니다."),
-    SUCCESS(HttpStatus.OK, "조회되었습니다."),
-    DELETED(HttpStatus.OK, "삭제되었습니다."),
 
     // User
     LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공하였습니다."),
@@ -38,11 +33,23 @@ public enum ResponseStatus {
     ENTERTAINMENT_UPDATAE_SUCCESS(HttpStatus.OK,  "엔터테인먼트 계정 수정에 성공하였습니다."),
     ENTERTAINMENT_DELETE_SUCCESS(HttpStatus.OK,  "엔터테인먼트 계정 삭제에 성공하였습니다."),
 
+    // 아티스트
+    ARTIST_CREATED(HttpStatus.CREATED, "아티스트 등록에 성공하였습니다."),
+    ARTIST_UPDATED(HttpStatus.OK, "아티스트 프로필이 수정되었습니다."),
+    ARTIST_READ_SUCCESS(HttpStatus.OK, "아티스트가 조회되었습니다."),
+    ARTIST_DELETED(HttpStatus.OK, "아티스트 계정이 삭제되었습니다."),
+
     // 아티스트 그룹
     ARTIST_GROUP_CREATE_SUCCESS(HttpStatus.OK, "아티스트 그룹 생성에 성공하였습니다."),
     ARTIST_GROUP_RETRIEVE_SUCCESS(HttpStatus.OK, "아티스트 그룹 조회에 성공하였습니다."),
     ARTIST_GROUP_UPDATE_SUCCESS(HttpStatus.OK, "아티스트 그룹 수정에 성공하였습니다."),
     ARTIST_GROUP_DELETE_SUCCESS(HttpStatus.OK, "아티스트 그룹 삭제에 성공하였습니다."),
+
+    //Feed
+    FEED_CREATED(HttpStatus.CREATED, "글이 등록되었습니다."),
+    FEED_UPDATED(HttpStatus.OK, "수정되었습니다."),
+    FEED_READ_SUCCESS(HttpStatus.OK, "조회되었습니다."),
+    FEED_DELETED(HttpStatus.OK, "삭제되었습니다."),
 
     // 엔터 피드
     NOTICE_CREATE_SUCCESS(HttpStatus.OK, "공지사항 생성에 성공하였습니다."),

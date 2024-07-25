@@ -7,7 +7,7 @@ import lombok.Getter;
 public class CreateFeedResponseDto {
 
     private String contents;
-    private String post_picture;
+    private String postPicture;
     //좋아요 수
     private int likeCount;
 
@@ -15,7 +15,7 @@ public class CreateFeedResponseDto {
     public static CreateFeedResponseDto of(Feed newFeed) {
         CreateFeedResponseDto responseDto = new CreateFeedResponseDto();
         responseDto.contents = newFeed.getContents();
-        responseDto.post_picture = newFeed.getPost_picture();
+        responseDto.postPicture = newFeed.getPostPicture();
         responseDto.likeCount = 0;
         return responseDto;
     }

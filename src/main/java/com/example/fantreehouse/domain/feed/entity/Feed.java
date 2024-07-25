@@ -10,7 +10,6 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class Feed extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
-    private String post_picture;
+    private String postPicture;
 
     private int likesCount;
 
@@ -49,10 +48,10 @@ public class Feed extends Timestamped {
     private ArtistGroup artistGroup;
 
     @Builder
-    public Feed(String artistName, String contents, String post_picture, User user, ArtistGroup artistGroup) {
+    public Feed(String artistName, String contents, String postPicture, User user, ArtistGroup artistGroup) {
         this.artistName = artistName;
         this.contents = contents;
-        this.post_picture = post_picture;
+        this.postPicture = postPicture;
 //        this.likesCount = 0;
         this.user = user;
         this.artistGroup = artistGroup;
@@ -82,7 +81,7 @@ public class Feed extends Timestamped {
 //    public Feed updateFeed(UpdateFeedRequestDto requestDto, String filePath) {
 //        return Feed.builder()
 //                .contents(requestDto.getContents())
-//                .post_picture(filePath)
+//                .postPicture(filePath)
 //                .build();
 //
 //    }
@@ -91,6 +90,7 @@ public class Feed extends Timestamped {
     public Feed updateFeed(UpdateFeedRequestDto requestDto) {
         return Feed.builder()
                 .contents(requestDto.getContents())
+                .postPicture(requestDto.getPostPicture())
                 .build();
 
     }

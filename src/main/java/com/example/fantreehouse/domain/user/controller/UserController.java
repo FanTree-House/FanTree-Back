@@ -31,7 +31,7 @@ public class UserController {
   private final JwtTokenHelper jwtTokenHelper;
 
 
-    @PostMapping(value = {"/invite/entertainment", "/invite/artist", "/admin"})
+    @PostMapping(value = {"","/invite/entertainment", "/invite/artist", "/admin"})
     public ResponseEntity<ResponseMessageDto> signUp(@Valid @RequestBody SignUpRequestDto requestDto) {
         userService.signUp(requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));

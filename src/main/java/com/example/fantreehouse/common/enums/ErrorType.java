@@ -52,6 +52,8 @@ public enum ErrorType implements ErrorCode {
     ENTERTAINMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "엔터테인먼트를 찾을 수 없습니다."),
     ARTIST_NOT_FOUND(HttpStatus.NOT_FOUND, "아티스트를 찾을 수 없습니다."),
     ARTIST_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "아티스트 그룹을 찾을 수 없습니다."),
+    ENROLLED_USER_AS_ARTIST(HttpStatus.UNAUTHORIZED, "이미 아티스트 등록을 하셨습니다."),
+    ENROLLED_ARTIST_NAME(HttpStatus.UNAUTHORIZED, "이미 아티스트 등록을 하셨습니다."),
 
     //유저 커뮤니티 피드
     NOT_FOUND_FEED(HttpStatus.NOT_FOUND, "피드를 찾을수 없습니다"),

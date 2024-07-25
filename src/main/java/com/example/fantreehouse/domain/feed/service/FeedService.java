@@ -3,6 +3,8 @@ package com.example.fantreehouse.domain.feed.service;
 import com.example.fantreehouse.common.exception.errorcode.AuthorizedException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
+import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.artist.repository.ArtistRepository;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.feed.dto.request.CreateFeedRequestDto;
@@ -33,6 +35,7 @@ import static com.example.fantreehouse.common.enums.PageSize.FEED_PAGE_SIZE;
 public class FeedService {
 
     private final FeedRepository feedRepository;
+    private final ArtistRepository artistRepository;
     private final ArtistGroupRepository artistGroupRepository;
 
 
@@ -40,16 +43,21 @@ public class FeedService {
      * Feed 생성
      * @param groupName
      * @param userDetails
-     * @param file
+//     * @param file
      * @param requestDto
      * @return
      */
-    public CreateFeedResponseDto createFeed(String groupName, UserDetailsImpl userDetails, MultipartFile file, CreateFeedRequestDto requestDto) {
+    @Transactional
+    public CreateFeedResponseDto createFeed(String groupName, UserDetailsImpl userDetails, CreateFeedRequestDto requestDto) {
 
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
         checkUserRole(loginUser.getUserRole());
-        checkArtistGroup(loginUser, groupName);
+
+        Artist loginArtist = artistRepository.findByUserId(loginUser.getId())
+                .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
+
+        checkArtistGroup(loginArtist, groupName);
 
         //file 경로 추출
 //        if (file != null && file.isEmpty()) {
@@ -58,14 +66,14 @@ public class FeedService {
 //        }
 
 //        Feed newFeed = new Feed.of(requestDto, loginUser, groupName, filePath);
-        Feed newFeed = Feed.of(requestDto, loginUser, loginUser.getArtist().getArtistGroup());//file 기능 전 임시 사용
 
+        Feed newFeed = Feed.of(requestDto, loginUser, loginArtist.getArtistGroup());//file 기능 전 임시 사용
         feedRepository.save(newFeed);
         return CreateFeedResponseDto.of(newFeed);
     }
 
     @Transactional
-    public UpdateFeedResponseDto updateFeed(String group_name, Long artistFeedId, UserDetailsImpl userDetails, MultipartFile file, UpdateFeedRequestDto requestDto) {
+    public UpdateFeedResponseDto updateFeed(String group_name, Long artistFeedId, UserDetailsImpl userDetails, UpdateFeedRequestDto requestDto) {
 
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
@@ -74,7 +82,10 @@ public class FeedService {
         Feed foundFeed = feedRepository.findById(artistFeedId)
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
 
-        checkArtistGroup(foundFeed.getUser(), group_name);
+        Artist loginArtist = artistRepository.findByUserId(loginUser.getId())
+                .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
+
+        checkArtistGroup(loginArtist, group_name);
         checkWriter(loginUser.getId(), foundFeed.getUser().getId());
 
 //        //파일 경로 추출 후, updateFeed 매개변수로 넣기 (file 은 임시)
@@ -101,7 +112,11 @@ public class FeedService {
         Feed foundFeed = feedRepository.findById(artistFeedId)
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
 
-        checkArtistGroup(foundFeed.getUser(), groupName);
+        Artist loginArtist = artistRepository.findByUserId(loginUser.getId())
+                .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
+
+
+        checkArtistGroup(loginArtist, groupName);
         return FeedResponseDto.of(foundFeed);
     }
 
@@ -172,8 +187,8 @@ public class FeedService {
         }
     }
     //url 의 groupName 과 loginUser 의 소속 group 명 이 동일한지 확인
-    private void checkArtistGroup(User loginUser, String groupName) {
-        if (!loginUser.getArtist().getArtistGroup().getGroupName().equals(groupName)) {
+    private void checkArtistGroup(Artist loginArtist, String groupName) {
+        if (!loginArtist.getArtistGroup().getGroupName().equals(groupName)) {
             throw new AuthorizedException(UNAUTHORIZED);
         }
     }
