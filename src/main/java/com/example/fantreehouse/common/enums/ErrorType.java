@@ -44,6 +44,11 @@ public enum ErrorType implements ErrorCode {
     ALREADY_EXIST_ENTER_NAME(HttpStatus.NOT_FOUND, "이미 존재하는 엔터테인먼트 이름입니다."),
     ALREADY_EXIST_ENTER_NUMBER(HttpStatus.NOT_FOUND, "이미 존재하는 사업자번호입니다."),
 
+    // 엔터테인먼트 및 아티스트 관련 에러
+    ENTERTAINMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "엔터테인먼트를 찾을 수 없습니다."),
+    ARTIST_NOT_FOUND(HttpStatus.NOT_FOUND, "아티스트를 찾을 수 없습니다."),
+    ARTIST_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "아티스트 그룹을 찾을 수 없습니다."),
+
     //유저 커뮤니티 피드
 
     NOT_FOUND_FEED(HttpStatus.NOT_FOUND, "피드를 찾을수 없습니다"),

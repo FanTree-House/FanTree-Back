@@ -15,6 +15,8 @@ import com.example.fantreehouse.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+
 
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,11 +30,11 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
 
 
-  //    @Value("${auth.manager_token}")
-    private String ADMIN_TOKEN;
-
-    private String ARTIST_TOKEN;
-
+    @Value("${auth.admin_token}")
+    private String ADMIN_TOKEN = "1np0t2ncesuuuud3rTaMeng5" ;
+    @Value("${auth.artist_token}")
+    private String ARTIST_TOKEN = "acRos3knitterUp2eTt1ng5";
+    @Value("${auth.entertainment_token}")
     private String ENTERTAINMENT_TOKEN = "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc";
 
     //회원가입
