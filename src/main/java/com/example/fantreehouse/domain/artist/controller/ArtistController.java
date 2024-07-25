@@ -6,7 +6,6 @@ import com.example.fantreehouse.common.enums.ResponseStatus;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artist.dto.ArtistResponseDto;
 import com.example.fantreehouse.domain.artist.dto.request.ArtistRequestDto;
-import com.example.fantreehouse.domain.artist.dto.request.UpdateArtistRequestDto;
 import com.example.fantreehouse.domain.artist.dto.response.ArtistProfileResponseDto;
 import com.example.fantreehouse.domain.artist.service.ArtistService;
 import jakarta.validation.Valid;
@@ -71,17 +70,25 @@ public class ArtistController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_READ_SUCCESS, responseDto));
     }
 
-    //아티스트 전체 조회 - FanTree내 6명씩 페이지네이션 (구독자수) / 비가입자 가능
+    /**
+     * 아티스트 전체 조회(6명씩, 구독자 순)/비가입자 가능
+     * @param page
+     * @return
+     */
     @GetMapping
     public ResponseEntity<ResponseDataDto> getAllArtist(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam int page
     ) {
-        Page<ArtistResponseDto> pageArtist = artistService.getAllArtist (userDetails, page);
+        Page<ArtistProfileResponseDto> pageArtist = artistService.getAllArtist (page);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_READ_SUCCESS, pageArtist));
     }
 
-    //아티스트 계정 삭제
+    /**
+     * 아티스트 계정 삭제
+     * @param artistId
+     * @param userDetails
+     * @return
+     */
     @DeleteMapping("/{artistId}")
     public ResponseEntity<ResponseMessageDto> deleteArtist (
             @PathVariable Long artistId,

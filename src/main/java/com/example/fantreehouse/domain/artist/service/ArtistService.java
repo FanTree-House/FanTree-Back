@@ -4,19 +4,27 @@ import com.example.fantreehouse.common.exception.errorcode.AuthorizedException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
+import com.example.fantreehouse.domain.artist.dto.ArtistResponseDto;
 import com.example.fantreehouse.domain.artist.dto.request.ArtistRequestDto;
 import com.example.fantreehouse.domain.artist.dto.response.ArtistProfileResponseDto;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artist.repository.ArtistRepository;
+import com.example.fantreehouse.domain.feed.dto.response.FeedResponseDto;
+import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
+import static com.example.fantreehouse.common.enums.PageSize.ARTIST_PAGE_SIZE;
+import static com.example.fantreehouse.common.enums.PageSize.FEED_PAGE_SIZE;
 
 @Slf4j
 @Service
@@ -42,7 +50,7 @@ public class ArtistService {
 
         // 활동명 중복 등록 확인
         boolean isExistName = artistRepository.existsByArtistName(requestDto.getArtistName());
-        if(isExistName) {
+        if (isExistName) {
             throw new DuplicatedException(ENROLLED_ARTIST_NAME);
         }
 
@@ -80,12 +88,14 @@ public class ArtistService {
         return ArtistProfileResponseDto.of(foundArtist);
     }
 
+    // 아티스트 프로필 전체 조회 - 비가입자 가능
+    public Page<ArtistProfileResponseDto> getAllArtist(int page) {
 
+        PageRequest pageRequest = PageRequest.of(page, ARTIST_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "subscriberCount"));
+        Page<Artist> pageArtist = artistRepository.findAll(pageRequest);
 
-
-
-
-
+        return pageArtist.map(ArtistProfileResponseDto::of);
+    }
 
     // 아티스트 계정 삭제
     @Transactional
@@ -108,8 +118,8 @@ public class ArtistService {
             throw new AuthorizedException(UNAUTHORIZED);
         }
     }
-
     // 아티스트인지 확인
+
     private void checkUserRole(UserRoleEnum userRoleEnum) {
         if (!userRoleEnum.equals(UserRoleEnum.ARTIST)) {
             throw new AuthorizedException(UNAUTHORIZED);
