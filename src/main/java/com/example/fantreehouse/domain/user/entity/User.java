@@ -100,6 +100,7 @@ public class User extends Timestamped {
         return refreshToken == null ? true : false;
     }
 
+
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
