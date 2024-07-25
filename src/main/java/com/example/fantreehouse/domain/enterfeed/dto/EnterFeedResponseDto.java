@@ -1,21 +1,25 @@
 package com.example.fantreehouse.domain.enterfeed.dto;
 
+import com.example.fantreehouse.domain.enterfeed.entity.FeedCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 public class EnterFeedResponseDto {
-    private String feedId;
+    private Long id;
+    private String title;
     private String contents;
     private String postPicture;
-    private String category;
-    private String date;
+    private FeedCategory category;
+    private LocalDate date;
 
-    public EnterFeedResponseDto(String feedId, String contents, String postPicture, String category, String date) {
-        this.feedId = feedId;
+    public EnterFeedResponseDto(Long id, String title, String contents, String postPicture, FeedCategory category, LocalDate   date) {
+        this.id = id;
+        this.title = title;
         this.contents = contents;
         this.postPicture = postPicture;
         this.category = category;
