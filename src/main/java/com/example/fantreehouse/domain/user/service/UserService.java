@@ -29,7 +29,6 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
-
     @Value("${auth.admin_token}")
     private String ADMIN_TOKEN;
     @Value("${auth.artist_token}")
@@ -91,7 +90,6 @@ public class UserService {
         return new SignUpResponseDto(user);
     }
 
-
   //회원 탈퇴
   @Transactional
   public void withDraw(Long userId, String password) {
@@ -144,7 +142,6 @@ public class UserService {
   public ProfileResponseDto getProfile(Long userId) {
     return new ProfileResponseDto(findById(userId));
   }
-
 
   private User findById(Long id) {
     return userRepository.findById(id).orElseThrow(
