@@ -2,6 +2,7 @@ package com.example.fantreehouse.domain.user.entity;
 
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
+import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
