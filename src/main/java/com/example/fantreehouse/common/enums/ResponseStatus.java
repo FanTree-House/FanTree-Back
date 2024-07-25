@@ -52,7 +52,13 @@ public enum ResponseStatus {
     SCHEDULE_CREATE_SUCCESS(HttpStatus.OK, "스케줄 생성에 성공하였습니다."),
     SCHEDULE_RETRIEVE_SUCCESS(HttpStatus.OK, "스케줄 조회에 성공하였습니다."),
     SCHEDULE_UPDATE_SUCCESS(HttpStatus.OK, "스케줄 수정에 성공하였습니다."),
-    SCHEDULE_DELETE_SUCCESS(HttpStatus.OK, "스케줄 삭제에 성공하였습니다.")
+    SCHEDULE_DELETE_SUCCESS(HttpStatus.OK, "스케줄 삭제에 성공하였습니다."),
+
+    // 상품
+    PRODUCT_CREATE_SUCCESS(HttpStatus.OK, "상품 등록에 성공하였습니다."),
+    PRODUCT_READ_SUCCESS(HttpStatus.OK, "상품 조회에 성공하였습니다."),
+    PRODUCT_UPDATE_SUCCESS(HttpStatus.OK, "상품 수정에 성공하였습니다."),
+    PRODUCT_DELETE_SUCCESS(HttpStatus.OK, "상품 삭제에 성공하였습니다.")
     ;
 
     private final HttpStatus httpStatus;

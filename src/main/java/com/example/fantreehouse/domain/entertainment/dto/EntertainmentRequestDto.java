@@ -11,7 +11,6 @@ import org.hibernate.validator.constraints.UniqueElements;
 @Getter
 public class EntertainmentRequestDto {
     @NotBlank(message = "소속사 이름을 입력해주세요.")
-    @NotNull
     @Size(min = 1, max = 20, message = "소속사 이름은 최대 20글자 입니다.")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "소속사 이름은 영어와 숫자만 입력 가능합니다.")
     private String enterName;
