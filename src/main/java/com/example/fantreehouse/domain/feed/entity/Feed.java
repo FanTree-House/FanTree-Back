@@ -52,7 +52,7 @@ public class Feed extends Timestamped {
         this.artistName = artistName;
         this.contents = contents;
         this.postPicture = postPicture;
-//        this.likesCount = 0;
+        this.likesCount = 0;
         this.user = user;
         this.artistGroup = artistGroup;
     }
@@ -70,7 +70,7 @@ public class Feed extends Timestamped {
 
     //file 업로드 기능 전까지 임시 사용
     public static Feed of(CreateFeedRequestDto requestDto, User user, ArtistGroup artistGroup) {
-        return Feed.builder()
+        return com.example.fantreehouse.domain.feed.entity.Feed.builder()
                 .artistName(requestDto.getArtistName())
                 .contents(requestDto.getContents())
                 .user(user)
@@ -87,11 +87,8 @@ public class Feed extends Timestamped {
 //    }
 
     //file 업로드 기능 전까지 임시 사용
-    public Feed updateFeed(UpdateFeedRequestDto requestDto) {
-        return Feed.builder()
-                .contents(requestDto.getContents())
-                .postPicture(requestDto.getPostPicture())
-                .build();
-
+    public void updateFeed(UpdateFeedRequestDto requestDto) {
+        this.contents = requestDto.getContents();
+        this.postPicture = requestDto.getPostPicture();
     }
 }

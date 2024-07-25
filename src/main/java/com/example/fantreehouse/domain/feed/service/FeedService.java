@@ -72,6 +72,14 @@ public class FeedService {
         return CreateFeedResponseDto.of(newFeed);
     }
 
+    /**
+     * Feed 수정
+     * @param group_name
+     * @param artistFeedId
+     * @param userDetails
+     * @param requestDto
+     * @return
+     */
     @Transactional
     public UpdateFeedResponseDto updateFeed(String group_name, Long artistFeedId, UserDetailsImpl userDetails, UpdateFeedRequestDto requestDto) {
 
@@ -92,8 +100,10 @@ public class FeedService {
 //        String filePath = ;
 
 //        Feed updatedFeed = foundFeed.updateFeed(requestDto, filePath);
-        Feed updatedFeed = foundFeed.updateFeed(requestDto); //file 기능 전 임시 사용
-        return UpdateFeedResponseDto.of(updatedFeed);
+        foundFeed.updateFeed(requestDto); //file 기능 전 임시 사용
+
+
+        return UpdateFeedResponseDto.of(foundFeed);
     }
 
     /**
@@ -120,7 +130,13 @@ public class FeedService {
         return FeedResponseDto.of(foundFeed);
     }
 
-    //Feed 다건 조회(페이지) - 로그인 회원 누구나
+    /**
+     * Feed 다건 조회(페이지) - 로그인 회원 누구나
+     * @param groupName
+     * @param userDetails
+     * @param page
+     * @return
+     */
     public Page<FeedResponseDto> getAllFeed(String groupName, UserDetailsImpl userDetails,Integer page) {
 
         User loginUser = userDetails.getUser();
