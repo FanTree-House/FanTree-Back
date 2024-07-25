@@ -1,0 +1,73 @@
+### 변수 정의
+@enterName = hybe
+@groupName = seventeen
+
+### 공지사항 생성
+POST http://localhost:8080/feed/{{groupName}}/notice
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "title": "seventeen 공지사항",
+  "contents": "공지사항2",
+  "postPicture": "http://example.com/pic.jpg",
+  "category": "NOTICE"
+}
+
+### 특정 공지사항 조회
+GET http://localhost:8080/feed/{{groupName}}/notice/{{feedId}}
+
+### 전체 공지사항 조회
+GET http://localhost:8080/feed/{{groupName}}/notice
+
+### 공지사항 수정
+PATCH http://localhost:8080/feed/{{groupName}}/notice/{{feedId}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "title": "seventeen 공지사항 수정",
+  "contents": "공지사항1 수정 됨",
+  "postPicture": "http://example.com/pic.jpg",
+  "category": "NOTICE"
+}
+
+### 공지사항삭제
+DELETE http://localhost:8080/feed/{{groupName}}/notice/{{feedId}}
+Authorization: {{Authorization}}
+
+### 스케줄 생성
+POST http://localhost:8080/feed/{{groupName}}/schedule
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "title": "우지 스케줄",
+  "contents": "유튜브 출연",
+  "postPicture": "https://www.youtube.com/watch?v=DssBP24ig2Y",
+  "category": "SCHEDULE",
+  "date": "2024-08-09"
+}
+
+### 특정 스케줄 조회
+GET http://localhost:8080/feed/{{groupName}}/schedule/6
+
+### 전체 스케줄 조회
+GET http://localhost:8080/feed/{{groupName}}/schedule
+
+### 스케줄 수정
+PATCH http://localhost:8080/feed/{{groupName}}/schedule/{{feedId}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "title": "우지 스케줄",
+  "contents": "불참",
+  "postPicture": "https://www.youtube.com/watch?v=DssBP24ig2Y",
+  "category": "SCHEDULE",
+  "date": "2024-08-03"
+}
+
+### 스케줄 삭제
+DELETE http://localhost:8080/feed/{{groupName}}/schedule/{{feedId}}
+Authorization: {{Authorization}}

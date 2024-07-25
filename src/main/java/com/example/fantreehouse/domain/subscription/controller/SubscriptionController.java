@@ -17,6 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
+    /**
+     * 구독하기
+     * @param userDetails
+     * @param group_name
+     * @return
+     */
     @PostMapping
     public ResponseEntity<ResponseMessageDto> createSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                               @PathVariable String group_name
@@ -25,6 +31,13 @@ public class SubscriptionController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_SUCCESS_SUBSCRIPT));
     }
 
+    /**
+     * 구독해지하기
+     * @param userDetails
+     * @param group_name
+     * @param subscription
+     * @return
+     */
     @DeleteMapping
     public ResponseEntity<ResponseMessageDto> deleteSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                               @PathVariable String group_name,

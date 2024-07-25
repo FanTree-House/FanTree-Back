@@ -1,15 +1,33 @@
-### 회원가입 (Enter)
+### 유저 회원가입
 POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
-  "name": "김우진",
-  "nickname": "김우진",
-  "email": "rladnwlsok@naver.com",
-  "password": "rladnwls",
+  "id": "test1",
+  "name": "테스트",
+  "nickname": "연습용",
+  "email": "test@email.com",
+  "password": "test1234"
+}
+
+
+### 엔터 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "winter1",
+  "name": "winte",
+  "nickname": "winter",
+  "email": "winter1@email.com",
+  "password": "winter122333",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "admin": false,
+  "adminToken": "",
+  "artist": false,
+  "artistToken": "",
   "entertainment": true,
-  "entertainmentToken": "qwer1234qwer1234"
+  "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
 }
 
 ### 로그인 (Enter)
@@ -17,8 +35,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
-  "password": "rladnwls"
+  "id": "test",
+  "password": "test1234!"
 }
 
 > {%
@@ -27,4 +45,3 @@ Content-Type: application/json
     client.global.set("Authorization", response.headers.valueOf("Authorization"));
     client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
 %}
-
