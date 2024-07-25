@@ -1,7 +1,7 @@
 ### 변수 정의
 @enterName = hybe
 @groupName = seventeen
-@feedId = 8
+@feedId = 1
 
 ### 공지사항 생성
 POST http://localhost:8080/feed/{{groupName}}/notice
@@ -9,8 +9,8 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "title": "seventeen 공지사항",
-  "contents": "공지사항2",
+  "title": "seventeen 공지사항111",
+  "contents": "공지사항223232",
   "postPicture": "http://example.com/pic.jpg",
   "category": "NOTICE"
 }
