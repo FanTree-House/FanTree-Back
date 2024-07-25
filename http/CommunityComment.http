@@ -1,0 +1,19 @@
+### 커뮤니티 보드 피드 댓글 생성
+POST http://localhost:8080/fantree/artist/feeds/{{feedId}}/comments
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+### 커뮤니티 보드 피드 댓글 전체 조회
+POST http://localhost:8080/fantree/artist/feeds/{{feedId}}/comments
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+### 커뮤니티 보드 피드 댓글 수정
+POST http://localhost:8080/fantree/artist/feeds/{feedId}/{{commentId}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+### 커뮤니티 보드 피드 댓글 삭제
+POST http://localhost:8080/fantree/artist/feeds/{feedId}/{{commentId}}
+Authorization: {{Authorization}}
+Content-Type: application/json

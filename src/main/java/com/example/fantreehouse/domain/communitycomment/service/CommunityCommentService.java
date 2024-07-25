@@ -26,11 +26,11 @@ public class CommunityCommentService {
     private final UserRepository userRepository;
 
     //댓글생성
-    public CommunityCommentResponseDto createcComment(CommunityCommentRequestDto requestDto, User user, Long community_feed_id) {
+    public CommunityCommentResponseDto createcComment(CommunityCommentRequestDto requestDto, User user, Long feedId) {
         user = userRepository.findById(user.getId()).orElseThrow(()
                 -> new CustomException(ErrorType.USER_NOT_FOUND));
 
-        CommunityFeed feed = feedRepository.findById(community_feed_id).orElseThrow(()
+        CommunityFeed feed = feedRepository.findById(feedId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_FEED));
 
         if (!feed.getUser().getArtist().getArtistGroup().getId().equals(user.getArtist().getArtistGroup().getId())) {

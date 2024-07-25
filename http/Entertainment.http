@@ -50,8 +50,8 @@ Authorization: {{Authorization}}
 
 
 ### 아티스트 그룹 생성
-POST http://localhost:8080/entertainments/{{enterName}}
-Authorization: {{Authorization}}
+POST http://localhost:8080/entertainments/hybe
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3aW50ZXIxIiwiYXV0aCI6IkVOVEVSVEFJTk1FTlQiLCJzdGF0dXMiOiJBQ1RJVkVfVVNFUiIsImV4cCI6MTcyMTg4NzE0NSwiaWF0IjoxNzIxODg1MzQ1fQ.FZONMMgHaY8WH4IpxzGfcAm8bZz8px5TNQXtDQXvBH8
 Content-Type: application/json
 
 {

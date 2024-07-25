@@ -29,10 +29,6 @@ public class ArtistGroup extends Timestamped {
 
     private String artistProfilePicture;
 
-    //아티스트와 일대다
-//    @OneToMany(mappedBy = "artistGroup", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Artist> artists = new ArrayList<>();
-
     //엔터테이너먼트와 다대일 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entertainment_id")

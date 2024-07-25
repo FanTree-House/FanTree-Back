@@ -31,7 +31,7 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "winter1",
+  "id": "winter12",
   "name": "winte",
   "nickname": "winter",
   "email": "winter1@email.com",
@@ -83,7 +83,7 @@ Content-Type: application/json
 
 {
   "id": "winter1",
-  "password": "winter123"
+  "password": "winter122333"
 }
 
 > {%

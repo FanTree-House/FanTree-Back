@@ -8,6 +8,7 @@ import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRepository;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
+import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EntertainmentService {
     private final EntertainmentRepository enterRepository;
+    private final UserRepository userRepository;
 
     /**
      * 엔터 계정 생성

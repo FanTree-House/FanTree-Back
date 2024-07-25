@@ -1,0 +1,24 @@
+### 커뮤니티 보드 피드 생성
+POST http://localhost:8080/fantree/artist/feeds
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+### 커뮤니티 보드 피드 전체 조회
+POST http://localhost:8080/fantree/artist/feeds
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+### 커뮤니티 보드 피드 선택조회
+POST http://localhost:8080/fantree/artist/feeds/{feedId}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+### 커뮤니티 보드 피드 수정
+POST http://localhost:8080/fantree/artist/feeds/{feedId}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+### 커뮤니티 보드 피드 삭제
+POST http://localhost:8080/fantree/artist/feeds/{feedId}
+Authorization: {{Authorization}}
+Content-Type: application/json

@@ -49,18 +49,18 @@ public class CommunityFeedService {
     }
 
     //피드 선택 조회
-    public CommunityFeed findFeed(Long community_feed_id, User user, ArtistGroup artistGroup) {
+    public CommunityFeed findFeed(Long feedId, User user, ArtistGroup artistGroup) {
        fanCheck(user,artistGroup);
-        CommunityFeed feed = feedRepository.findById(community_feed_id).orElseThrow(()
+        CommunityFeed feed = feedRepository.findById(feedId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_FEED));
         return feed;
         }
 
     //피드 업데이트
     @Transactional
-    public void updateFeed(CommunityFeedUpdateRequestDto requestDto, Long community_feed_id, User user, ArtistGroup artistGroup) {
+    public void updateFeed(CommunityFeedUpdateRequestDto requestDto, Long feedId, User user, ArtistGroup artistGroup) {
         fanCheck(user, artistGroup);
-        CommunityFeed feed = feedRepository.findById(community_feed_id).orElseThrow(()
+        CommunityFeed feed = feedRepository.findById(feedId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_FEED));
         if (!feed.getUser().getId().equals(user.getId())) {
             throw new CustomException(ErrorType.NOT_USER_FEED);
@@ -70,9 +70,9 @@ public class CommunityFeedService {
 
     // 피드 삭제
     @Transactional
-    public void deleteFeed(Long community_feed_id, User user, ArtistGroup artistGroup) {
+    public void deleteFeed(Long feedId, User user, ArtistGroup artistGroup) {
         fanCheck(user, artistGroup);
-        CommunityFeed feed = feedRepository.findById(community_feed_id).orElseThrow(()
+        CommunityFeed feed = feedRepository.findById(feedId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_FEED));
         if (!feed.getUser().getId().equals(user.getId())) {
             throw new CustomException(ErrorType.NOT_USER_FEED);
@@ -82,12 +82,12 @@ public class CommunityFeedService {
 
     //유저가 아티스트 그룹에 가입되어있는지 확인하는 로직
     public void fanCheck(User user, ArtistGroup artistGroup) {
-//        user = userRepository.findById(user.getId()).orElseThrow(()
-//                -> new CustomException(ErrorType.USER_NOT_FOUND));
-//        artistGroup = artistGroupRepository.findById(artistGroup.getId()).orElseThrow(()
-//                -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
-//        if (!user.getArtist().getArtistGroup().getId().equals(artistGroup.getId())) {
-//            throw new CustomException(ErrorType.NOT_MATCH_USER);
-//        }
+        user = userRepository.findById(user.getId()).orElseThrow(()
+                -> new CustomException(ErrorType.USER_NOT_FOUND));
+        artistGroup = artistGroupRepository.findById(artistGroup.getId()).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
+        if (!user.getArtist().getArtistGroup().getId().equals(artistGroup.getId())) {
+            throw new CustomException(ErrorType.NOT_MATCH_USER);
+        }
     }
 }
