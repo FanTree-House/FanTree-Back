@@ -16,8 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -31,7 +29,7 @@ public class ProductService {
      */
     @Transactional
     public void createProduct(ProductRequestDto productRequestDto, User user) {
-        // [예외1] - Entertainment 권한 체크
+        // [예외1] - Admin 권한 체크
         checkEntertainmentAuthority(user);
 
         Product product = new Product(productRequestDto);
@@ -63,6 +61,31 @@ public class ProductService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<ProductResponseDto> productPage = productRepository.findAll(pageable).map(ProductResponseDto::new);
         return productPage;
+    }
+
+    /**
+     * 상품 수정
+     * @param productId
+     * @param requestDto
+     * @param user
+     */
+    @Transactional
+    public void updateProduct(Long productId, ProductRequestDto requestDto, User user) {
+        // [예외1] - Entertainment 권한 체크
+        checkEntertainmentAuthority(user);
+
+        // [예외2] - 존재하지 않는 상품
+        Product product = productRepository.findById(productId).orElseThrow(() ->
+                new CustomException(ErrorType.NOT_FOUND_PRODUCT));
+
+        if (null != requestDto.getProductName()) { product.updateProductName(requestDto.getProductName()); }
+        else if (null != requestDto.getStock()) { product.updateStock(requestDto.getStock()); }
+        else if (null != requestDto.getType()) { product.updateType(requestDto.getType()); }
+        else if (null != requestDto.getArtist()) { product.updateArtist(requestDto.getArtist()); }
+        else if (null != requestDto.getProductPicture()) { product.updateProductPicture(requestDto.getProductPicture()); }
+        else if (null != requestDto.getPrice()) { product.updatePrice(requestDto.getPrice()); }
+
+        productRepository.save(product);
     }
 
     private void checkEntertainmentAuthority(User user) {

@@ -48,8 +48,7 @@ public class EntertainmentService {
 
         // [예외 2] - 존재하지 않는 엔터테이먼트 계정
         Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() ->
-                new CustomException(ErrorType.NOT_FOUND_ENTER)
-        );
+                new CustomException(ErrorType.NOT_FOUND_ENTER));
 
         EntertainmentResponseDto enterResponseDto = new EntertainmentResponseDto(enter);
 
@@ -68,15 +67,12 @@ public class EntertainmentService {
         checkEntertainmentAuthority(user);
 
         // [예외 2] - 존재하지 않는 엔터테이먼트 계정
-        Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
+        Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() ->
+                new CustomException(ErrorType.NOT_FOUND_ENTER));
 
-        if (null != enterRequestDto.getEnterName() && null == enterRequestDto.getEnterNumber() && null == enterRequestDto.getEnterLogo()) {
-            enter.updateEnterName(enterRequestDto.getEnterName());
-        } else if (null == enterRequestDto.getEnterName() && null != enterRequestDto.getEnterNumber() && null == enterRequestDto.getEnterLogo()) {
-            enter.updateEnterNumber(enterRequestDto.getEnterNumber());
-        } else if (null == enterRequestDto.getEnterName() && null == enterRequestDto.getEnterNumber() && null != enterRequestDto.getEnterLogo()) {
-            enter.updateEnterLogo(enterRequestDto.getEnterLogo());
-        }
+        if (null != enterRequestDto.getEnterName()) { enter.updateEnterName(enterRequestDto.getEnterName()); }
+        else if (null != enterRequestDto.getEnterNumber()) { enter.updateEnterNumber(enterRequestDto.getEnterNumber()); }
+        else if (null != enterRequestDto.getEnterLogo()) { enter.updateEnterLogo(enterRequestDto.getEnterLogo()); }
 
         enterRepository.save(enter);
     }

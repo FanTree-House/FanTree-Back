@@ -59,14 +59,14 @@ public enum ErrorType implements ErrorCode {
     NOT_FOUNT_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾지 못했습니다."),
     NOT_USER_COMMENT(HttpStatus.NOT_ACCEPTABLE, "유저가 작성한 댓글이 아닙니다."),
 
-    //아티스트그룹
+    // 아티스트그룹
     NOT_FOUND_ARTISTGROUP(HttpStatus.NOT_FOUND, "아티스트그룹을 찾지 못했습니다."),
 
+    // 상품
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
-
+    NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다."),
 
     ;
-
 
 
     private final HttpStatus httpStatus;

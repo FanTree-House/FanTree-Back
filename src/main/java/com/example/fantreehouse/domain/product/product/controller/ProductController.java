@@ -55,14 +55,23 @@ public class ProductController {
         Page<ProductResponseDto> responseDto = productService.getProductList(page, size);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.PRODUCT_READ_SUCCESS, responseDto));
     }
-/*
-    // 상품 수정
-    @PatchMapping("/{productId}")
-    private ResponseEntity<ResponseMessageDto> updateProduct() {
 
+    /**
+     * 상품 수정
+     * @param productId
+     * @param requestDto
+     * @param userDetails
+     * @return
+     */
+    @PatchMapping("/{productId}")
+    private ResponseEntity<ResponseMessageDto> updateProduct(
+            @PathVariable Long productId,
+            @RequestBody ProductRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        productService.updateProduct(productId, requestDto, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.PRODUCT_UPDATE_SUCCESS));
     }
-
+/*
     // 상품 삭제
     @DeleteMapping("/{productId}")
     private ResponseEntity<ResponseMessageDto> deleteProduct() {

@@ -49,4 +49,28 @@ public class Product extends Timestamped {
         this.productPicture = productRequestDto.getProductPicture();
         this.price = productRequestDto.getPrice();
     }
+
+    public void updateProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void updateStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public void updateType(String type) {
+        this.type = type;
+    }
+
+    public void updateArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public void updateProductPicture(String productPicture) {
+        this.productPicture = productPicture;
+    }
+
+    public void updatePrice(Integer price) {
+        this.price = price;
+    }
 }

@@ -3,13 +3,13 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "id": "dnwlsadmin",
-  "name": "우진어드민",
-  "nickname": "우진어드민",
+  "id": "dnwlsenter",
+  "name": "우진엔터",
+  "nickname": "우진엔터",
   "email": "rladnwlsok@naver.com",
-  "password": "dnwlsadmin",
-  "admin": true,
-  "adminToken": "1np0t2ncesuuuud3rTaMeng5"
+  "password": "dnwlsenter",
+  "entertainment": true,
+  "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
 }
 
 ### 로그인 (Enter)
@@ -17,8 +17,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "dnwlsadmin",
-  "password": "dnwlsadmin"
+  "id": "dnwlsenter",
+  "password": "dnwlsenter"
 }
 
 > {%
