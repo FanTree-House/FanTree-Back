@@ -71,12 +71,19 @@ public class ProductController {
         productService.updateProduct(productId, requestDto, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.PRODUCT_UPDATE_SUCCESS));
     }
-/*
-    // 상품 삭제
-    @DeleteMapping("/{productId}")
-    private ResponseEntity<ResponseMessageDto> deleteProduct() {
 
+    /**
+     * 상품 삭제
+     * @param productId
+     * @param userDetails
+     * @return
+     */
+    @DeleteMapping("/{productId}")
+    private ResponseEntity<ResponseMessageDto> deleteProduct(
+            @PathVariable Long productId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        productService.deleteProduct(productId, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.PRODUCT_DELETE_SUCCESS));
-    }  */
+    }
 
 }

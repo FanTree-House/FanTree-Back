@@ -2,6 +2,7 @@ package com.example.fantreehouse.domain.product.product.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
+import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.product.product.dto.ProductRequestDto;
 import com.example.fantreehouse.domain.product.product.dto.ProductResponseDto;
 import com.example.fantreehouse.domain.product.product.entity.Product;
@@ -86,6 +87,23 @@ public class ProductService {
         else if (null != requestDto.getPrice()) { product.updatePrice(requestDto.getPrice()); }
 
         productRepository.save(product);
+    }
+
+    /**
+     * 상품 삭제
+     * @param productId
+     * @param user
+     */
+    @Transactional
+    public void deleteProduct(Long productId, User user) {
+        // [예외1] - Entertainment 권한 체크
+        checkEntertainmentAuthority(user);
+
+        // [예외2] - 존재하지 않는 상품
+        Product product = productRepository.findById(productId).orElseThrow(() ->
+                new CustomException(ErrorType.NOT_FOUND_PRODUCT));
+
+        productRepository.delete(product);
     }
 
     private void checkEntertainmentAuthority(User user) {
