@@ -1,13 +1,18 @@
-### 회원가입 (Enter)
-POST http://localhost:8080/users
+### 엔터 회원가입
+POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "winter12",
-  "name": "윈터",
-  "nickname": "윈터",
-  "email": "rladnwlsok@naver.com",
-  "password": "winter12",
+  "id": "winter1",
+  "name": "winte",
+  "nickname": "winter",
+  "email": "winter1@email.com",
+  "password": "winter122333",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "admin": false,
+  "adminToken": "",
+  "artist": false,
+  "artistToken": "",
   "entertainment": true,
   "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
 }
@@ -17,8 +22,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "winter12",
-  "password": "winter12"
+  "id": "winter1",
+  "password": "winter122333"
 }
 
 > {%
