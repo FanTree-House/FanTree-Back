@@ -16,6 +16,7 @@ import com.example.fantreehouse.common.enums.ResponseStatus;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,7 +31,7 @@ public class UserController {
   private final JwtTokenHelper jwtTokenHelper;
 
 
-    @PostMapping
+    @PostMapping(value = {"/invite/entertainment", "/invite/artist", "/admin"})
     public ResponseEntity<ResponseMessageDto> signUp(@Valid @RequestBody SignUpRequestDto requestDto) {
         userService.signUp(requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
