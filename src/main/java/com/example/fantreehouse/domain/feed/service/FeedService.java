@@ -150,7 +150,7 @@ public class FeedService {
 
     //Feed 삭제
     @Transactional
-    public void deleteFeed(String groupName, Long artistFeedId, UserDetailsImpl userDetails) {
+    public void deleteFeed(Long artistFeedId, UserDetailsImpl userDetails) {
         User loginUser = userDetails.getUser();
         UserRoleEnum loginUserRole = loginUser.getUserRole();
 
@@ -167,9 +167,6 @@ public class FeedService {
 
         Long loginUserId = loginUser.getId();
         Long feedWriterId = foundFeed.getUser().getId();
-
-//        //groupName 어디에 사용하지
-//        //loginUser 의 그룹이름이 groupName 과 동일한지..확인..? //엔터인 경우는 그 그룹이름을 가진 그룹을 갖는지 확인..?
 
         // 로그인유저가 '작성자 본인'이거나 '작성자의 엔터테인먼트를 가진 유저'인 경우
         if (! (loginUserId.equals(feedWriterId) ||

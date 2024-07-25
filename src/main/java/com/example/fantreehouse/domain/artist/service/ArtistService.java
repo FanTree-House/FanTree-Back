@@ -85,6 +85,7 @@ public class ArtistService {
         Artist foundArtist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
 
+
         return ArtistProfileResponseDto.of(foundArtist);
     }
 
@@ -119,7 +120,6 @@ public class ArtistService {
         }
     }
     // 아티스트인지 확인
-
     private void checkUserRole(UserRoleEnum userRoleEnum) {
         if (!userRoleEnum.equals(UserRoleEnum.ARTIST)) {
             throw new AuthorizedException(UNAUTHORIZED);

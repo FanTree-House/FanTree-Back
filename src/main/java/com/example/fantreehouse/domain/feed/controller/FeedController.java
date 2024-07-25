@@ -116,17 +116,15 @@ public class FeedController {
 
     /**
      * Feed 삭제
-     * @param groupName
      * @param artistFeedId
      * @return
      */
     @DeleteMapping("/feed/{artistFeedId}")
     public ResponseEntity<ResponseMessageDto> deleteFeed (
-            @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl UserDetails
     ) {
-        feedService.deleteFeed(groupName, artistFeedId, UserDetails);
+        feedService.deleteFeed(artistFeedId, UserDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_DELETED));
     }
 

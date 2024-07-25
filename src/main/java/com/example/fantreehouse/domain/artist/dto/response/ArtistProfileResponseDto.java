@@ -2,7 +2,9 @@ package com.example.fantreehouse.domain.artist.dto.response;
 
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
+import lombok.Getter;
 
+@Getter
 public class ArtistProfileResponseDto {
 
     private String artistName; //활동명
@@ -18,12 +20,13 @@ public class ArtistProfileResponseDto {
         this.artistGroup = artistGroup;
     }
 
-    public static ArtistProfileResponseDto of(Artist foundArtist) {
+    public static ArtistProfileResponseDto of(Artist artist) {
         return new ArtistProfileResponseDto(
-                foundArtist.getArtistName(),
-                foundArtist.getArtistProfilePicture(),
-                foundArtist.getSubscriberCount(),
-                foundArtist.getArtistGroup()
+                artist.getArtistName(),
+                artist.getArtistProfilePicture(),
+                artist.getSubscriberCount(),
+                artist.getArtistGroup()
         );
     }
+
 }
