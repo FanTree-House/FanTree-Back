@@ -32,20 +32,23 @@ public class UserController {
 
 
     @PostMapping(value = {"","/invite/entertainment", "/invite/artist", "/admin"})
-    public ResponseEntity<ResponseMessageDto> signUp(@Valid @RequestBody SignUpRequestDto requestDto) {
+    public ResponseEntity<ResponseMessageDto> signUp(
+        @Valid @RequestBody SignUpRequestDto requestDto) {
         userService.signUp(requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
     }
 
     @PutMapping("/withDraw")
-    public ResponseEntity<ResponseMessageDto> withDraw(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public ResponseEntity<ResponseMessageDto> withDraw(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
         @Valid @RequestBody WithdrawRequestDto requestDto) {
         userService.withDraw(userDetails.getUser().getId(),requestDto.getPassword());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.WITHDRAW_SUCCESS));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ResponseMessageDto> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ResponseMessageDto> logout(
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.logout(userDetails.getUser().getId());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.LOGOUT_SUCCESS));
     }
