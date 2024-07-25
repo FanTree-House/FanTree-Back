@@ -1,7 +1,6 @@
 package com.example.fantreehouse.domain.artistgroup.repository;
 
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
