@@ -39,7 +39,6 @@ public class FeedController {
      * @return
      * @throws IOException
      */
-
 //    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PostMapping
     public ResponseEntity<ResponseDataDto<CreateFeedResponseDto>> createFeed(
@@ -65,7 +64,6 @@ public class FeedController {
      * @return
      * @throws IOException
      */
-
     @PatchMapping("/feed/{artistFeedId}")
     public ResponseEntity<ResponseDataDto<?>> updateFeed(
             @PathVariable final String groupName,
@@ -83,12 +81,11 @@ public class FeedController {
     }
 
     /**
-     * Feed 조회
+     * Feed 단건 조회
      * @param groupName
      * @param artistFeedId
      * @return
      */
-
     @GetMapping("/feed/{artistFeedId}")
     public ResponseEntity<ResponseDataDto<?>> getFeed (
             @PathVariable final String groupName,
@@ -99,8 +96,13 @@ public class FeedController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDto));
     }
 
-
-    //Feed 전체 조회
+    /**
+     * Feed 전체 조회
+     * @param groupName
+     * @param userDetails
+     * @param page
+     * @return
+     */
     @GetMapping("/feeds")
     public ResponseEntity<ResponseDataDto<Page<FeedResponseDto>>> getAllFeed (
             @PathVariable final String groupName,
@@ -114,17 +116,15 @@ public class FeedController {
 
     /**
      * Feed 삭제
-     * @param groupName
      * @param artistFeedId
      * @return
      */
     @DeleteMapping("/feed/{artistFeedId}")
     public ResponseEntity<ResponseMessageDto> deleteFeed (
-            @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl UserDetails
     ) {
-        feedService.deleteFeed(groupName, artistFeedId, UserDetails);
+        feedService.deleteFeed(artistFeedId, UserDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_DELETED));
     }
 

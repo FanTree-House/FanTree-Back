@@ -20,11 +20,9 @@ import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.common.enums.PageSize.FEED_PAGE_SIZE;
@@ -72,6 +70,14 @@ public class FeedService {
         return CreateFeedResponseDto.of(newFeed);
     }
 
+    /**
+     * Feed 수정
+     * @param group_name
+     * @param artistFeedId
+     * @param userDetails
+     * @param requestDto
+     * @return
+     */
     @Transactional
     public UpdateFeedResponseDto updateFeed(String group_name, Long artistFeedId, UserDetailsImpl userDetails, UpdateFeedRequestDto requestDto) {
 
@@ -92,8 +98,9 @@ public class FeedService {
 //        String filePath = ;
 
 //        Feed updatedFeed = foundFeed.updateFeed(requestDto, filePath);
-        Feed updatedFeed = foundFeed.updateFeed(requestDto); //file 기능 전 임시 사용
-        return UpdateFeedResponseDto.of(updatedFeed);
+        foundFeed.updateFeed(requestDto); //file 기능 전 임시 사용
+
+        return UpdateFeedResponseDto.of(foundFeed);
     }
 
     /**
@@ -120,7 +127,13 @@ public class FeedService {
         return FeedResponseDto.of(foundFeed);
     }
 
-    //Feed 다건 조회(페이지) - 로그인 회원 누구나
+    /**
+     * Feed 다건 조회(페이지) - 로그인 회원 누구나
+     * @param groupName
+     * @param userDetails
+     * @param page
+     * @return
+     */
     public Page<FeedResponseDto> getAllFeed(String groupName, UserDetailsImpl userDetails,Integer page) {
 
         User loginUser = userDetails.getUser();
@@ -135,14 +148,9 @@ public class FeedService {
         return pagedFeed.map(FeedResponseDto::of);
     }
 
-    /**
-     * Feed 삭제
-     * @param groupName
-     * @param artistFeedId
-     * @param userDetails
-     */
+    //Feed 삭제
     @Transactional
-    public void deleteFeed(String groupName, Long artistFeedId, UserDetailsImpl userDetails) {
+    public void deleteFeed(Long artistFeedId, UserDetailsImpl userDetails) {
         User loginUser = userDetails.getUser();
         UserRoleEnum loginUserRole = loginUser.getUserRole();
 
@@ -159,10 +167,6 @@ public class FeedService {
 
         Long loginUserId = loginUser.getId();
         Long feedWriterId = foundFeed.getUser().getId();
-
-//        //groupName 어디에 사용하지
-//        //loginUser 의 그룹이름이 groupName 과 동일한지..확인..? //엔터인 경우는 그 그룹이름을 가진 그룹을 갖는지 확인..?
-//        loginUser.getArtist().getArtistGroup().getGroupName()
 
         // 로그인유저가 '작성자 본인'이거나 '작성자의 엔터테인먼트를 가진 유저'인 경우
         if (! (loginUserId.equals(feedWriterId) ||

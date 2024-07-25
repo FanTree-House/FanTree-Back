@@ -1,0 +1,23 @@
+### 변수
+@artistId = 1
+
+### 아티스트 계정 생성
+POST http://localhost:8080/artist
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "artistName": "artist1",
+  "artistProfilePicture": "artist123!@#"
+}
+
+### 아티스트 단건 조회
+GET http://localhost:8080/artist/{{artistId}}
+Authorization: {{Authorization}}
+
+### 아티스트 전체 조회 (페이징)
+GET http://localhost:8080/artist?page=0
+
+### 아티스트 삭제
+DELETE http://localhost:8080/artist/{{artistId}}
+Authorization: {{Authorization}}
