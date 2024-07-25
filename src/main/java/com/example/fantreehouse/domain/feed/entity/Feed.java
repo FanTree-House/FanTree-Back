@@ -1,6 +1,7 @@
 package com.example.fantreehouse.domain.feed.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
+import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.comment.entity.Comment;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -37,6 +38,10 @@ public class Feed extends Timestamped {
     @OneToMany(mappedBy = "feed")
     private List<Comment> comments = new ArrayList<>();
 
+    // 아티스트 그룹이랑 다대일
+    @ManyToOne
+    @JoinColumn(name = "artist_group_id")
+    private ArtistGroup artistGroup;
 
     // 사용자랑 다대일
     @ManyToOne

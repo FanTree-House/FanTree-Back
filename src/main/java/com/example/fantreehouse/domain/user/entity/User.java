@@ -3,6 +3,8 @@ package com.example.fantreehouse.domain.user.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
+import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
@@ -51,22 +53,36 @@ public class User extends Timestamped {
 
     private String refreshToken;
 
+    //아티스트 피드와 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<Feed> feedList = new ArrayList<>();
 
+    //픽업데이터와 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<PickUp> pickUpList = new ArrayList<>();
 
+    //엔터테이너먼트와 일대일 매핑
     @OneToOne         // 주인
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
+    //아티스트와 일대다? 다대일? 일대일? 매핑
     @OneToOne
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
+    //구독자와 일대다 매핑
     @OneToMany(mappedBy = "user")
-    private List<Subscription> subscriptions;
+    private List<Subscription> subscriptions = new ArrayList<>();
+
+    //구독자 커뮤니티랑 일대다 매핑
+    @OneToMany(mappedBy = "user")
+    private List<CommunityFeed> communityFeedList = new ArrayList<>();
+
+    //엔터 피드와 일대다 매핑
+    @OneToMany(mappedBy = "user")
+    private List<EnterFeed> enterFeedList = new ArrayList<>();
+
 
     @Builder
     public User(String loginId, String name, String nickname,

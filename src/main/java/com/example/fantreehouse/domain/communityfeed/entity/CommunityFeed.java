@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,14 +27,17 @@ public class CommunityFeed extends Timestamped {
     private String post_picture;
     private String nickname;
 
+    //유저와 다대일 매핑
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    //커뮤니티댓글과 일대다 매핑
     @OneToMany(mappedBy = "communityFeed")
-    private List<CommunityComment> communityComments;
+    private List<CommunityComment> communityCommentList = new ArrayList<>();
 
-    @ManyToOne
+    //아티스트 그룹과 다대일 매핑
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 

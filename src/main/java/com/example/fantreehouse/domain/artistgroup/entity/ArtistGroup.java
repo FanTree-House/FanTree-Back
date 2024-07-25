@@ -3,7 +3,9 @@ package com.example.fantreehouse.domain.artistgroup.entity;
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
+import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
+import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,24 +29,34 @@ public class ArtistGroup extends Timestamped {
 
     private String artistProfilePicture;
 
+    //아티스트와 일대다
+//    @OneToMany(mappedBy = "artistGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Artist> artists = new ArrayList<>();
+
+    //엔터테이너먼트와 다대일 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
-    @OneToMany(mappedBy = "artistGroup", cascade = CascadeType.ALL)
-    private List<Artist> artists = new ArrayList<>();
-
-    //group과 Artist와의 일대다관계
-    @OneToMany(mappedBy = "artistGroup", orphanRemoval = true)
-    private List<Artist> artistList;
-
-    //구독자와 일대다 관계
+    //엔터피드와 다대일 매핑
     @OneToMany(mappedBy = "artistGroup")
-    private List<Subscription> subscriptions;
+    private List<EnterFeed> enterFeedList = new ArrayList<>();
 
-    //구독자 커뮤니티 피드와 일대다관계
+    // 아티스트그룹과 아티스트와의 일대다 매핑
+    @OneToMany(mappedBy = "artistGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Artist> artistList = new ArrayList<>();
+
+    //구독자와 일대다 매핑
     @OneToMany(mappedBy = "artistGroup")
-    private List<CommunityFeed> communityFeeds;
+    private List<Subscription> subscriptionsList = new ArrayList<>();
+
+    //구독자 커뮤니티 피드와 일대다 매핑
+    @OneToMany(mappedBy = "artistGroup")
+    private List<CommunityFeed> communityFeedList = new ArrayList<>();
+
+    //아티스트피드와 일대다 매핑
+    @OneToMany(mappedBy = "artistGroup")
+    private List<Feed> feedList = new ArrayList<>();
 
     public ArtistGroup(String groupName, String artistProfilePicture, Entertainment entertainment) {
         this.groupName = groupName;
@@ -54,16 +66,16 @@ public class ArtistGroup extends Timestamped {
 
     // 아티스트 추가 메서드
     public void addArtist(Artist artist) {
-        artists.add(artist);
+        artistList.add(artist);
         artist.setArtistGroup(this);
     }
 
     // 기존 아티스트 목록 초기화 메서드
     public void clearArtists() {
-        for (Artist artist : new ArrayList<>(artists)) {
+        for (Artist artist : new ArrayList<>(artistList)) {
             artist.setArtistGroup(null);
         }
-        artists.clear();
+        artistList.clear();
     }
 
     // 그룹 이름 설정 메서드

@@ -1,0 +1,8 @@
+### 구독하기 (Subscript)
+POST http://localhost:8080/artistGroup/subscript/{group_name}
+Content-Type: application/json
+
+
+### 구독해지하기 (Subscript)
+DELETE http://localhost:8080/artistGroup/subscript/{group_name}
+Content-Type: application/json

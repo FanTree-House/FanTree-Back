@@ -20,7 +20,7 @@ public class CommunityComment extends Timestamped {
     private String contents;
 
     @ManyToOne
-    @JoinColumn(name = "community_feed_id")
+    @JoinColumn(name = "communityFeed_id")
     private CommunityFeed communityFeed;
 
     public CommunityComment(CommunityCommentRequestDto requestDto) {
