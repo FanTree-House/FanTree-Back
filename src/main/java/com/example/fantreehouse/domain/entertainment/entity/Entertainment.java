@@ -42,4 +42,16 @@ public class Entertainment extends Timestamped {
         this.enterLogo = enterRequestDto.getEnterLogo();
         this.user = user;
     }
+
+    public void updateEnterName(String enterName) {
+        this.enterName = enterName;
+    }
+
+    public void updateEnterNumber(Long enterNumber) {
+        this.enterNumber = enterNumber;
+    }
+    public void updateEnterLogo(String enterLogo) {
+        this.enterLogo = enterLogo;
+    }
+
 }

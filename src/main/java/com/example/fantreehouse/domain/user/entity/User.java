@@ -57,10 +57,7 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user")
     private List<PickUp> pickUpList = new ArrayList<>();
 
-    @Column
-    private Long enter_id;
-
-    @OneToOne         // 주인
+    @OneToOne
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
