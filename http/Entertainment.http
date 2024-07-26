@@ -1,15 +1,15 @@
 ### 변수 정의
 @enterName = hybe
-@groupName = seventeen
+@groupName = aespa
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGVzdDIiLCJhdXRoIjoiRU5URVJUQUlOTUVOVCIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIxOTc2NDUwLCJpYXQiOjE3MjE5NzQ2NTB9.bTHm4ZpeakDBjBb-IG_IFyZBJDhvbaPnc9wV6lcCgUs
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "enterName": "testenter3",
-  "enterNumber": 123456,
+  "enterName": "hybe",
+  "enterNumber": 12334678,
   "enterLogo": "image"
 }
 
@@ -50,24 +50,24 @@ Authorization: {{Authorization}}
 
 
 ### 아티스트 그룹 생성
-POST http://localhost:8080/entertainments/testenter
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGVzdCIsImF1dGgiOiJFTlRFUlRBSU5NRU5UIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjE5NzIxMTksImlhdCI6MTcyMTk3MDMxOX0.lTjyEXCDIJ6oCErUTS-rkg_CY2XkWqKTep9lpFNU4Lg
+POST http://localhost:8080/entertainments/{{enterName}}
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "groupName": "Mouse",
+  "groupName": "seventeen",
   "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "artistIds": [2]
+  "artistIds": [1]
 }
 
 ### 특정 아티스트 그룹 조회
-GET http://localhost:8080/entertainments/SM/seventeen
+GET http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
 
 ###아티스트 그룹 전체 조회
-GET http://localhost:8080/entertainments/SM/groupName
+GET http://localhost:8080/entertainments/{{enterName}}/groupName
 
 ### 아티스트 그룹 수정
-PATCH http://localhost:8080/entertainments/SM/seventeen
+PATCH http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
 Authorization: {{Authorization}}
 Content-Type: application/json
 
