@@ -65,7 +65,7 @@ public class FeedController {
      * @throws IOException
      */
     @PatchMapping("/feed/{artistFeedId}")
-    public ResponseEntity<ResponseDataDto<?>> updateFeed(
+    public ResponseEntity<ResponseDataDto<UpdateFeedResponseDto>> updateFeed(
             @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
 //            @RequestPart(value = "file", required = false) MultipartFile file,
@@ -87,7 +87,7 @@ public class FeedController {
      * @return
      */
     @GetMapping("/feed/{artistFeedId}")
-    public ResponseEntity<ResponseDataDto<?>> getFeed (
+    public ResponseEntity<ResponseDataDto<FeedResponseDto>> getFeed (
             @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails

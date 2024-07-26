@@ -2,7 +2,7 @@ package com.example.fantreehouse.domain.user.entity;
 
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
-import com.example.fantreehouse.common.security.UserDetailsImpl;
+import com.example.fantreehouse.common.exception.errorcode.AuthorizedException;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
@@ -17,6 +17,10 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.fantreehouse.common.enums.ErrorType.UNAUTHORIZED;
+import static com.example.fantreehouse.domain.user.entity.UserRoleEnum.ARTIST;
+import static com.example.fantreehouse.domain.user.entity.UserRoleEnum.USER;
 
 
 @Entity
@@ -66,10 +70,6 @@ public class User extends Timestamped {
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
-//    public void setArtist(Artist artist) {
-//        this.artist = artist;
-//    }
-
     @OneToMany(mappedBy = "user")
     private List<Subscription> subscriptions;
 
@@ -104,5 +104,18 @@ public class User extends Timestamped {
     public void update(Optional<String> email, Optional<String> newEncodePw) {
         this.email = email.orElse(this.email);
         this.password = newEncodePw.orElse(this.password);
+    }
+
+    //구독자 중 USER 와 ARTIST 권한인 유저
+    public static void hasCommentAuthorization(List<User> subscribers) {
+        for (User user : subscribers ) {
+            switch (user.getUserRole()) {
+                case USER, ARTIST -> {
+                }
+                default -> {
+                    throw new AuthorizedException(UNAUTHORIZED);
+                }
+            }
+        }
     }
 }

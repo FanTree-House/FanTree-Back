@@ -40,7 +40,7 @@ public enum ErrorType implements ErrorCode {
     MISMATCH_ENTERTAINMENTTOKEN(HttpStatus.OK, "Entertainment 토큰값이 일치하지 않습니다."),
 
     //Feed
-    FEED_NOT_FOUND(HttpStatus.NOT_FOUND,"찾는 글이 없습니다."),
+    FEED_NOT_FOUND(HttpStatus.NOT_FOUND,"찾는 피드가 없습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"접근 권한이 없습니다."),
 
     // Entertainment
