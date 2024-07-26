@@ -50,7 +50,7 @@ public class ArtistGroup extends Timestamped {
     @OneToMany(mappedBy = "artistGroup")
     private List<CommunityFeed> communityFeedList = new ArrayList<>();
 
-    //아티스트피드와 일대다 매핑
+    //아티스트피드와 일대다 매핑하기
     @OneToMany(mappedBy = "artistGroup")
     private List<Feed> feedList = new ArrayList<>();
 
