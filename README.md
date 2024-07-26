@@ -76,18 +76,15 @@ SpringBoot 3.3
 ## 아키텍쳐
 
 
+
 ---
 ## API 명세서
   [API 명세서](https://www.notion.so/teamsparta/8726a50848b84392992f4c9d7281cbe4?v=f346494e067c4471ab4e70997ccc8a25)
   
 ---
 ## ERD
-<details>
-<summary>열기</summary>
-<div markdown="1">
-  <img src=>
-</div>
-</details>
+![FanTree House](https://github.com/user-attachments/assets/c889dbdd-88cd-488b-bd15-b88db93364f1)
+
 
 
 ---
