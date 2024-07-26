@@ -110,4 +110,8 @@ public class User extends Timestamped {
     public void transRole(UserRoleEnum roleEnum) {
         this.userRole = roleEnum;
     }
+
+    public void transUser() {
+        this.status = UserStatusEnum.ACTIVE_USER;
+    }
 }

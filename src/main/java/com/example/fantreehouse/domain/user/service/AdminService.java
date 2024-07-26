@@ -7,6 +7,7 @@ import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.user.dto.AdminRequestDto;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
+import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -28,7 +29,12 @@ public class AdminService {
         User blacklistUser = userRepository.findByLoginId(requestDto.getLoginId()).orElseThrow(() ->
                 new CustomException(ErrorType.NOT_FOUND_ENTER));
 
-        blacklistUser.transBlacklist();
+        // 블랙리스트아닐 때
+        if (! UserStatusEnum.BLACK_LIST.equals(blacklistUser.getStatus())) { // 이거 블랙리스트 만들기전에 status를 저장해두고 나중에 풀어줄 때 그거 끌어다쓰면 될듯?
+            blacklistUser.transBlacklist();
+        } else {
+            blacklistUser.transUser();
+        }
 
         userRepository.save(blacklistUser);
     }
