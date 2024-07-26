@@ -55,6 +55,10 @@ public class FeedService {
         Artist loginArtist = artistRepository.findByUserId(loginUser.getId())
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
 
+        //artistGroup 에 소속되어 있지 않으면 (또는 엔터테인먼트가 없으면 게시글 불가)
+        ArtistGroup artistGroup = loginArtist.getArtistGroup();
+
+
         checkArtistGroup(loginArtist, groupName);
 
         //file 경로 추출

@@ -1,0 +1,11 @@
+## 변수
+@feedId=1
+
+### 아티스트 Feed에 댓글1 생성 (아티스트나 구독 유저로 할 것)
+POST http://localhost:8080/feed/{{feedId}}/comment
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "contents": "여러분 안녕하세요"
+}

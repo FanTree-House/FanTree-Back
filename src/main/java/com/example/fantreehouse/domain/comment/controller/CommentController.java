@@ -8,8 +8,6 @@ import com.example.fantreehouse.domain.comment.dto.CommentRequestDto;
 import com.example.fantreehouse.domain.comment.dto.CommentResponseDto;
 import com.example.fantreehouse.domain.comment.dto.request.CreateCommentRequestDto;
 import com.example.fantreehouse.domain.comment.service.CommentService;
-import com.example.fantreehouse.domain.feed.dto.response.CreateFeedResponseDto;
-import com.example.fantreehouse.domain.feed.dto.response.FeedResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +19,13 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/{groupName}/feed/{feedId}")
+@RequestMapping("/feed/{feedId}")
 public class CommentController {
 
     private final CommentService commentService;
 
     /**
      * 아티스트 feed 댓글 생성
-     * @param groupName
      * @param feedId
      * @param userDetails
      * @param requestDto
@@ -36,18 +33,16 @@ public class CommentController {
      */
     @PostMapping("/comment")
     public ResponseEntity<ResponseMessageDto> createComment(
-        @PathVariable String groupName,
         @PathVariable Long feedId,
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @Valid @RequestBody CreateCommentRequestDto requestDto
     ) {
-        commentService.createComment(groupName, feedId, userDetails, requestDto);
+        commentService.createComment(feedId, userDetails, requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CREATE_SUCCESS_COMMENT));
     }
 
     /**
      * 아티스트 feed 댓글 수정
-     * @param groupName
      * @param feedId
      * @param artistFeedCommentId
      * @param userDetails
@@ -56,19 +51,17 @@ public class CommentController {
      */
     @PutMapping("/comment/{artistFeedCommentId}")
     public ResponseEntity<ResponseMessageDto> updateComment(
-            @PathVariable String groupName,
             @PathVariable Long feedId,
             @PathVariable Long artistFeedCommentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody CommentRequestDto requestDto
     ) {
-        commentService.updateComment(groupName, feedId, artistFeedCommentId, userDetails, requestDto);
+        commentService.updateComment(feedId, artistFeedCommentId, userDetails, requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.UPDATE_SUCCESS_COMMENT));
     }
 
     /**
      * 아티스트 feed 댓글 삭제
-     * @param groupName
      * @param feedId
      * @param artistFeedCommentId
      * @param userDetails
@@ -76,25 +69,29 @@ public class CommentController {
      */
     @DeleteMapping("/comment/{artistFeedCommentId}")
     public ResponseEntity<ResponseMessageDto> deleteComment(
-            @PathVariable String groupName,
             @PathVariable Long feedId,
             @PathVariable Long artistFeedCommentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        commentService.deleteComment(groupName, feedId, artistFeedCommentId, userDetails);
+        commentService.deleteComment(feedId, artistFeedCommentId, userDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.DELETE_SUCCESS_COMMENT));
     }
 
-    // 아티스트 feed 댓글 (전체) 조회
+    /**
+     * 아티스트 feed 댓글 (전체) 조회
+     * @param feedId
+     * @param userDetails
+     * @param page
+     * @return
+     */
     @GetMapping
     public ResponseEntity<ResponseDataDto<Page<CommentResponseDto>>> getComment(
-            @PathVariable String groupName,
             @PathVariable Long feedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam int page
 
     ) {
-        Page<CommentResponseDto> pageComment = commentService.getAllComment(groupName, feedId, userDetails, page);
+        Page<CommentResponseDto> pageComment = commentService.getAllComment(feedId, userDetails, page);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.READ_SUCCESS_COMMENT, pageComment));
     }
 

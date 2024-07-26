@@ -1,5 +1,5 @@
 ### 변수 정의
-@enterName = hybe
+@enterName = dentist
 @groupName = seventeen
 
 ### 엔터 계정 생성
@@ -23,7 +23,7 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "enterName": "dentist"
+  "enterName": "SM"
 }
 
 ### 엔터 계정 수정 (엔터 넘버)

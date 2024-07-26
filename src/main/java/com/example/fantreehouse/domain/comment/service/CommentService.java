@@ -35,7 +35,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     //댓글 작성 - 해당 아티스트 & 구독한 유저가
-    public void createComment(String groupName, Long feedId, UserDetailsImpl userDetails, CreateCommentRequestDto requestDto) {
+    public void createComment(Long feedId, UserDetailsImpl userDetails, CreateCommentRequestDto requestDto) {
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
 
@@ -60,7 +60,7 @@ public class CommentService {
 
     // 댓글 수정 - 작성자 본인만 가능
     @Transactional
-    public void updateComment(String groupName, Long feedId, Long artistFeedCommentId,
+    public void updateComment(Long feedId, Long artistFeedCommentId,
                               UserDetailsImpl userDetails, CommentRequestDto requestDto) {
 
         User loginUser = userDetails.getUser();
@@ -81,7 +81,7 @@ public class CommentService {
 
 
     //comment 삭제 //작성자 본인, 아티스트의 경우 엔터와 어드민, 어떤 유저든 어드민 가능
-    public void deleteComment(String groupName, Long feedId, Long artistFeedCommentId, UserDetailsImpl userDetails) {
+    public void deleteComment(Long feedId, Long artistFeedCommentId, UserDetailsImpl userDetails) {
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
 
@@ -109,7 +109,7 @@ public class CommentService {
     }
 
     //특정 feed 의 모든 comment 조회 // activeUser 면 됨
-    public Page<CommentResponseDto> getAllComment(String groupName, Long feedId, UserDetailsImpl userDetails, int page) {
+    public Page<CommentResponseDto> getAllComment(Long feedId, UserDetailsImpl userDetails, int page) {
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
 
@@ -133,7 +133,7 @@ public class CommentService {
         }
     }
 
-    //로그인 유저가 feed 작성자 본인 이거나, 구독자 중 USER 또는 ARTIST 인 유저
+    //로그인 유저가 feed 작성자 본인(ARTIST) 이거나, 구독자 중 USER 또는 ARTIST 인 유저
     private void canWriteComment(User loginUser, User feedUser, List<User> subscribers) {
         if (!loginUser.getId().equals(feedUser.getId()))
             User.hasCommentAuthorization(subscribers);

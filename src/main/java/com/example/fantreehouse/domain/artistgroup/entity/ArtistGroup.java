@@ -71,4 +71,5 @@ public class ArtistGroup extends Timestamped {
     public void setArtistProfilePicture(String artistProfilePicture) {
         this.artistProfilePicture = artistProfilePicture;
     }
+
 }
