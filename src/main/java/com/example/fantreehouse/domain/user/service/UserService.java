@@ -1,6 +1,7 @@
 package com.example.fantreehouse.domain.user.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
+import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
@@ -55,6 +56,11 @@ public class UserService {
         //닉네임 검증
         if (userRepository.findByNickname(nickname).isPresent()) {
             throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
+        }
+
+        // 블랙리스트 검증
+        if (userRepository.getStatusFindByEmail(email).get().equals(UserStatusEnum.BLACK_LIST)) {
+            throw new CustomException(ErrorType.BLACKLIST_EMAIL);
         }
 
         UserRoleEnum role = UserRoleEnum.USER;
