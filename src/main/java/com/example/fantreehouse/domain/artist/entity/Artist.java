@@ -1,20 +1,14 @@
 package com.example.fantreehouse.domain.artist.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
-import com.example.fantreehouse.domain.artist.dto.request.CreateArtistRequestDto;
+import com.example.fantreehouse.domain.artist.dto.request.ArtistRequestDto;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
-import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
-import com.example.fantreehouse.domain.feed.entity.Feed;
-import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -32,7 +26,7 @@ public class Artist extends Timestamped {
     @Column(nullable = false)
     private String artistProfilePicture;
 
-//    private Long subscriberCount;
+    private Long subscriberCount;
 
     //아티스트 그룹과 다대일 매핑
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,7 +45,7 @@ public class Artist extends Timestamped {
         this.user = user;
     }
 
-    public static Artist of(CreateArtistRequestDto requestDto, User loginUser) {
+    public static Artist of(ArtistRequestDto requestDto, User loginUser) {
         return Artist.builder()
                 .artistName(requestDto.getArtistName())
                 .artistProfilePicture(requestDto.getArtistProfilePicture()) //추후변경예정
@@ -67,5 +61,10 @@ public class Artist extends Timestamped {
         if (artistGroup != null) {
             artistGroup.getArtists().add(this);
         }
+    }
+
+    public void updateArtist(ArtistRequestDto requestDto) {
+        this.artistName = requestDto.getArtistName();
+        this.artistProfilePicture = requestDto.getArtistProfilePicture();
     }
 }

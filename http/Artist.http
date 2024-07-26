@@ -18,13 +18,17 @@ Content-Type: application/json
 }
 
 ### 아티스트  생성
+### 변수
+@artistId = 1
+
+### 아티스트 계정 생성
 POST http://localhost:8080/artist
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MTIzNCIsImF1dGgiOiJBUlRJU1QiLCJzdGF0dXMiOiJBQ1RJVkVfVVNFUiIsImV4cCI6MTcyMTk3MTk0MiwiaWF0IjoxNzIxOTcwMTQyfQ.UI6crZMGDoCltpnLXaKVe0yAhEZFhq16PNxAsIPpaKg
 Content-Type: application/json
+Authorization: {{Authorization}}
 
 {
-  "artistName": "Jerry",
-  "artistProfilePicture": "asdklasjd123"
+  "artistName": "artist1",
+  "artistProfilePicture": "artist123!@#"
 }
 
 ### 아티스트 로그인
@@ -42,4 +46,13 @@ Content-Type: application/json
     client.global.set("Authorization", response.headers.valueOf("Authorization"));
     client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
 %}
+### 아티스트 단건 조회
+GET http://localhost:8080/artist/{{artistId}}
+Authorization: {{Authorization}}
 
+### 아티스트 전체 조회 (페이징)
+GET http://localhost:8080/artist?page=0
+
+### 아티스트 삭제
+DELETE http://localhost:8080/artist/{{artistId}}
+Authorization: {{Authorization}}

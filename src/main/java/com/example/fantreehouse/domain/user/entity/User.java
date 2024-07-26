@@ -38,7 +38,7 @@ public class User extends Timestamped {
 
     private String nickname; // 로그인 한 닉네임
 
-    @Email
+
     private String email;
 
     private String password;
@@ -54,6 +54,9 @@ public class User extends Timestamped {
     private String statusUpdate;
 
     private String refreshToken;
+
+    @Column
+    private Long kakaoId;
 
     //아티스트 피드와 일대다 매핑
     @OneToMany(mappedBy = "user")
@@ -116,6 +119,7 @@ public class User extends Timestamped {
         return refreshToken == null ? true : false;
     }
 
+
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
@@ -124,4 +128,20 @@ public class User extends Timestamped {
         this.email = email.orElse(this.email);
         this.password = newEncodePw.orElse(this.password);
     }
+
+    public User(String loginId, String password, String name, String nickname, String email, UserRoleEnum userRole, UserStatusEnum status, Long kakaoId) {
+        this.loginId = loginId;
+        this.name = name;
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
+        this.userRole = userRole;
+        this.status = status;
+        this.kakaoId = kakaoId;
+    }
+
+    public void kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId=kakaoId;
+    }
+
 }
