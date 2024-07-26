@@ -28,12 +28,13 @@ public class Artist extends Timestamped {
 
     private Long subscriberCount;
 
+    //아티스트 그룹과 다대일 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    //유저와 다 대 일 매핑
+    @OneToOne(mappedBy = "artist")
     private User user;
 
     @Builder

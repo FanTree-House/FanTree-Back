@@ -31,7 +31,7 @@ public class EntertainmentController {
     public ResponseEntity<ResponseMessageDto> createEnter(
             @Valid @RequestBody EntertainmentRequestDto enterRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        entertainmentService.createEnter(enterRequestDto , userDetails.getUser());
+        entertainmentService.createEnter(enterRequestDto , userDetails.getUser().getId());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ENTERTAINMENT_CREATE_SUCCESS));
     }
 

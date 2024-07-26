@@ -61,6 +61,11 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
+  "id": "etest2",
+  "name": "Etest2",
+  "nickname": "Etest2",
+  "email": "Etest@email.com",
+  "password": "test1234",
   "id": "winter1",
   "name": "winter1",
   "nickname": "winter",
@@ -124,8 +129,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "artist1",
-  "password": "artist123!@#"
+  "id": "etest2",
+  "password": "test1234"
 }
 
 > {%

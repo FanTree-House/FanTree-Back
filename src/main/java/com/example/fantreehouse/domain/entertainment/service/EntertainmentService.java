@@ -8,6 +8,7 @@ import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRepository;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
+import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class EntertainmentService {
 
     private final EntertainmentRepository enterRepository;
+    private final UserRepository userRepository;
 
     /**
      * 엔터 계정 생성
@@ -24,7 +26,9 @@ public class EntertainmentService {
      * @param user
      */
     @Transactional
-    public void createEnter(EntertainmentRequestDto enterRequestDto, User user) {
+    public void createEnter(EntertainmentRequestDto enterRequestDto, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(()
+                -> new CustomException(ErrorType.USER_NOT_FOUND));
         // [예외1] - Entertainment 권한 체크
         checkEntertainmentAuthority(user);
 
@@ -111,3 +115,4 @@ public class EntertainmentService {
         }
     }
 }
+

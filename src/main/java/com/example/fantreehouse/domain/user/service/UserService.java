@@ -75,6 +75,7 @@ public class UserService {
               throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
             }
             role = UserRoleEnum.ENTERTAINMENT;
+
         }
 
         User user = new User(

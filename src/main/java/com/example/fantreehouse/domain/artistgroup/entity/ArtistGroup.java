@@ -3,7 +3,9 @@ package com.example.fantreehouse.domain.artistgroup.entity;
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
+import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
+import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,20 +29,30 @@ public class ArtistGroup extends Timestamped {
 
     private String artistProfilePicture;
 
+    //엔터테이너먼트와 다대일 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
+    // 아티스트그룹과 아티스트와의 일대다 매핑
     @OneToMany(mappedBy = "artistGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Artist> artists = new ArrayList<>();
 
+    //엔터피드와 다대일 매핑
+    @OneToMany(mappedBy = "artistGroup")
+    private List<EnterFeed> enterFeedList = new ArrayList<>();
+
     //구독자와 일대다 관계
     @OneToMany(mappedBy = "artistGroup")
-    private List<Subscription> subscriptions;
+    private List<Subscription> subscriptionList = new ArrayList<>();
 
     //구독자 커뮤니티 피드와 일대다관계
     @OneToMany(mappedBy = "artistGroup")
-    private List<CommunityFeed> communityFeeds;
+    private List<CommunityFeed> communityFeedList = new ArrayList<>();
+
+    //아티스트피드와 일대다 매핑
+    @OneToMany(mappedBy = "artistGroup")
+    private List<Feed> feedList = new ArrayList<>();
 
     public ArtistGroup(String groupName, String artistProfilePicture, Entertainment entertainment) {
         this.groupName = groupName;
