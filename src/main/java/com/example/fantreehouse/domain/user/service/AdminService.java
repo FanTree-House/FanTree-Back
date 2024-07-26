@@ -2,8 +2,6 @@ package com.example.fantreehouse.domain.user.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
-import com.example.fantreehouse.common.security.UserDetailsImpl;
-import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.user.dto.AdminRequestDto;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AdminService {
     private final UserRepository userRepository;
-    private final EnableSpringDataWebSupport.QuerydslActivator querydslActivator;
 
     @Transactional
     public void transBlacklist(AdminRequestDto requestDto, User user) {
@@ -39,6 +36,7 @@ public class AdminService {
         userRepository.save(blacklistUser);
     }
 
+    @Transactional
     public void transRole(AdminRequestDto requestDto, User user) {
         // [예외1] - Admin 권한 체크
         checkAdminAuthority(user);
