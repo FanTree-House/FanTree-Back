@@ -106,4 +106,8 @@ public class User extends Timestamped {
     public void transBlacklist() {
         this.status = UserStatusEnum.BLACK_LIST;
     }
+
+    public void transRole(UserRoleEnum roleEnum) {
+        this.userRole = roleEnum;
+    }
 }

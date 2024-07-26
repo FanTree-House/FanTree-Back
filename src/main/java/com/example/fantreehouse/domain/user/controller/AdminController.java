@@ -28,8 +28,11 @@ public class AdminController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.TRANSFORM_BLACKLIST_SUCCESS));
     }
 
-//    @PatchMapping("/role")
-//    private ResponseEntity<ResponseMessageDto> transBlacklist(@RequestBody AdminRequestDto requestDto) {
-//        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_ROLE_UPDATE_SUCCESS));
-//    }
+    @PatchMapping("/role")
+    private ResponseEntity<ResponseMessageDto> transRole(
+            @RequestBody AdminRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        adminService.transRole(requestDto, userDetails.getUser());
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_ROLE_UPDATE_SUCCESS));
+    }
 }
