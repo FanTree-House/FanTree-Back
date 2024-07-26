@@ -1,6 +1,6 @@
 ### 변수 정의
 @enterName = hybe
-@groupName = seventeen
+@groupName = aespa
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
@@ -50,7 +50,7 @@ Authorization: {{Authorization}}
 
 
 ### 아티스트 그룹 생성
-POST http://localhost:8080/entertainments/SM
+POST http://localhost:8080/entertainments/{{enterName}}
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -61,13 +61,13 @@ Content-Type: application/json
 }
 
 ### 특정 아티스트 그룹 조회
-GET http://localhost:8080/entertainments/SM/seventeen
+GET http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
 
 ###아티스트 그룹 전체 조회
-GET http://localhost:8080/entertainments/SM/groupName
+GET http://localhost:8080/entertainments/{{enterName}}/groupName
 
 ### 아티스트 그룹 수정
-PATCH http://localhost:8080/entertainments/SM/seventeen
+PATCH http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -78,5 +78,5 @@ Content-Type: application/json
 }
 
 ### 아티스트 그룹 삭제
-DELETE http://localhost:8080/entertainments/SM/aespa
+DELETE http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
 Authorization: {{Authorization}}
