@@ -30,6 +30,8 @@ public class EntertainmentService {
         // [예외2] - Entertainment 소속사 이름, 사업자번호 중복체크
         checkEnterNameOrNumberExisits(enter);
 
+        user.setEntertainment(enter);
+
         enterRepository.save(enter);
     }
 

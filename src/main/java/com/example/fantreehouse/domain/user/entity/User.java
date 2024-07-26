@@ -61,6 +61,10 @@ public class User extends Timestamped {
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
+    public void setEntertainment(Entertainment entertainment) {
+        this.entertainment = entertainment;
+    }
+
     @OneToOne
     @JoinColumn(name = "artist_id")
     private Artist artist;
