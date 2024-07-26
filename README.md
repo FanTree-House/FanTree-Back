@@ -14,7 +14,7 @@
     <tr>
       <td align="center"><a href="https://github.com/silicao3o"><img src="https://avatars.githubusercontent.com/u/155416976?v=4" width="100px;" alt=""/><br /><sub><b> 팀장 : 이시영 </b></sub></a><br /></td>
       <td align="center"><a href="gaeun7"><img src="https://avatars.githubusercontent.com/u/48433827?v=4" width="100px;" alt=""/><br /><sub><b> 부팀장 : 김가은 </b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/MonGrony"><img src="https://avatars.githubusercontent.com/u/154612223?v=4" width="100px;" alt=""/><br /><sub><b> 팀원 : 김나영 </b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/MonGrony"><img src= width="100px;" alt=""/><br /><sub><b> 팀원 : 김나영 </b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/kwj0605"><img src="https://avatars.githubusercontent.com/u/108345184?v=4" width="100px;" alt=""/><br /><sub><b> 팀원 : 김우진 </b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/Wooseok1213"><img src="https://avatars.githubusercontent.com/u/84154173?v=4" width="100px;" alt=""/><br /><sub><b> 팀원 : 김우석 </b></sub></a><br /></td>
     </tr>
