@@ -4,6 +4,9 @@ package com.example.fantreehouse.domain.user.entity;
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.common.exception.errorcode.AuthorizedException;
 import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
+import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
+import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
@@ -39,7 +42,6 @@ public class User extends Timestamped {
 
     private String nickname; // 로그인 한 닉네임
 
-    @Email
     private String email;
 
     private String password;
@@ -56,22 +58,45 @@ public class User extends Timestamped {
 
     private String refreshToken;
 
+    @Column
+    private Long kakaoId;
+
+    //아티스트 피드와 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<Feed> feedList = new ArrayList<>();
 
+    //픽업데이터와 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<PickUp> pickUpList = new ArrayList<>();
 
+    //엔터테이너먼트와 일대일 매핑
     @OneToOne         // 주인
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
+    //아티스트와 일대다? 다대일? 일대일? 매핑
     @OneToOne
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
+    //구독자와 일대다 매핑
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Subscription> subscriptions = new ArrayList<>();
+
+//    public void setArtist(Artist artist) {
+//        this.artist = artist;
+//    }
+    //구독자 커뮤니티랑 일대다 매핑
     @OneToMany(mappedBy = "user")
-    private List<Subscription> subscriptions;
+    private List<CommunityFeed> communityFeedList = new ArrayList<>();
+
+    //엔터 피드와 일대다 매핑
+    @OneToMany(mappedBy = "user")
+    private List<EnterFeed> enterFeedList = new ArrayList<>();
+
+    // 커뮤니티 댓글과 일대다 매핑
+    @OneToMany(mappedBy = "user")
+    private List<CommunityComment> communityCommentList = new ArrayList<>();
 
     @Builder
     public User(String loginId, String name, String nickname,
@@ -97,6 +122,7 @@ public class User extends Timestamped {
         return refreshToken == null ? true : false;
     }
 
+
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
@@ -105,6 +131,22 @@ public class User extends Timestamped {
         this.email = email.orElse(this.email);
         this.password = newEncodePw.orElse(this.password);
     }
+
+    public User(String loginId, String password, String name, String nickname, String email, UserRoleEnum userRole, UserStatusEnum status, Long kakaoId) {
+        this.loginId = loginId;
+        this.name = name;
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
+        this.userRole = userRole;
+        this.status = status;
+        this.kakaoId = kakaoId;
+    }
+
+    public void kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId=kakaoId;
+    }
+
 
     //구독자 중 USER 와 ARTIST 권한인 유저
     public static void hasCommentAuthorization(List<User> subscribers) {

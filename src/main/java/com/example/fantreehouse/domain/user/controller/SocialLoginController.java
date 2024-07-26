@@ -29,7 +29,7 @@ public class SocialLoginController {
       @RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
     String token = kakaoService.kakaoLogin(code);
 
-    Cookie cookie = new Cookie(JwtTokenHelper.AUTHORIZATION_HEADER, token);
+    Cookie cookie = new Cookie(JwtTokenHelper.AUTHORIZATION_HEADER, token.substring(7));
     cookie.setPath("/");
     response.addCookie(cookie);
 

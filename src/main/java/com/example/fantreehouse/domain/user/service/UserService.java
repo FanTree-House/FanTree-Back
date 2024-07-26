@@ -29,7 +29,6 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
-
     @Value("${auth.admin_token}")
     private String ADMIN_TOKEN;
     @Value("${auth.artist_token}")
@@ -76,6 +75,7 @@ public class UserService {
               throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
             }
             role = UserRoleEnum.ENTERTAINMENT;
+
         }
 
         User user = new User(
@@ -90,7 +90,6 @@ public class UserService {
         userRepository.save(user);
         return new SignUpResponseDto(user);
     }
-
 
   //회원 탈퇴
   @Transactional
@@ -144,7 +143,6 @@ public class UserService {
   public ProfileResponseDto getProfile(Long userId) {
     return new ProfileResponseDto(findById(userId));
   }
-
 
   private User findById(Long id) {
     return userRepository.findById(id).orElseThrow(
