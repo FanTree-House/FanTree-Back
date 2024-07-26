@@ -4,7 +4,6 @@ import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.subscription.dto.SubscriptionResponseDto;
-import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import com.example.fantreehouse.domain.subscription.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,35 +22,33 @@ public class SubscriptionController {
     /**
      * 구독하기
      * @param userDetails
-     * @param group_name
+     * @param groupName
      * @return
      */
-    @PostMapping("/{group_name}")
+    @PostMapping("/{groupName}")
     public ResponseEntity<ResponseMessageDto> createSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                              @PathVariable String group_name
-                                                          ) {
-        subscriptionService.createSubscript(userDetails.getUser(), group_name);
+                                                              @PathVariable String groupName) {
+        subscriptionService.createSubscript(userDetails.getUser().getId(), groupName);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_SUCCESS_SUBSCRIPT));
     }
 
     /**
      * 구독해지하기
      * @param userDetails
-     * @param group_name
-     * @param subscription
+     * @param groupName
      * @return
      */
-    @DeleteMapping("/{group_name}")
+    @DeleteMapping("/{groupName}")
     public ResponseEntity<ResponseMessageDto> deleteSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                              @PathVariable String group_name,
-                                                              Subscription subscription) {
-        subscriptionService.deleteSubscript(userDetails.getUser(), group_name, subscription);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_SUCCESS_SUBSCRIPT));
+                                                              @PathVariable String groupName) {
+        subscriptionService.deleteSubscript(userDetails.getUser().getId(), groupName);
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_DELETE_SUBSCRIPT));
     }
 
+    //구독리스트조회
     @GetMapping
     public ResponseEntity<?> findAllSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<SubscriptionResponseDto> responseDto = subscriptionService.findAllSubscript(userDetails.getUser());
+        List<SubscriptionResponseDto> responseDto = subscriptionService.findAllSubscript(userDetails.getUser().getId());
         return ResponseEntity.ok(responseDto);
     }
 

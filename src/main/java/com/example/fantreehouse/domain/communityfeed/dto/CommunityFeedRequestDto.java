@@ -1,6 +1,5 @@
 package com.example.fantreehouse.domain.communityfeed.dto;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommunityFeedRequestDto {
 
-    @NotNull
     @Size(min = 1, message = "작성할 내용을 입력해주세요")
     private String contents;
     private String post_picture;
+
 }

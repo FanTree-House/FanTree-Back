@@ -2,18 +2,24 @@ package com.example.fantreehouse.domain.communitycomment.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
+import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
+import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.comment.repository.CommentRepository;
 import com.example.fantreehouse.domain.communitycomment.dto.CommunityCommentRequestDto;
 import com.example.fantreehouse.domain.communitycomment.dto.CommunityCommentResponseDto;
+import com.example.fantreehouse.domain.communitycomment.dto.CommunityCommentUpdateRequestDto;
+import com.example.fantreehouse.domain.communitycomment.dto.CommunityCommentUpdateResponseDto;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communitycomment.repository.CommunityCommentRepository;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
+import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.beans.Transient;
 import java.util.List;
 
 @Service
@@ -24,72 +30,90 @@ public class CommunityCommentService {
     private final CommunityCommentRepository commentRepository;
     private final CommunityFeedRepository feedRepository;
     private final UserRepository userRepository;
+    private final ArtistGroupRepository artistGroupRepository;
+
 
     //댓글생성
-    public CommunityCommentResponseDto createcComment(CommunityCommentRequestDto requestDto, User user, Long feedId) {
-        user = userRepository.findById(user.getId()).orElseThrow(()
+    public CommunityCommentResponseDto createComment(CommunityCommentRequestDto requestDto, Long userId, Long feedId) {
+        User user = userRepository.findById(userId).orElseThrow(()
                 -> new CustomException(ErrorType.USER_NOT_FOUND));
+        CommunityFeed feed = findFeed(feedId);
 
-        CommunityFeed feed = feedRepository.findById(feedId).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_FOUND_FEED));
-
-        if (!feed.getUser().getArtist().getArtistGroup().getId().equals(user.getArtist().getArtistGroup().getId())) {
-            throw new CustomException(ErrorType.NOT_MATCH_USER);
-        }
-        CommunityComment comment = new CommunityComment(requestDto);
+        CommunityComment comment = new CommunityComment(requestDto, user);
         commentRepository.save(comment);
 
         return new CommunityCommentResponseDto(comment);
     }
 
+    //댓글 전체조회
+    public List<CommunityCommentResponseDto> findAllComment(String groupName, Long feedId) {
+        ArtistGroup artistGroup = findArtistGroup(groupName);
+        CommunityFeed feed = findFeed(feedId);
+        List<CommunityComment> commentList = commentRepository.findAllByCommunityFeed_Id(feedId);
+        if (commentList.isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUND_COMMENT);
+        }
+
+        return commentList.stream()
+                .map(CommunityCommentResponseDto::new)
+                .toList();
+    }
+
     //댓글수정
-    public CommunityComment updateComment(Long commentId,
-                                          CommunityCommentRequestDto requestDto,
-                                          User user) {
 
-        user = userRepository.findById(user.getId()).orElseThrow(()
-                -> new CustomException(ErrorType.USER_NOT_FOUND));
+    public CommunityComment updateComment(Long commentId, CommunityCommentUpdateRequestDto requestDto, Long userId,
+                                                           String groupName) {
+        User user = findUser(userId);
+        ArtistGroup artistGroup = findArtistGroup(groupName);
+        CommunityComment comment = findComment(commentId);
+        // Todo : User 랑 CommunityFeed 가 널로들어와서 리팩토링해야함
 
-        CommunityComment comment = commentRepository.findById(commentId).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_FOUNT_COMMENT));
-        if (!comment.getCommunityFeed().getUser().getId().equals(user.getId())) {
+        if (!comment.getNickname().equals(user.getNickname())) {
             throw new CustomException(ErrorType.NOT_USER_COMMENT);
-//            Todo : 테스트가능할때 키값이 제대로 매치가 되었는지 확인해야함
-           }
-        comment.updateComment(requestDto);
+        }
+        if (comment.getContents().equals(requestDto.getContents())) {
+            throw new CustomException(ErrorType.DUPLICATE_COMMENT);
+        }
+        comment.updateComment(requestDto, user);
         return comment;
     }
 
     //댓글삭제
-    public void deleteComment(Long commentId, User user) {
-        CommunityComment comment = commentRepository.findById(commentId).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_FOUNT_COMMENT));
-        user = userRepository.findById(user.getId()).orElseThrow(()
-                -> new CustomException(ErrorType.USER_NOT_FOUND));
+    public void deleteComment(Long commentId, Long userId , String groupName) {
+        ArtistGroup artistGroup = findArtistGroup(groupName);
+        User user = findUser(userId);
+        CommunityComment comment = findComment(commentId);
 
-        if (!comment.getCommunityFeed().getUser().getId().equals(user.getId())) {
+        if (!comment.getNickname().equals(user.getNickname())) {
             throw new CustomException(ErrorType.NOT_USER_COMMENT);
-            //            Todo : 테스트가능할때 키값이 제대로 매치가 되었는지 확인해야함
+            // Todo : User 랑 CommunityFeed 가 널로들어와서 리팩토링해야함
 
         }
         commentRepository.delete(comment);
     }
 
-    //댓글 전체조회
-    public List<CommunityCommentResponseDto> findAllComment(User user) {
-        user = userRepository.findById(user.getId()).orElseThrow(()
+
+
+    //유저조회
+    public User findUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(()
                 -> new CustomException(ErrorType.USER_NOT_FOUND));
+    }
+    //아티스트 그룹 조회
+    public ArtistGroup findArtistGroup(String groupName) {
+        return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
+    }
+    //피드조회
+    public CommunityFeed findFeed(Long feedId) {
+        return feedRepository.findById(feedId).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_FEED));
+    }
 
-//        Todo? : 유저가 구독한사람인지 인증해야하는 과정이 필요한지 고민하기
-
-        List<CommunityComment> commentList = commentRepository.findAll();
-        if (commentList.isEmpty()) {
-            throw new CustomException(ErrorType.NOT_FOUNT_COMMENT);
-
-        }
-        return commentList.stream()
-                .map(CommunityCommentResponseDto::new)
-                .toList();
+    //댓글찾기
+    public CommunityComment findComment(Long commentId) {
+        return commentRepository.findAllById(commentId).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_COMMENT));
     }
 }
 

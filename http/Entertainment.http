@@ -4,12 +4,12 @@
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
-Authorization: {{Authorization}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGVzdDIiLCJhdXRoIjoiRU5URVJUQUlOTUVOVCIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIxOTc2NDUwLCJpYXQiOjE3MjE5NzQ2NTB9.bTHm4ZpeakDBjBb-IG_IFyZBJDhvbaPnc9wV6lcCgUs
 Content-Type: application/json
 
 {
-  "enterName": "hybe",
-  "enterNumber": 12334678,
+  "enterName": "testenter3",
+  "enterNumber": 123456,
   "enterLogo": "image"
 }
 
@@ -50,24 +50,24 @@ Authorization: {{Authorization}}
 
 
 ### 아티스트 그룹 생성
-POST http://localhost:8080/entertainments/hybe
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3aW50ZXIxIiwiYXV0aCI6IkVOVEVSVEFJTk1FTlQiLCJzdGF0dXMiOiJBQ1RJVkVfVVNFUiIsImV4cCI6MTcyMTg4NzE0NSwiaWF0IjoxNzIxODg1MzQ1fQ.FZONMMgHaY8WH4IpxzGfcAm8bZz8px5TNQXtDQXvBH8
+POST http://localhost:8080/entertainments/testenter
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGVzdCIsImF1dGgiOiJFTlRFUlRBSU5NRU5UIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjE5NzIxMTksImlhdCI6MTcyMTk3MDMxOX0.lTjyEXCDIJ6oCErUTS-rkg_CY2XkWqKTep9lpFNU4Lg
 Content-Type: application/json
 
 {
-  "groupName": "seventeen",
+  "groupName": "Mouse",
   "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "artistIds": [1]
+  "artistIds": [2]
 }
 
 ### 특정 아티스트 그룹 조회
-GET http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
+GET http://localhost:8080/entertainments/SM/seventeen
 
 ###아티스트 그룹 전체 조회
-GET http://localhost:8080/entertainments/{{enterName}}/groupName
+GET http://localhost:8080/entertainments/SM/groupName
 
 ### 아티스트 그룹 수정
-PATCH http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
+PATCH http://localhost:8080/entertainments/SM/seventeen
 Authorization: {{Authorization}}
 Content-Type: application/json
 

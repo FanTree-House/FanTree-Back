@@ -3,11 +3,11 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "user1",
-  "name": "user",
-  "nickname": "user",
-  "email": "user1@email.com",
-  "password": "user123123",
+  "id": "usertest1",
+  "name": "usertest1",
+  "nickname": "usertest1",
+  "email": "test@email.com",
+  "password": "test1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
 }
 
@@ -31,11 +31,11 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "winter12",
-  "name": "winte",
-  "nickname": "winter",
-  "email": "winter1@email.com",
-  "password": "winter122333",
+  "id": "etest2",
+  "name": "Etest2",
+  "nickname": "Etest2",
+  "email": "Etest@email.com",
+  "password": "test1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
   "admin": false,
   "adminToken": "",
@@ -50,8 +50,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "user1",
-  "password": "user123123"
+  "id": "usertest2",
+  "password": "test1234"
 }
 
 > {%
@@ -82,8 +82,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "winter1",
-  "password": "winter122333"
+  "id": "etest2",
+  "password": "test1234"
 }
 
 > {%

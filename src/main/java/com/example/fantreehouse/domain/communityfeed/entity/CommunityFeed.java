@@ -5,9 +5,9 @@ import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
+import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,7 +26,6 @@ public class CommunityFeed extends Timestamped {
     private String contents;
     private String post_picture;
     private String nickname;
-
     //유저와 다대일 매핑
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -41,14 +40,14 @@ public class CommunityFeed extends Timestamped {
     @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 
-    public CommunityFeed(CommunityFeedRequestDto requestDto, User user) {
-        this.nickname = user.getNickname();
+    public CommunityFeed(CommunityFeedRequestDto requestDto, Subscription subscription) {
+        this.user = subscription.getUser();
+        this.nickname = subscription.getUser().getNickname();
         this.contents = requestDto.getContents();
         this.post_picture = requestDto.getPost_picture();
     }
 
     public void updateFeed(CommunityFeedUpdateRequestDto requestDto) {
-        this.nickname = requestDto.getNickname();
         this.contents = requestDto.getContents();
         this.post_picture = requestDto.getPost_picture();
 

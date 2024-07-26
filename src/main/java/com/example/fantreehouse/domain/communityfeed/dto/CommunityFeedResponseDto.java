@@ -13,8 +13,8 @@ public class CommunityFeedResponseDto {
     String post_picture;
 
     public CommunityFeedResponseDto(CommunityFeed feed) {
-        this.nickname = feed.getNickname();
         this.contents = feed.getContents();
         this.post_picture = feed.getPost_picture();
+        this.nickname = feed.getNickname();
     }
 }

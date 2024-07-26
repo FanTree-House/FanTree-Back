@@ -6,11 +6,12 @@ import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.subscription.dto.SubscriptionResponseDto;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
-import com.example.fantreehouse.domain.subscription.repository.SubcriptionRepository;
+import com.example.fantreehouse.domain.subscription.repository.SubscriptionRepository;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,50 +21,61 @@ public class SubscriptionService {
 
     private final UserRepository userRepository;
     private final ArtistGroupRepository artistGroupRepository;
-    private final SubcriptionRepository subcriptionRepository;
+    private final SubscriptionRepository subcriptionRepository;
 
-//  구독생성
-    public Subscription createSubscript(User user , String group_name) {
-        user = userRepository.findById(user.getId()).orElseThrow(()
-                -> new CustomException(ErrorType.USER_NOT_FOUND));
+    //  구독생성
+    @Transactional
+    public Subscription createSubscript(Long userId, String groupName) {
+        User user = findUser(userId);
+        ArtistGroup artistGroup = findArtistGroup(groupName);
 
-        ArtistGroup artistGroup = artistGroupRepository.findByGroupName(group_name).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
+        subcriptionRepository.findByUser_IdAndArtistGroup_Id(user.getId(), artistGroup.getId()).ifPresent(
+                e -> {
+                    throw new CustomException(ErrorType.DUPLICATE_USER);
+                });
 
-        Subscription subscription = new Subscription();
-        if (subscription.getUser().getArtist().getArtistGroup().getGroupName().equals(user.getArtist().getArtistGroup().getGroupName())) {
-            throw new CustomException(ErrorType.DUPLICATE_USER);
-        }
+        Subscription subscription = new Subscription(user, artistGroup);
         return subcriptionRepository.save(subscription);
     }
 
     //구독해지
-    public void deleteSubscript(User user, String group_name, Subscription subscription) {
-        user = userRepository.findById(user.getId()).orElseThrow(()
-                -> new CustomException(ErrorType.USER_NOT_FOUND));
+    @Transactional
+    public void deleteSubscript(Long userId, String groupName) {
+        User user = findUser(userId);
+        ArtistGroup artistGroup = findArtistGroup(groupName);
 
-        ArtistGroup artistGroup = artistGroupRepository.findByGroupName(group_name).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
+        Subscription subscription = subcriptionRepository.findByUser_IdAndArtistGroup_Id(user.getId(), artistGroup.getId())
+                .orElseThrow(() -> new CustomException(ErrorType.NOT_SUBSCRIPT_USER));
 
-        subscription = subcriptionRepository.findById(subscription.getId()).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_FOUND_SUBSCRIPT_USER));
-
-        if (!subscription.getUser().getArtist().getArtistGroup().getGroupName().equals(user.getArtist().getArtistGroup().getGroupName())) {
+        if (!subscription.getUser().getId().equals(user.getId())) {
             throw new CustomException(ErrorType.DUPLICATE_USER);
         }
         subcriptionRepository.delete(subscription);
     }
 
-    public List<SubscriptionResponseDto> findAllSubscript(User user) {
-        user = userRepository.findById(user.getId()).orElseThrow(()
+    //구독리스트 조회
+    public List<SubscriptionResponseDto> findAllSubscript(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(()
                 -> new CustomException(ErrorType.USER_NOT_FOUND));
-        List<Subscription> subscriptionList = subcriptionRepository.findAllByUserId(user.getId());
+
+        List<Subscription> subscriptionList = subcriptionRepository.findAllByUserId(user.getId()).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_SUBSCRIPT_USER));
 
         if (subscriptionList.isEmpty()) {
-            throw new CustomException(ErrorType.NOT_FOUNT_SUBSCRIPTION);
+            throw new CustomException(ErrorType.NOT_FOUND_SUBSCRIPTION);
         }
         return subscriptionList.stream()
                 .map(SubscriptionResponseDto::new)
                 .toList();
+    }
+
+    public User findUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(()
+                -> new CustomException(ErrorType.USER_NOT_FOUND));
+    }
+
+    public ArtistGroup findArtistGroup(String groupName) {
+        return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
     }
 }

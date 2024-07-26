@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class CommunityCommentRequestDto {
 
     @NotNull
-    @Size(min = 1, message = "수정할 내용을 작성해주세요")
+    @Size(min = 1, message = "작성할 댓글을 입력해주세요")
     private String contents;
 }

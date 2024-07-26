@@ -26,4 +26,8 @@ public class Subscription extends Timestamped {
     @JoinColumn(name = "artist_group")
     private ArtistGroup artistGroup;
 
+    public Subscription(User user, ArtistGroup artistGroup) {
+        this.user = user;
+        this.artistGroup = artistGroup;
+    }
 }

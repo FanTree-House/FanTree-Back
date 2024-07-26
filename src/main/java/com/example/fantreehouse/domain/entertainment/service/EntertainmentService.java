@@ -11,10 +11,12 @@ import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class EntertainmentService {
+
     private final EntertainmentRepository enterRepository;
     private final UserRepository userRepository;
 
@@ -23,7 +25,10 @@ public class EntertainmentService {
      * @param enterRequestDto
      * @param user
      */
-    public void createEnter(EntertainmentRequestDto enterRequestDto, User user) {
+    @Transactional
+    public void createEnter(EntertainmentRequestDto enterRequestDto, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(()
+                -> new CustomException(ErrorType.USER_NOT_FOUND));
         // [예외1] - Entertainment 권한 체크
         checkEntertainmentAuthority(user);
 
@@ -46,7 +51,8 @@ public class EntertainmentService {
         checkEntertainmentAuthority(user);
 
         // [예외 2] - 존재하지 않는 엔터테이먼트 계정
-        Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
+        Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() ->
+                new CustomException(ErrorType.NOT_FOUND_ENTER));
 
         EntertainmentResponseDto enterResponseDto = new EntertainmentResponseDto(enter);
 
@@ -59,20 +65,18 @@ public class EntertainmentService {
      * @param enterRequestDto
      * @param user
      */
+    @Transactional
     public void updateEnter(String enterName, EntertainmentRequestDto enterRequestDto, User user) {
         // [예외1] - Entertainment 권한 체크
         checkEntertainmentAuthority(user);
 
         // [예외 2] - 존재하지 않는 엔터테이먼트 계정
-        Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
+        Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() ->
+                new CustomException(ErrorType.NOT_FOUND_ENTER));
 
-        if (null != enterRequestDto.getEnterName() && null == enterRequestDto.getEnterNumber() && null == enterRequestDto.getEnterLogo()) {
-            enter.updateEnterName(enterRequestDto.getEnterName());
-        } else if (null == enterRequestDto.getEnterName() && null != enterRequestDto.getEnterNumber() && null == enterRequestDto.getEnterLogo()) {
-            enter.updateEnterNumber(enterRequestDto.getEnterNumber());
-        } else if (null == enterRequestDto.getEnterName() && null == enterRequestDto.getEnterNumber() && null != enterRequestDto.getEnterLogo()) {
-            enter.updateEnterLogo(enterRequestDto.getEnterLogo());
-        }
+        if (null != enterRequestDto.getEnterName()) { enter.updateEnterName(enterRequestDto.getEnterName()); }
+        else if (null != enterRequestDto.getEnterNumber()) { enter.updateEnterNumber(enterRequestDto.getEnterNumber()); }
+        else if (null != enterRequestDto.getEnterLogo()) { enter.updateEnterLogo(enterRequestDto.getEnterLogo()); }
 
         enterRepository.save(enter);
     }
@@ -82,6 +86,7 @@ public class EntertainmentService {
      * @param enterName
      * @param user
      */
+    @Transactional
     public void deleteEnter(String enterName, User user) {
         // [예외1] - Entertainment, Admin 권한 체크
         if (!(UserRoleEnum.ADMIN.equals(user.getUserRole()) || UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole()))) {
@@ -110,3 +115,4 @@ public class EntertainmentService {
         }
     }
 }
+

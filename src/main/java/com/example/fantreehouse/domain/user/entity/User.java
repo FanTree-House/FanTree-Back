@@ -2,7 +2,9 @@ package com.example.fantreehouse.domain.user.entity;
 
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
+import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
@@ -72,9 +74,12 @@ public class User extends Timestamped {
     private Artist artist;
 
     //구독자와 일대다 매핑
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Subscription> subscriptions = new ArrayList<>();
 
+//    public void setArtist(Artist artist) {
+//        this.artist = artist;
+//    }
     //구독자 커뮤니티랑 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<CommunityFeed> communityFeedList = new ArrayList<>();
@@ -83,6 +88,9 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user")
     private List<EnterFeed> enterFeedList = new ArrayList<>();
 
+    // 커뮤니티 댓글과 일대다 매핑
+    @OneToMany(mappedBy = "user")
+    private List<CommunityComment> communityCommentList = new ArrayList<>();
 
     @Builder
     public User(String loginId, String name, String nickname,

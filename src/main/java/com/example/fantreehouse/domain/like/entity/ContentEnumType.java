@@ -9,7 +9,7 @@ import java.util.Objects;
 @Getter
 public enum ContentEnumType {
     // 게시글 또는 댓글
-    POST("post"),
+    Feed("feed"),
     COMMENT("comment");
 
     private final String type;
@@ -19,8 +19,8 @@ public enum ContentEnumType {
     }
 
     public static ContentEnumType getByType(String type) {
-        if (Objects.equals(type, POST.type)) {
-            return POST;
+        if (Objects.equals(type, Feed.type)) {
+            return Feed;
         } else if (Objects.equals(type, COMMENT.type)) {
             return COMMENT;
         } else
