@@ -11,7 +11,6 @@ public class CommunityFeedUpdateRequestDto {
     @NotNull
     @Size(min = 1, message = "수정할 내용을 작성해주세요")
     private String contents;
-    private String nickname;
     private String post_picture;
 
 }

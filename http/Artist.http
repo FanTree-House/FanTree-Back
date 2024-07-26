@@ -1,3 +1,23 @@
+### 아티스트 회원가입
+POST http://localhost:8080/users/invite/artist
+Content-Type: application/json
+
+{
+  "id": "test1234",
+  "name": "명수",
+  "nickname": "GGDD2",
+  "email": "test@email.com",
+  "password": "test1234",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "admin": false,
+  "adminToken": "",
+  "artist": true,
+  "artistToken": "acRos3knitterUp2eTt1ng5",
+  "entertainment": false,
+  "entertainmentToken": ""
+}
+
+### 아티스트  생성
 ### 변수
 @artistId = 1
 
@@ -11,6 +31,21 @@ Authorization: {{Authorization}}
   "artistProfilePicture": "artist123!@#"
 }
 
+### 아티스트 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "test1234",
+  "password": "test1234"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
 ### 아티스트 단건 조회
 GET http://localhost:8080/artist/{{artistId}}
 Authorization: {{Authorization}}

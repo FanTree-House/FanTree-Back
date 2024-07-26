@@ -2,6 +2,7 @@ package com.example.fantreehouse.domain.entertainment.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
+import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentRequestDto;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -14,11 +15,11 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table (name = "entertainment")
+@Table(name = "entertainment")
 public class Entertainment extends Timestamped {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 20, nullable = false, unique = true)
@@ -30,9 +31,15 @@ public class Entertainment extends Timestamped {
     @Column(nullable = false)
     private String enterLogo;
 
+    //아티스트그룹과 일대다 매핑
     @OneToMany(mappedBy = "entertainment")
     private List<ArtistGroup> artistGroupsList = new ArrayList<>();
 
+    //엔터피드와 일대다 매핑
+    @OneToMany(mappedBy = "entertainment")
+    private List<EnterFeed> enterFeedList = new ArrayList<>();
+
+    //엔터와 원투원 매핑
     @OneToOne(mappedBy = "entertainment")
     private User user;
 
@@ -50,6 +57,7 @@ public class Entertainment extends Timestamped {
     public void updateEnterNumber(Long enterNumber) {
         this.enterNumber = enterNumber;
     }
+
     public void updateEnterLogo(String enterLogo) {
         this.enterLogo = enterLogo;
     }

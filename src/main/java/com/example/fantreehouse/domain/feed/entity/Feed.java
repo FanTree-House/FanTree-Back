@@ -38,13 +38,15 @@ public class Feed extends Timestamped {
     @OneToMany(mappedBy = "feed")
     private List<Comment> comments = new ArrayList<>();
 
+
     // 사용자랑 다대일
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    // 아티스트 그룹이랑 다대일
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="artist_group")
+    @JoinColumn(name="artist_group_id")
     private ArtistGroup artistGroup;
 
     @Builder

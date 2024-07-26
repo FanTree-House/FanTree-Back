@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/fantree/artist/feeds")
+@RequestMapping("/artist/{groupName}/feeds")
 @RequiredArgsConstructor
 
 public class CommunityFeedController {
@@ -29,73 +29,75 @@ public class CommunityFeedController {
      * 커뮤니티 피드 생성
      * @param requestDto
      * @param userDetails
-     * @param artistGroup
+     * @param groupName
      * @return
      */
     @PostMapping
-    public ResponseEntity<ResponseMessageDto> createFeed(@Valid CommunityFeedRequestDto requestDto,
+    public ResponseEntity<?> createFeed( @RequestBody CommunityFeedRequestDto requestDto,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                         ArtistGroup artistGroup) {
-        feedService.createFeed(requestDto, userDetails.getUser(), artistGroup);
+                                                          @PathVariable String groupName) {
+        feedService.createFeed(requestDto, userDetails.getUser().getId(), groupName);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CREATE_SUCCESS_FEED));
     }
 
     /**
-     * 커뮤니티 피드 전체조회
+     * 피드 전체 조회
      * @param userDetails
+     * @param groupName
      * @return
      */
     @GetMapping
     public ResponseEntity<?> findAllFeed(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                         ArtistGroup artistGroup) {
-        List<CommunityFeedResponseDto> responseDto = feedService.findAllFeed(userDetails.getUser(),artistGroup);
+                                         @PathVariable String groupName) {
+        List<CommunityFeedResponseDto> responseDto = feedService.findAllFeed(userDetails.getUser().getId(),groupName);
         return ResponseEntity.ok(responseDto);
     }
 
     /**
-     * 커뮤니티 피드 선택 조회
+     * 피드 선택 조회
      * @param userDetails
-     * @param community_feed_id
-     * @param artistGroup
+     * @param feedId
+     * @param groupName
      * @return
      */
-    @GetMapping("/{community_feed_id}")
+    @GetMapping("/{feedId}")
      public ResponseEntity<?> findFeed(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                        @PathVariable Long community_feed_id,
-                                       ArtistGroup artistGroup) {
-        CommunityFeed feed = feedService.findFeed(community_feed_id ,userDetails.getUser(),artistGroup);
+                                        @PathVariable Long feedId,
+                                       @PathVariable  String groupName) {
+        CommunityFeed feed = feedService.findFeed(feedId ,userDetails.getUser().getId(),groupName);
         CommunityFeedResponseDto responseDto = new CommunityFeedResponseDto(feed);
         return ResponseEntity.ok(responseDto);
     }
 
     /**
-     * 커뮤니티 피드 수정
+     * 피드 수정
      * @param requestDto
      * @param userDetails
-     * @param community_feed_id
-     * @param artistGroup
+     * @param feedId
+     * @param groupName
      * @return
      */
-    @PatchMapping("/{community_feed_id}")
-    public ResponseEntity<ResponseMessageDto> updateFeed(@Valid CommunityFeedUpdateRequestDto requestDto,
+    @PatchMapping("/{feedId}")
+    public ResponseEntity<ResponseMessageDto> updateFeed(@Valid @RequestBody CommunityFeedUpdateRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                            @PathVariable Long community_feed_id, ArtistGroup artistGroup) {
-        feedService.updateFeed(requestDto, community_feed_id, userDetails.getUser(), artistGroup);
+                                                            @PathVariable Long feedId,
+                                                         @PathVariable String groupName) {
+        feedService.updateFeed(requestDto, feedId, userDetails.getUser().getId(), groupName);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_UPDATE_SUCCESS));
     }
 
     /***
      * 커뮤니티 피드 삭제
-     * @param community_feed_id
+     * @param feedId
      * @param userDetails
-     * @param artistGroup
+     * @param groupName
      * @return
      */
-    @DeleteMapping("/{community_feed_id}")
-    public ResponseEntity<ResponseMessageDto> DeleteFeed(@PathVariable Long community_feed_id,
+    @DeleteMapping("/{feedId}")
+    public ResponseEntity<ResponseMessageDto> deleteFeed(@PathVariable Long feedId,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                         ArtistGroup artistGroup) {
-        feedService.deleteFeed(community_feed_id, userDetails.getUser(), artistGroup);
+                                                         @PathVariable  String groupName) {
+        feedService.deleteFeed(feedId, userDetails.getUser().getId(), groupName);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_DELETE_SUCCESS));
     }
 }

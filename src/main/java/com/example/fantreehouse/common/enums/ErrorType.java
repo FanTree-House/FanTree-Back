@@ -31,10 +31,8 @@ public enum ErrorType implements ErrorCode {
     DUPLICATE_ID(HttpStatus.OK, "중복된 아이디입니다."),
     BLACKLIST_EMAIL(HttpStatus.OK, "블랙리스트에 등록된 이메일로 가입할 수 없습니다."),
     DUPLICATE_NICKNAME(HttpStatus.OK, "중복된 닉네임입니다."),
-    WITHDRAW_USER(HttpStatus.NOT_FOUND,
-        "탈퇴한 회원입니다."),
-    REFRESH_TOKEN_MISMATCH(HttpStatus.NOT_FOUND,
-        "REFRESH_TOKEN 값이 일치 하지 않습니다."),
+    WITHDRAW_USER(HttpStatus.NOT_FOUND, "탈퇴한 회원입니다."),
+    REFRESH_TOKEN_MISMATCH(HttpStatus.NOT_FOUND, "REFRESH_TOKEN 값이 일치 하지 않습니다."),
     MISMATCH_ADMINTOKEN(HttpStatus.OK, "Admin 토큰값이 일치하지 않습니다."),
     MISMATCH_ARTISTTOKEN(HttpStatus.OK, "Artist 토큰값이 일치하지 않습니다."),
     MISMATCH_ENTERTAINMENTTOKEN(HttpStatus.OK, "Entertainment 토큰값이 일치하지 않습니다."),
@@ -59,10 +57,19 @@ public enum ErrorType implements ErrorCode {
     NOT_FOUND_FEED(HttpStatus.NOT_FOUND, "피드를 찾을수 없습니다"),
     NOT_USER_FEED(HttpStatus.NOT_ACCEPTABLE, "유저가 작성한 피드가 아닙니다."),
     NOT_MATCH_USER(HttpStatus.NOT_ACCEPTABLE, "해당 유저는 아티스트그룹을 구독하지 않았습니다."),
+    UNAUTHORIZED_FEED_ACCESS(HttpStatus.FORBIDDEN, "유저 커뮤니티에 접근할 권한이 없습니다."),
+
 
     // 유저 커뮤니티 피드 댓글
-    NOT_FOUNT_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾지 못했습니다."),
+    NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾지 못했습니다."),
     NOT_USER_COMMENT(HttpStatus.NOT_ACCEPTABLE, "유저가 작성한 댓글이 아닙니다."),
+    DUPLICATE_COMMENT(HttpStatus.LOCKED, "같은 댓글은 작성하실수 없습니다"),
+
+    // 구독
+    DUPLICATE_USER(HttpStatus.LOCKED, "이미 구독한 그룹입니다."),
+    NOT_SUBSCRIPT_USER(HttpStatus.LOCKED, "구독한 그룹이 아닙니다."),
+    NOT_FOUND_SUBSCRIPT_USER(HttpStatus.NOT_FOUND, "구독자를 찾을수 없습니다."),
+    NOT_FOUND_SUBSCRIPTION(HttpStatus.NOT_FOUND, "구독한 그룹이 없습니다."),
 
     //아티스트그룹
     NOT_FOUND_ARTISTGROUP(HttpStatus.NOT_FOUND, "아티스트그룹을 찾지 못했습니다."),

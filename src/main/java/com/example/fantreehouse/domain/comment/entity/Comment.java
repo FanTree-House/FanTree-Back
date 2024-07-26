@@ -20,7 +20,7 @@ public class Comment extends Timestamped {
     private String contents;
 
     // Feed랑 다대일 연관관계
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id", nullable = false)
     private Feed feed;
 
