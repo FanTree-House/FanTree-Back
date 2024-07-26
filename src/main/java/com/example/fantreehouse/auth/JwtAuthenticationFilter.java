@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -37,13 +38,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       LoginRequestDto requestDto = new ObjectMapper().readValue(
           request.getInputStream(), LoginRequestDto.class);
 
-      return getAuthenticationManager().authenticate(
+      Authentication authentication = getAuthenticationManager().authenticate(
           new UsernamePasswordAuthenticationToken(
               requestDto.getId(),
               requestDto.getPassword(),
               null
           )
       );
+
+      // 사용자 상태 체크
+      UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+      if (userDetails.getUser().getStatus() == UserStatusEnum.BLACK_LIST) {
+        throw new DisabledException("로그인이 불가능한 사용자입니다."); // 블랙리스트 예외 처리
+      }
+
+      return authentication;
 
     } catch (IOException e) {
       log.error(e.getMessage());
@@ -84,6 +93,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
     response.setCharacterEncoding("utf-8");
-    response.getWriter().write("상태 : " + response.getStatus() + ", 로그인 실패");
+    if (failed instanceof DisabledException) {
+      response.getWriter().write("상태 : " + response.getStatus() + ", " + failed.getMessage());
+    } else {
+      response.getWriter().write("상태 : " + response.getStatus() + ", 로그인 실패");
+    }
   }
 }
