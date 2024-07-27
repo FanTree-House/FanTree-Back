@@ -58,6 +58,9 @@ public enum ErrorType implements ErrorCode {
     NOT_USER_FEED(HttpStatus.NOT_ACCEPTABLE, "유저가 작성한 피드가 아닙니다."),
     NOT_MATCH_USER(HttpStatus.NOT_ACCEPTABLE, "해당 유저는 아티스트그룹을 구독하지 않았습니다."),
     UNAUTHORIZED_FEED_ACCESS(HttpStatus.FORBIDDEN, "유저 커뮤니티에 접근할 권한이 없습니다."),
+    UNAUTHORIZED_FEED_CREATE(HttpStatus.FORBIDDEN, "유저 커뮤니티 피드를 작성할 권한이 없습니다."),
+    UNAUTHORIZED_FEED_DELETE(HttpStatus.FORBIDDEN, "유저 커뮤니티 피드를 삭제할 권한이 없습니다."),
+
 
 
     // 유저 커뮤니티 피드 댓글
