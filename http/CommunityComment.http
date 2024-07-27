@@ -1,27 +1,27 @@
 ### 커뮤니티 보드 피드 댓글 생성
-POST http://localhost:8080/artist/2NE1/feeds/3/comments
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIxOTYwOTMyLCJpYXQiOjE3MjE5NTkxMzJ9.U12yJGMrKVq-YU9YiN1c74E2WgLK6KsHP6MBD2HXlD4
+POST http://localhost:8080/artist/2NE1/feeds/2/comments
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDY4MzQyLCJpYXQiOjE3MjIwNjY1NDJ9.aA1A6sfsBOLv2Mh8vxyAHdd2Rv9-2v7NC_1ECRJ5Yc8
 Content-Type: application/json
 
 {
-  "contents" : "댓글테스트5"
+  "contents" : "댓글테스트1"
 }
 
 ### 커뮤니티 보드 피드 댓글 전체 조회
 GET http://localhost:8080/artist/2NE1/feeds/3/comments
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIxOTIzMTUwLCJpYXQiOjE3MjE5MjEzNTB9.G32b4fAyUmYnMhvDzdIz22idemxr_usqK0W3-Zu5_44
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDY2ODIxLCJpYXQiOjE3MjIwNjUwMjF9.V8MXjhJt3jC-2kSai4k9uSc73xbgSEcORthDMYw62V0
 Content-Type: application/json
 
 ### 커뮤니티 보드 피드 댓글 수정
-PATCH http://localhost:8080/artist/2NE1/feeds/3/comments/4
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIxOTYwOTMyLCJpYXQiOjE3MjE5NTkxMzJ9.U12yJGMrKVq-YU9YiN1c74E2WgLK6KsHP6MBD2HXlD4
+PATCH http://localhost:8080/artist/2NE1/feeds/1/comments/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDY4MDYzLCJpYXQiOjE3MjIwNjYyNjN9.qsNuXpZm-iKKMEXlSkeks95AfOuTmx5ZJEstciMqKtA
 Content-Type: application/json
 
 {
-  "contents" : "댓글수정 테스트"
+  "contents" : "댓글수정 테스트1"
 }
 
 ### 커뮤니티 보드 피드 댓글 삭제
-DELETE http://localhost:8080/artist/2NE1/feeds/3/comments/4
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIxOTYwOTMyLCJpYXQiOjE3MjE5NTkxMzJ9.U12yJGMrKVq-YU9YiN1c74E2WgLK6KsHP6MBD2HXlD4
+DELETE http://localhost:8080/artist/2NE1/feeds/1/comments/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDY4MDYzLCJpYXQiOjE3MjIwNjYyNjN9.qsNuXpZm-iKKMEXlSkeks95AfOuTmx5ZJEstciMqKtA
 Content-Type: application/json

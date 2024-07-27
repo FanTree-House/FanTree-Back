@@ -9,6 +9,7 @@ import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDt
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.service.CommunityFeedService;
+import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class CommunityFeedController {
     @GetMapping
     public ResponseEntity<?> findAllFeed(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                          @PathVariable String groupName) {
-        List<CommunityFeedResponseDto> responseDto = feedService.findAllFeed(userDetails.getUser().getId(),groupName);
+        List<CommunityFeedResponseDto> responseDto = feedService.findAllFeed(userDetails.getUser().getId(), groupName);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -96,8 +97,9 @@ public class CommunityFeedController {
     @DeleteMapping("/{feedId}")
     public ResponseEntity<ResponseMessageDto> deleteFeed(@PathVariable Long feedId,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                         @PathVariable  String groupName) {
-        feedService.deleteFeed(feedId, userDetails.getUser().getId(), groupName);
+                                                         @PathVariable  String groupName,
+                                                         UserRoleEnum userRoleEnum) {
+        feedService.deleteFeed(feedId, userDetails.getUser().getId(), groupName, userRoleEnum);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_DELETE_SUCCESS));
     }
 }

@@ -4,7 +4,6 @@ import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.communitycomment.dto.CommunityCommentRequestDto;
 import com.example.fantreehouse.domain.communitycomment.dto.CommunityCommentUpdateRequestDto;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
-import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,7 +30,9 @@ public class CommunityComment extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public CommunityComment(CommunityCommentRequestDto requestDto, User user) {
+    public CommunityComment(CommunityCommentRequestDto requestDto, User user, CommunityFeed feed) {
+        this.user = user;
+        this.communityFeed = feed;
         this.contents = requestDto.getContents();
         this.nickname = user.getNickname();
     }
