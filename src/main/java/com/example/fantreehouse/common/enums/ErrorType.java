@@ -79,6 +79,8 @@ public enum ErrorType implements ErrorCode {
     NOT_FOUND_ARTISTGROUP(HttpStatus.NOT_FOUND, "아티스트그룹을 찾지 못했습니다."),
     UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "권한이 없습니다."),
     DUPLICATE_GROUP_NAME(HttpStatus.BAD_REQUEST, "그룹 이름이 중복되었습니다."),
+    ARTIST_NOT_IN_GROUP(HttpStatus.BAD_REQUEST, "아티스트가 그룹에 없습니다."),
+
     //엔터피드
     ENTER_FEED_NOT_FOUND(HttpStatus.NOT_FOUND, "피드를 찾을 수 없습니다."),
     // 상품

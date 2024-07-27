@@ -54,7 +54,7 @@ Content-Type: application/json
 {
   "title": "우지 스케줄",
   "contents": "유튜브 출연",
-  "postPicture": "https://www.youtube.com/watch?v=DssBP24ig2Y",
+  "postPicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
   "category": "SCHEDULE",
   "date": "2024-08-09"
 }
@@ -83,7 +83,7 @@ Content-Type: application/json
 {
   "title": "우지 스케줄",
   "contents": "불참",
-  "postPicture": "https://w.com/watch?v=DssBP24ig2Y"
+  "postPicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev"
 }
 
 ### 스케줄 날짜 수정

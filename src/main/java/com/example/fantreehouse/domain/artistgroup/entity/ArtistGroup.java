@@ -35,7 +35,7 @@ public class ArtistGroup extends Timestamped {
     private Entertainment entertainment;
 
     // 아티스트그룹과 아티스트와의 일대다 매핑
-    @OneToMany(mappedBy = "artistGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "artistGroup")
     private List<Artist> artists = new ArrayList<>();
 
     //엔터피드와 다대일 매핑
@@ -62,6 +62,11 @@ public class ArtistGroup extends Timestamped {
 
     // 아티스트 추가 메서드
     public void addArtist(Artist artist) {
+        // 기존 그룹에서 제거
+        if (artist.getArtistGroup() != null) {
+            artist.getArtistGroup().getArtists().remove(artist);
+        }
+        // 새 그룹에 추가
         artists.add(artist);
         artist.setArtistGroup(this);
     }
@@ -82,6 +87,12 @@ public class ArtistGroup extends Timestamped {
     // 아티스트 프로필 사진 설정 메서드
     public void setArtistProfilePicture(String artistProfilePicture) {
         this.artistProfilePicture = artistProfilePicture;
+    }
+
+    // 아티스트 제거 메서드
+    public void removeArtist(Artist artist) {
+        artists.remove(artist);
+        artist.setArtistGroup(null);
     }
 
 }

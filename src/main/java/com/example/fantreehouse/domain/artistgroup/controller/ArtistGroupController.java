@@ -88,6 +88,25 @@ public class ArtistGroupController {
     }
 
     /**
+     * [removeArtistFromGroup] 아티스트 그룹에서 아티스트 탈퇴
+     * @param enterName 엔터테인먼트 이름
+     * @param groupName 그룹 이름
+     * @param artistId 아티스트 ID
+     * @param userDetails 로그인한 사용자 정보
+     * @return 응답 메시지 DTO
+     */
+    @DeleteMapping("/{enterName}/{groupName}/artists/{artistId}")
+    public ResponseEntity<ResponseMessageDto> removeArtistFromGroup(
+            @PathVariable String enterName,
+            @PathVariable String groupName,
+            @PathVariable Long artistId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        artistGroupService.removeArtistFromGroup(enterName, groupName, artistId, userDetails.getUser());
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_REMOVE_SUCCESS));
+    }
+
+    /**
      * [deleteArtistGroup] 아티스트 그룹 삭제
      * @param enterName 엔터테인먼트 이름
      * @param groupName 그룹 이름

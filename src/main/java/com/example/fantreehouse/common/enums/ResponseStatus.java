@@ -49,6 +49,7 @@ public enum ResponseStatus {
     ARTIST_GROUP_CREATE_SUCCESS(HttpStatus.OK, "아티스트 그룹 생성에 성공하였습니다."),
     ARTIST_GROUP_RETRIEVE_SUCCESS(HttpStatus.OK, "아티스트 그룹 조회에 성공하였습니다."),
     ARTIST_GROUP_UPDATE_SUCCESS(HttpStatus.OK, "아티스트 그룹 수정에 성공하였습니다."),
+    ARTIST_REMOVE_SUCCESS(HttpStatus.OK, "그룹에서 아티스트 삭제를 성공하였습니다."),
     ARTIST_GROUP_DELETE_SUCCESS(HttpStatus.OK, "아티스트 그룹 삭제에 성공하였습니다."),
 
     //Feed
@@ -73,6 +74,7 @@ public enum ResponseStatus {
     PRODUCT_UPDATE_SUCCESS(HttpStatus.OK, "상품 수정에 성공하였습니다."),
     PRODUCT_DELETE_SUCCESS(HttpStatus.OK, "상품 삭제에 성공하였습니다.")
     ;
+
 
     private final HttpStatus httpStatus;
     private final String message;
