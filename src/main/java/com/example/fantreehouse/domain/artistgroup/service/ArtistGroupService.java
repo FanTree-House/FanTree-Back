@@ -49,6 +49,11 @@ public class ArtistGroupService {
         Entertainment entertainment = entertainmentRepository.findByEnterName(enterName)
                 .orElseThrow(() -> new CustomException(ErrorType.ENTERTAINMENT_NOT_FOUND));
 
+
+        if (artistGroupRepository.findByGroupName(request.getGroupName()).isPresent()) {
+            throw new CustomException(ErrorType.DUPLICATE_GROUP_NAME);
+        }
+
         ArtistGroup artistGroup = new ArtistGroup(request.getGroupName(), request.getArtistProfilePicture(), entertainment);
 
         for (Long artistId : request.getArtistIds()) {

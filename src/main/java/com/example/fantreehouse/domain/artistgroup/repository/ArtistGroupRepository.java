@@ -12,7 +12,4 @@ public interface ArtistGroupRepository extends JpaRepository<ArtistGroup, Long> 
     Optional<ArtistGroup> findByEntertainmentEnterNameAndGroupName(String enterName, String groupName);
 
     Optional<ArtistGroup> findByGroupName(String groupName);
-
-//    Optional<ArtistGroup> findByUserId(Long userId);
-//    Optional<ArtistGroup> findByUserId(Long userId);
 }
