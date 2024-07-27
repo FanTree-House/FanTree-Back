@@ -21,8 +21,6 @@ public class CommunityComment extends Timestamped {
 
     private String contents;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "community_feed_id")
     private String nickname;
 
     @ManyToOne(fetch = FetchType.EAGER)

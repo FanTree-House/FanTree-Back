@@ -4,10 +4,26 @@
 @artistFeedId2=2
 
 
+### Feed 새로 생성
+POST http://localhost:8080/{{groupName}}
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "artistName": "artist1",
+  "contents": "새로만든 첫 번째 Feed 입니다",
+  "postPicture": "fdsa2345"
+}
+
+
+
+
+
 ### Feed1 생성
 POST http://localhost:8080/{{groupName}}
 Authorization: {{Authorization}}
 Content-Type: application/json
+
 
 {
   "groupName": "seventeen",

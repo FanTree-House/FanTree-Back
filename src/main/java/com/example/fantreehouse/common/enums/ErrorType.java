@@ -60,10 +60,11 @@ public enum ErrorType implements ErrorCode {
     UNAUTHORIZED_FEED_ACCESS(HttpStatus.FORBIDDEN, "유저 커뮤니티에 접근할 권한이 없습니다."),
 
 
-    // 유저 커뮤니티 피드 댓글
+    // 유저 커뮤니티 & 아티스트 피드 댓글
     NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾지 못했습니다."),
     NOT_USER_COMMENT(HttpStatus.NOT_ACCEPTABLE, "유저가 작성한 댓글이 아닙니다."),
     DUPLICATE_COMMENT(HttpStatus.LOCKED, "같은 댓글은 작성하실수 없습니다"),
+
 
     // 구독
     DUPLICATE_USER(HttpStatus.LOCKED, "이미 구독한 그룹입니다."),

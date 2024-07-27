@@ -1,7 +1,9 @@
 package com.example.fantreehouse.domain.comment.dto;
 
 import com.example.fantreehouse.domain.comment.entity.Comment;
+import lombok.Getter;
 
+@Getter
 public class CommentResponseDto {
 
     private String contents;

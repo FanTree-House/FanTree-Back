@@ -1,11 +1,40 @@
 ## 변수
+@groupName=seventeen
 @feedId=1
+@artistFeedCommentId=1
 
-### 아티스트 Feed에 댓글1 생성 (아티스트나 구독 유저로 할 것)
-POST http://localhost:8080/feed/{{feedId}}/comment
+### 아티스트 Feed에 댓글1 생성 (아티스트 Feed 작성자 본인)
+POST http://localhost:8080/{{groupName}}/feed/{{feedId}}/comment
 Content-Type: application/json
 Authorization: {{Authorization}}
 
 {
   "contents": "여러분 안녕하세요"
 }
+
+### 아티스트 Feed에 댓글2 생성 (아티스트 Feed 작성자 본인)
+POST http://localhost:8080/{{groupName}}/feed/{{feedId}}/comment
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "contents": "여러분 안녕히계세요"
+}
+
+### 아티스트 feed 댓글 수정 (작성자 본인)
+PUT http://localhost:8080/{{groupName}}/feed/{{feedId}}/comment/{{artistFeedCommentId}}
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "contents": "저도 안녕합니다"
+}
+
+
+### 아티스트 feed 댓글 삭제
+DELETE http://localhost:8080/{{groupName}}/feed/{{feedId}}/comment/{{artistFeedCommentId}}
+Authorization: {{Authorization}}
+
+### 아티스트 feed 댓글 전체 조회 (로그인 사용자 누구나)
+GET http://localhost:8080/{{groupName}}/feed/{{feedId}}/comments?page=0
+Authorization: {{Authorization}}

@@ -2,7 +2,7 @@ package com.example.fantreehouse.domain.user.entity;
 
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
-import com.example.fantreehouse.common.exception.errorcode.AuthorizedException;
+import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
@@ -12,7 +12,6 @@ import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.fantreehouse.common.enums.ErrorType.UNAUTHORIZED;
-import static com.example.fantreehouse.domain.user.entity.UserRoleEnum.ARTIST;
-import static com.example.fantreehouse.domain.user.entity.UserRoleEnum.USER;
 
 
 @Entity
@@ -78,6 +75,9 @@ public class User extends Timestamped {
     @OneToOne
     @JoinColumn(name = "artist_id")
     private Artist artist;
+//
+//    @OneToOne(mappedBy = "user")
+//    private Artist artist;
 
     //구독자와 일대다 매핑
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
@@ -147,17 +147,4 @@ public class User extends Timestamped {
         this.kakaoId=kakaoId;
     }
 
-
-    //구독자 중 USER 와 ARTIST 권한인 유저
-    public static void hasCommentAuthorization(List<User> subscribers) {
-        for (User user : subscribers ) {
-            switch (user.getUserRole()) {
-                case USER, ARTIST -> {
-                }
-                default -> {
-                    throw new AuthorizedException(UNAUTHORIZED);
-                }
-            }
-        }
-    }
 }

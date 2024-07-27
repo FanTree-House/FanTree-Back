@@ -22,7 +22,7 @@ public enum ResponseStatus {
     CREATE_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 생성되었습니다."),
     UPDATE_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 수정되었습니다."),
     DELETE_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 삭제되었습니다."),
-    READ_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 삭제되었습니다."),
+    READ_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 조회되었습니다."),
 
     WITHDRAW_SUCCESS(HttpStatus.OK, "회원탈퇴에 성공하였습니다."),
     SIGNUP_SUCCESS(HttpStatus.OK, "회원가입에 성공하였습니다."),
