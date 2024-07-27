@@ -49,6 +49,11 @@ public class ArtistGroupService {
         Entertainment entertainment = entertainmentRepository.findByEnterName(enterName)
                 .orElseThrow(() -> new CustomException(ErrorType.ENTERTAINMENT_NOT_FOUND));
 
+
+        if (artistGroupRepository.findByGroupName(request.getGroupName()).isPresent()) {
+            throw new CustomException(ErrorType.DUPLICATE_GROUP_NAME);
+        }
+
         ArtistGroup artistGroup = new ArtistGroup(request.getGroupName(), request.getArtistProfilePicture(), entertainment);
 
         for (Long artistId : request.getArtistIds()) {
@@ -107,6 +112,34 @@ public class ArtistGroupService {
 
         return artistGroupRepository.save(artistGroup);
     }
+
+    /**
+     * [removeArtistFromGroup] 아티스트 그룹에서 아티스트 탈퇴
+     * @param enterName 엔터테인먼트 이름
+     * @param groupName 그룹 이름
+     * @param artistId 아티스트 ID
+     * @param user 로그인한 사용자 정보
+     */
+    @Transactional
+    public void removeArtistFromGroup(String enterName, String groupName, Long artistId, User user) {
+        verifyEntertainmentOrAdminAuthority(user);
+
+        ArtistGroup artistGroup = getArtistGroup(enterName, groupName);
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> new CustomException(ErrorType.ARTIST_NOT_FOUND));
+
+        if (artist.getArtistGroup() == null || !artist.getArtistGroup().equals(artistGroup)) {
+            throw new CustomException(ErrorType.ARTIST_NOT_IN_GROUP);
+        }
+
+        // 그룹에서 아티스트 제거
+        artistGroup.removeArtist(artist);
+
+        // 변경된 엔티티 저장
+        artistRepository.save(artist);
+        artistGroupRepository.save(artistGroup);
+    }
+
 
     /**
      * [deleteArtistGroup] 아티스트 그룹 삭제
