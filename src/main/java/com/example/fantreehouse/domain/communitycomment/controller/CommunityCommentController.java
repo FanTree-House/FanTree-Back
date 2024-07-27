@@ -36,23 +36,26 @@ public class CommunityCommentController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<ResponseMessageDto> createCommnet(@Valid @RequestBody CommunityCommentRequestDto requestDto,
+    public ResponseEntity<ResponseMessageDto> creatComment(@Valid @RequestBody CommunityCommentRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails,
                                                             @PathVariable Long feedId) {
-        commentService.createComment(requestDto, userDetails.getUser().getId(), feedId);
+        commentService.creatComment(requestDto, userDetails.getUser().getId(), feedId);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CREATE_SUCCESS_COMMENT));
     }
 
     /**
-     * 댓글전체조회
+     * 댓글 조회 기능
      * @param groupName
+     * @param userDetails
      * @param feedId
      * @return
      */
     @GetMapping
     public ResponseEntity<?> findComment(@PathVariable String groupName,
-                                         Long feedId) {
-        List<CommunityCommentResponseDto> responseDto = commentService.findAllComment(groupName, feedId);
+                                         @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                         @PathVariable Long feedId) {
+        List<CommunityCommentResponseDto> responseDto = commentService.findAllComment(groupName, feedId,
+                                                                                        userDetails.getUser().getId());
         return ResponseEntity.ok(responseDto);
     }
 
@@ -60,6 +63,7 @@ public class CommunityCommentController {
      * 댓글 수정 기능
      * @param requestDto
      * @param commentId
+     * @param groupName
      * @param userDetails
      * @return
      */
@@ -76,7 +80,7 @@ public class CommunityCommentController {
     }
 
     /**
-     * 댓글 삭제 기능
+     * 댓글삭제기능
      * @param userDetails
      * @param commentId
      * @param groupName

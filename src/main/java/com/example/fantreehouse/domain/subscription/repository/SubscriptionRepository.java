@@ -11,5 +11,4 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
 
     Optional<Subscription> findByUser_IdAndArtistGroup_Id(Long userId, Long groupId);
     Optional<Subscription> findByUserId(Long UserId);
-
 }
