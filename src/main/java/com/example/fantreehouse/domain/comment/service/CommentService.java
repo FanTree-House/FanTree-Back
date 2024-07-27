@@ -51,6 +51,7 @@ public class CommentService {
         );
 
         User feedWriter = foundFeed.getUser();
+        Long loginUserId = loginUser.getId();
 
         //구독자 리스트
         List<User> subscribers = foundFeed.getArtistGroup().getSubscriptionList().stream()
@@ -66,7 +67,6 @@ public class CommentService {
         commentRepository.save(newComment);
 
     }
-
 
 
     // 댓글 수정 - 작성자 본인만 가능
@@ -134,7 +134,6 @@ public class CommentService {
     }
 
 
-
     //유저 status 확인 (활동 여부)
     private void checkUserStatus(UserStatusEnum userStatusEnum) {
         if (!userStatusEnum.equals(UserStatusEnum.ACTIVE_USER)) {
@@ -150,14 +149,6 @@ public class CommentService {
                 .orElseThrow(() -> new NotFoundException(ARTIST_GROUP_NOT_FOUND));
     }
 
-    //comment 작성 권한 = ARTIST 이거나 USER 인 경우 (ADMIN 과 ENTERTAINMENT 제외를 위한)
-//    private void canWriteComment(User loginUser) {
-//        if (!loginUser.getUserRole().equals(UserRoleEnum.ARTIST)
-//                || (!loginUser.getUserRole().equals(UserRoleEnum.USER)) {
-//            throw new UnAuthorizedException(UNAUTHORIZED);
-//        }
-//    }
-
     // login 한 유저의 Role 에 따른 comment 작성 가능여부 확인
     private void checkCommentAuthorization(User loginUser, User feedWriter, List<User> subscribers) {
         switch (loginUser.getUserRole()) {
@@ -171,20 +162,18 @@ public class CommentService {
                 break;
 
             case USER: // USER 의 경우 - 구독 확인
-                if (!subscribers.contains(loginUser))
+                Long loginUserId = loginUser.getId();
+                boolean isSubscribed = subscribers.stream()
+                        .anyMatch(user -> user.getId().equals(loginUserId));
+                if (!isSubscribed) {
                     throw new UnAuthorizedException(NOT_SUBSCRIPT_USER);
+                }
                 break;
 
             default:
                 throw new UnAuthorizedException(UNAUTHORIZED);
         }
     }
-
-//    //로그인 유저가 feed 작성자 본인(ARTIST) 이거나, 구독자 중 USER 또는 ARTIST 인 유저
-//    private void canWriteComment(User loginUser, User feedUser, List<User> subscribers) {
-//        if (!loginUser.getId().equals(feedUser.getId()))
-//            User.hasCommentAuthorization(loginUser, subscribers);
-//    }
 
     //로그인 유저가 Comment 작성자 본인
     private void checkWriter(User loginUser, User commentUser) {
