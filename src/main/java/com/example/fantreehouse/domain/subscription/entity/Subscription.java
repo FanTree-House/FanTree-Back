@@ -19,9 +19,15 @@ public class Subscription extends Timestamped {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nickname", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany
+    @ManyToOne
+    @JoinColumn(name = "artist_group")
     private ArtistGroup artistGroup;
+
+    public Subscription(User user, ArtistGroup artistGroup) {
+        this.user = user;
+        this.artistGroup = artistGroup;
+    }
 }

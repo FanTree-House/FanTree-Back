@@ -1,0 +1,141 @@
+### 일반 유저 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "user1",
+  "name": "user",
+  "nickname": "user",
+  "email": "user1@email.com",
+  "password": "user123123",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
+}
+
+### 관리자 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "admin1",
+  "name": "admin1",
+  "nickname": "admin1",
+  "email": "admin1@email.com",
+  "password": "admin123123",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "admin": true,
+  "adminToken": "1np0t2ncesuuuud3rTaMeng5"
+}
+
+### 아티스트 회원가입
+POST http://localhost:8080/users/invite/artist
+Content-Type: application/json
+
+{
+  "id": "artist1",
+  "name": "artist1",
+  "nickname": "artist1",
+  "email": "artist1@gmail.com",
+  "password": "artist123!@#",
+  "profileImage": "",
+  "artist": true,
+  "artistToken": "acRos3knitterUp2eTt1ng5"
+}
+
+### 엔터 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "smenter1",
+  "name": "SMENTERTAINMENT",
+  "nickname": "winter1",
+  "email": "smentertainment1@email.com",
+  "password": "smenter123",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "entertainment": true,
+  "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
+}
+
+### 아티스트 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "etest2",
+  "name": "Etest2",
+  "nickname": "Etest2",
+  "email": "Etest@email.com",
+  "password": "test1234",
+  "id": "winter1",
+  "name": "winter1",
+  "nickname": "winter",
+  "email": "winter1@email.com",
+  "password": "winter123",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "artist": true,
+  "artistToken": "acRos3knitterUp2eTt1ng5"
+}
+
+### 일반 유저 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "usertest2",
+  "password": "test1234"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 관리자 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "admin1",
+  "password": "admin123123"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 엔터 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "etest2",
+  "password": "test1234"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 아티스트 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "etest2",
+  "password": "test1234"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}

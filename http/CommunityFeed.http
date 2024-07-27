@@ -1,0 +1,35 @@
+### 커뮤니티 보드 피드 생성
+POST http://localhost:8080/artist/Mouse/feeds
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDY4MzQyLCJpYXQiOjE3MjIwNjY1NDJ9.aA1A6sfsBOLv2Mh8vxyAHdd2Rv9-2v7NC_1ECRJ5Yc8
+Content-Type: application/json
+
+{
+  "contents": "테스트4 입니다",
+  "post_picture": "비어있음"
+}
+
+### 커뮤니티 보드 피드 전체 조회
+GET http://localhost:8080/artist/2NE1/feeds
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MTIzNCIsImF1dGgiOiJBUlRJU1QiLCJzdGF0dXMiOiJBQ1RJVkVfVVNFUiIsImV4cCI6MTcyMjA2MzU1NSwiaWF0IjoxNzIyMDYxNzU1fQ.pOXHI4T4cln4BjmGxeseHFx2GfRSaRlvZIe9EnD52lg
+Content-Type: application/json
+
+### 커뮤니티 보드 피드 선택조회
+GET http://localhost:8080/artist/2NE1/feeds/6
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIxOTIxMTc0LCJpYXQiOjE3MjE5MTkzNzR9.usfDfpF_UUBhYzjQd32Gr1MWZ7iTWN2o2XZ_Cj0fEWk
+Content-Type: application/json
+
+### 커뮤니티 보드 피드 수정
+PATCH http://localhost:8080/artist/2NE1/feeds/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDU5OTI0LCJpYXQiOjE3MjIwNTgxMjR9.LgTABanXsyIzezsaBGm_p49kPd0dTfFuQ0bgw0rb-sU
+Content-Type: application/json
+
+{
+  "contents": "수정테스트2 입니다",
+  "post_picture": "비어있음 수정테스트2 입니다."
+
+}
+
+### 커뮤니티 보드 피드 삭제
+DELETE http://localhost:8080/artist/2NE1/feeds/
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDEiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDYzNjE1LCJpYXQiOjE3MjIwNjE4MTV9.KvfQAkHFfrlDHJI9Y6NeWusQOhGrKi9IK6ODY-aPOr8
+Content-Type: application/json
