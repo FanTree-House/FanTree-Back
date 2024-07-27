@@ -2,7 +2,7 @@ package com.example.fantreehouse.domain.user.entity;
 
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
-import com.example.fantreehouse.common.security.UserDetailsImpl;
+import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
@@ -12,7 +12,6 @@ import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +19,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.fantreehouse.common.enums.ErrorType.UNAUTHORIZED;
 
 
 @Entity
@@ -37,7 +38,6 @@ public class User extends Timestamped {
     private String name; // 실명
 
     private String nickname; // 로그인 한 닉네임
-
 
     private String email;
 
@@ -75,6 +75,9 @@ public class User extends Timestamped {
     @OneToOne
     @JoinColumn(name = "artist_id")
     private Artist artist;
+//
+//    @OneToOne(mappedBy = "user")
+//    private Artist artist;
 
     //구독자와 일대다 매핑
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)

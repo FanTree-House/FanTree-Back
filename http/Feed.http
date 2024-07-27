@@ -1,0 +1,74 @@
+##변수
+@groupName =seventeen
+@artistFeedId=1
+@artistFeedId2=2
+
+
+### Feed 새로 생성
+POST http://localhost:8080/{{groupName}}
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "artistName": "artist1",
+  "contents": "새로만든 첫 번째 Feed 입니다",
+  "postPicture": "fdsa2345"
+}
+
+
+
+
+
+### Feed1 생성
+POST http://localhost:8080/{{groupName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+
+{
+  "groupName": "seventeen",
+  "artistName": "artist1",
+  "contents": "첫 게시글",
+  "postPicture": "asd23"
+
+}
+
+### Feed2 생성
+POST http://localhost:8080/{{groupName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "groupName": "seventeen",
+  "artistName": "artist1",
+  "contents": "두번째 게시글",
+  "postPicture": "asdfgh"
+
+}
+
+### Feed1 수정
+PATCH http://localhost:8080/{{groupName}}/feed/{{artistFeedId}}
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "groupName": "seventeen",
+  "artistName": "artist1",
+  "contents": "수정한 첫 게시글",
+  "postPicture": "asd23"
+
+}
+
+
+### Feed 단건 조회 (Feed1)
+GET http://localhost:8080/{{groupName}}/feed/{{artistFeedId}}
+Authorization: {{Authorization}}
+
+### Feed 단건 조회 (Feed2)
+GET http://localhost:8080/{{groupName}}/feed/{{artistFeedId2}}
+Authorization: {{Authorization}}
+
+
+### Feed 전체 조회
+GET http://localhost:8080/{{groupName}}/feeds?page=0
+Authorization: {{Authorization}}

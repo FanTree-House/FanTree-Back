@@ -1,6 +1,6 @@
 package com.example.fantreehouse.domain.feed.service;
 
-import com.example.fantreehouse.common.exception.errorcode.AuthorizedException;
+import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artist.entity.Artist;
@@ -48,24 +48,26 @@ public class FeedService {
     @Transactional
     public CreateFeedResponseDto createFeed(String groupName, UserDetailsImpl userDetails, CreateFeedRequestDto requestDto) {
 
-        User loginUser = userDetails.getUser();
-        checkUserStatus(loginUser.getStatus());
-        checkUserRole(loginUser.getUserRole());
+        User loginUser = userDetails.getUser(); //로그인 유저
+        checkUserStatus(loginUser.getStatus()); // 활성유저인지 확인
+        checkUserRole(loginUser.getUserRole()); //Artist 권한 확인
+
+        //groupName 이라는 이름을 가진 ArtistGroup 소속인지 확인
+        ArtistGroup artistGroup = artistGroupRepository.findByGroupName(groupName)
+                .orElseThrow(() -> new NotFoundException(ARTIST_GROUP_NOT_FOUND));
 
         Artist loginArtist = artistRepository.findByUserId(loginUser.getId())
-                .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
 
-        checkArtistGroup(loginArtist, groupName);
+        // 아티스트가 해당 아티스트 그룹에 속해있는지 확인 <- 아티스트 그룹을 통해서 아티스트를 찾아 올 수 없는 구조이므로
+        if (!artistGroup.getArtists().contains(loginArtist)) {
+            throw new NotFoundException(FEED_NOT_FOUND);
+        }
+        //artistGroup 에 소속되어 있지 않으면 (또는 엔터테인먼트가 없으면 게시글 불가)
 
-        //file 경로 추출
-//        if (file != null && file.isEmpty()) {
-//
-//            filePath = fileDirPath
-//        }
+//        checkArtistGroup(loginArtist, groupName);
 
-//        Feed newFeed = new Feed.of(requestDto, loginUser, groupName, filePath);
-
-        Feed newFeed = Feed.of(requestDto, loginUser, loginArtist.getArtistGroup());//file 기능 전 임시 사용
+        Feed newFeed = Feed.of(requestDto, loginUser, artistGroup);//file 기능 전 임시 사용
         feedRepository.save(newFeed);
         return CreateFeedResponseDto.of(newFeed);
     }
@@ -127,13 +129,7 @@ public class FeedService {
         return FeedResponseDto.of(foundFeed);
     }
 
-    /**
-     * Feed 다건 조회(페이지) - 로그인 회원 누구나
-     * @param groupName
-     * @param userDetails
-     * @param page
-     * @return
-     */
+    //Feed 다건 조회(페이지) - 로그인 회원 누구나
     public Page<FeedResponseDto> getAllFeed(String groupName, UserDetailsImpl userDetails,Integer page) {
 
         User loginUser = userDetails.getUser();
@@ -159,7 +155,7 @@ public class FeedService {
         //권한이 Artist 이거나 Entertainment 여야 함
         if (!(loginUserRole.equals(UserRoleEnum.ARTIST) ||
                 loginUserRole.equals(UserRoleEnum.ENTERTAINMENT))) {
-            throw new AuthorizedException(UNAUTHORIZED);
+            throw new UnAuthorizedException(UNAUTHORIZED);
         }
         //요청하는 feed 찾기
         Feed foundFeed = feedRepository.findById(artistFeedId)
@@ -171,7 +167,7 @@ public class FeedService {
         // 로그인유저가 '작성자 본인'이거나 '작성자의 엔터테인먼트를 가진 유저'인 경우
         if (! (loginUserId.equals(feedWriterId) ||
                 loginUser.getEntertainment().getUser().getId().equals(loginUserId))) {
-            throw new AuthorizedException(UNAUTHORIZED);
+            throw new UnAuthorizedException(UNAUTHORIZED);
         }
 
         feedRepository.delete(foundFeed);
@@ -180,26 +176,34 @@ public class FeedService {
     //유저 status 확인 (활동 여부)
     private void checkUserStatus(UserStatusEnum userStatusEnum) {
         if (!userStatusEnum.equals(UserStatusEnum.ACTIVE_USER)) {
-            throw new AuthorizedException(UNAUTHORIZED);
+            throw new UnAuthorizedException(UNAUTHORIZED);
         }
     }
 
     //login 유저가 아티스트인지 확인
     private void checkUserRole(UserRoleEnum userRoleEnum) {
         if (!userRoleEnum.equals(UserRoleEnum.ARTIST)) {
-            throw new AuthorizedException(UNAUTHORIZED);
+            throw new UnAuthorizedException(UNAUTHORIZED);
         }
     }
+
+    //
+//    private void hasArtistGroup(Artist loginArtist) {
+//        if (!loginArtist.getArtistGroup().) {
+//            throw new
+//            ;
+//        }
+//    }
     //url 의 groupName 과 loginUser 의 소속 group 명 이 동일한지 확인
     private void checkArtistGroup(Artist loginArtist, String groupName) {
         if (!loginArtist.getArtistGroup().getGroupName().equals(groupName)) {
-            throw new AuthorizedException(UNAUTHORIZED);
+            throw new UnAuthorizedException(UNAUTHORIZED);
         }
     }
     //로그인 유저와 feed 작성 유저가 동일한지 확인
     private void checkWriter(Long loginUserId, Long feedWriterId) {
         if (!loginUserId.equals(feedWriterId)) {
-            throw new AuthorizedException(UNAUTHORIZED);
+            throw new UnAuthorizedException(UNAUTHORIZED);
         }
     }
 }

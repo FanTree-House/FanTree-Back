@@ -1,16 +1,13 @@
 package com.example.fantreehouse.domain.artist.service;
 
-import com.example.fantreehouse.common.exception.errorcode.AuthorizedException;
+import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
-import com.example.fantreehouse.domain.artist.dto.ArtistResponseDto;
 import com.example.fantreehouse.domain.artist.dto.request.ArtistRequestDto;
 import com.example.fantreehouse.domain.artist.dto.response.ArtistProfileResponseDto;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artist.repository.ArtistRepository;
-import com.example.fantreehouse.domain.feed.dto.response.FeedResponseDto;
-import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
@@ -24,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.common.enums.PageSize.ARTIST_PAGE_SIZE;
-import static com.example.fantreehouse.common.enums.PageSize.FEED_PAGE_SIZE;
 
 @Slf4j
 @Service
@@ -71,7 +67,7 @@ public class ArtistService {
         Artist foundArtist = artistRepository.findByUserId(userDetails.getUser().getId())
                 .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
         if (!foundArtist.getId().equals(artistId)) {
-            throw new AuthorizedException(UNAUTHORIZED);
+            throw new UnAuthorizedException(UNAUTHORIZED);
         }
 
         foundArtist.updateArtist(requestDto);
@@ -107,7 +103,7 @@ public class ArtistService {
         Artist foundArtist = artistRepository.findByUserId(userDetails.getUser().getId())
                 .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
         if (!foundArtist.getId().equals(artistId)) {
-            throw new AuthorizedException(UNAUTHORIZED);
+            throw new UnAuthorizedException(UNAUTHORIZED);
         }
 
         artistRepository.delete(foundArtist);
@@ -116,13 +112,13 @@ public class ArtistService {
     // 활성화 유저인지 확인
     private void checkUserStatus(UserStatusEnum userStatusEnum) {
         if (!userStatusEnum.equals(UserStatusEnum.ACTIVE_USER)) {
-            throw new AuthorizedException(UNAUTHORIZED);
+            throw new UnAuthorizedException(UNAUTHORIZED);
         }
     }
     // 아티스트인지 확인
     private void checkUserRole(UserRoleEnum userRoleEnum) {
         if (!userRoleEnum.equals(UserRoleEnum.ARTIST)) {
-            throw new AuthorizedException(UNAUTHORIZED);
+            throw new UnAuthorizedException(UNAUTHORIZED);
         }
     }
 }
