@@ -2,6 +2,7 @@ package com.example.fantreehouse.domain.communityfeed.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
+import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
@@ -25,6 +26,7 @@ public class CommunityFeed extends Timestamped {
     private String contents;
     private String post_picture;
     private String nickname;
+    private Long likes = 0L;
     //유저와 다대일 매핑
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -39,6 +41,9 @@ public class CommunityFeed extends Timestamped {
     @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 
+    @OneToMany(mappedBy = "communityFeed")
+    private List<CommunityLike> feedLikeList = new ArrayList<>();
+
     public CommunityFeed(CommunityFeedRequestDto requestDto, User user, ArtistGroup artistGroup) {
         this.user = user;
         this.artistGroup = artistGroup;
@@ -50,6 +55,16 @@ public class CommunityFeed extends Timestamped {
     public void updateFeed(CommunityFeedUpdateRequestDto requestDto) {
         this.contents = requestDto.getContents();
         this.post_picture = requestDto.getPost_picture();
+    }
 
+    public void pressFeedLike(User user, CommunityFeed feed) {
+        this.user = user;
+        this.likes = feed.getLikes() + 1L;
+
+    }
+
+    public void pressFeedIsLike(User user, CommunityFeed feed) {
+        this.user = user;
+        this.likes = feed.getLikes() - 1L;
     }
 }

@@ -61,19 +61,21 @@ public enum ErrorType implements ErrorCode {
     UNAUTHORIZED_FEED_CREATE(HttpStatus.FORBIDDEN, "유저 커뮤니티 피드를 작성할 권한이 없습니다."),
     UNAUTHORIZED_FEED_DELETE(HttpStatus.FORBIDDEN, "유저 커뮤니티 피드를 삭제할 권한이 없습니다."),
 
-
-
     // 유저 커뮤니티 & 아티스트 피드 댓글
     NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾지 못했습니다."),
     NOT_USER_COMMENT(HttpStatus.NOT_ACCEPTABLE, "유저가 작성한 댓글이 아닙니다."),
     DUPLICATE_COMMENT(HttpStatus.LOCKED, "같은 댓글은 작성하실수 없습니다"),
-
 
     // 구독
     DUPLICATE_USER(HttpStatus.LOCKED, "이미 구독한 그룹입니다."),
     NOT_SUBSCRIPT_USER(HttpStatus.LOCKED, "구독한 그룹이 아닙니다."),
     NOT_FOUND_SUBSCRIPT_USER(HttpStatus.NOT_FOUND, "구독자를 찾을수 없습니다."),
     NOT_FOUND_SUBSCRIPTION(HttpStatus.NOT_FOUND, "구독한 그룹이 없습니다."),
+
+    //좋아요
+    NOT_FOUND_FEED_LIKE(HttpStatus.NOT_FOUND, "좋아요한 피드가 아닙니다"),
+    NOT_FOUND_COMMENT_LIKE(HttpStatus.NOT_FOUND, "좋아요한 댓글이 아닙니다"),
+
 
     //아티스트그룹
     NOT_FOUND_ARTISTGROUP(HttpStatus.NOT_FOUND, "아티스트그룹을 찾지 못했습니다."),
@@ -85,8 +87,8 @@ public enum ErrorType implements ErrorCode {
     ENTER_FEED_NOT_FOUND(HttpStatus.NOT_FOUND, "피드를 찾을 수 없습니다."),
     // 상품
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
-    NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다.")
-;
+    NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다."),
+    ;
 
     private final HttpStatus httpStatus;
     private final String message;

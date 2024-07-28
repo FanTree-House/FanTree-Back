@@ -23,7 +23,13 @@ public enum ResponseStatus {
     UPDATE_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 수정되었습니다."),
     DELETE_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 삭제되었습니다."),
     READ_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 조회되었습니다."),
+    // 좋아요
+    SUCCESS_FEED_LIKE(HttpStatus.OK,"피드를 좋아합니다!" ),
+    DELETE_FEED_LIKE(HttpStatus.OK, "피드의 좋아요를 취소합니다."),
+    SUCCESS_COMMENT_LIKE(HttpStatus.OK,"댓글을 좋아합니다!" ),
+    DELETE_COMMENT_LIKE(HttpStatus.OK, "댓글의 좋아요를 취소합니다."),
 
+    //프로필
     WITHDRAW_SUCCESS(HttpStatus.OK, "회원탈퇴에 성공하였습니다."),
     SIGNUP_SUCCESS(HttpStatus.OK, "회원가입에 성공하였습니다."),
     PROFILE_UPDATE(HttpStatus.OK, "프로필이 변경되었습니다."),
@@ -58,6 +64,7 @@ public enum ResponseStatus {
     FEED_READ_SUCCESS(HttpStatus.OK, "조회되었습니다."),
     FEED_DELETED(HttpStatus.OK, "삭제되었습니다."),
 
+
     // 엔터 피드
     NOTICE_CREATE_SUCCESS(HttpStatus.OK, "공지사항 생성에 성공하였습니다."),
     NOTICE_RETRIEVE_SUCCESS(HttpStatus.OK, "공지사항 조회에 성공하였습니다."),
@@ -72,8 +79,8 @@ public enum ResponseStatus {
     PRODUCT_CREATE_SUCCESS(HttpStatus.OK, "상품 등록에 성공하였습니다."),
     PRODUCT_READ_SUCCESS(HttpStatus.OK, "상품 조회에 성공하였습니다."),
     PRODUCT_UPDATE_SUCCESS(HttpStatus.OK, "상품 수정에 성공하였습니다."),
-    PRODUCT_DELETE_SUCCESS(HttpStatus.OK, "상품 삭제에 성공하였습니다.")
-    ;
+    PRODUCT_DELETE_SUCCESS(HttpStatus.OK, "상품 삭제에 성공하였습니다."),
+;
 
 
     private final HttpStatus httpStatus;

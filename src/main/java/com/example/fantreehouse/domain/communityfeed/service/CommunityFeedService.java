@@ -2,8 +2,11 @@ package com.example.fantreehouse.domain.communityfeed.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
+import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
+import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
+import com.example.fantreehouse.domain.communityLike.repository.CommunityLikeRepository;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
@@ -35,7 +38,9 @@ public class CommunityFeedService {
     private final UserRepository userRepository;
     private final ArtistGroupRepository artistGroupRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final CommunityLikeRepository likeRepository;
     private final DefaultSslBundleRegistry sslBundleRegistry;
+    private final CommunityLikeRepository communityLikeRepository;
 
     @Transactional //피드생성
     public CommunityFeedResponseDto createFeed(CommunityFeedRequestDto requestDto, Long userId, String groupName) {
@@ -81,7 +86,8 @@ public class CommunityFeedService {
     public CommunityFeed findFeed(Long feedId, Long userId, String groupName) {
         ArtistGroup artistGroup = findArtistGroup(groupName);
         User user = findUser(userId);
-        CommunityFeed feed = findFeed(feedId);
+        CommunityFeed feed = feedRepository.findById(feedId).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_FEED));
 
         List<Subscription> subscriptionList = subscriptionRepository.findAllByUserId(userId).orElseThrow(()
                 -> new CustomException(ErrorType.USER_NOT_FOUND));
@@ -120,7 +126,6 @@ public class CommunityFeedService {
     }
 
 
-
     //유저찾기
     public User findUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(()
@@ -137,6 +142,12 @@ public class CommunityFeedService {
     public ArtistGroup findArtistGroup(String groupName) {
         return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
+    }
+
+    //유저가 좋아요를 눌렀나 확인
+    public CommunityLike checkUserLike(Long userId) {
+        return likeRepository.findByUserId(userId).orElseThrow(()
+                -> new CustomException(ErrorType.DUPLICATE_LIKE));
     }
 
     //휴면유저와 UserROle 필터링
