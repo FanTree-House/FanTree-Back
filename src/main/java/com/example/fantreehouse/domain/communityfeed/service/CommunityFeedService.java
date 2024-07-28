@@ -81,7 +81,8 @@ public class CommunityFeedService {
     public CommunityFeed findFeed(Long feedId, Long userId, String groupName) {
         ArtistGroup artistGroup = findArtistGroup(groupName);
         User user = findUser(userId);
-        CommunityFeed feed = findFeed(feedId);
+        CommunityFeed feed = feedRepository.findById(feedId).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_FEED));
 
         List<Subscription> subscriptionList = subscriptionRepository.findAllByUserId(userId).orElseThrow(()
                 -> new CustomException(ErrorType.USER_NOT_FOUND));

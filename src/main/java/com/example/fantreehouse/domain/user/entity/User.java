@@ -2,8 +2,8 @@ package com.example.fantreehouse.domain.user.entity;
 
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
-import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
@@ -19,8 +19,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static com.example.fantreehouse.common.enums.ErrorType.UNAUTHORIZED;
 
 
 @Entity
@@ -65,6 +63,9 @@ public class User extends Timestamped {
     //픽업데이터와 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<PickUp> pickUpList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<CommunityLike> likeList = new ArrayList<>();
 
     //엔터테이너먼트와 일대일 매핑
     @OneToOne         // 주인
