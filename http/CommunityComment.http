@@ -1,10 +1,10 @@
 ### 커뮤니티 보드 피드 댓글 생성
-POST http://localhost:8080/artist/2NE1/feeds/2/comments
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDY4MzQyLCJpYXQiOjE3MjIwNjY1NDJ9.aA1A6sfsBOLv2Mh8vxyAHdd2Rv9-2v7NC_1ECRJ5Yc8
+POST http://localhost:8080/artist/2NE1/feeds/1/comments
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMTc0NzMyLCJpYXQiOjE3MjIxNzI5MzJ9.HEnUkoeVAFMATMjqDNsJg9I66WcO7JBdqiGMVBNv-CU
 Content-Type: application/json
 
 {
-  "contents" : "댓글테스트1"
+  "contents" : "댓글테스트3"
 }
 
 ### 커뮤니티 보드 피드 댓글 전체 조회

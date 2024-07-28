@@ -18,19 +18,17 @@ public class CommunityLike {
     @Column(nullable = false, unique = true)
     private Long id;
 
-    private Long likes;
-
     private boolean status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "communityFeed_Id")
     private CommunityFeed communityFeed;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "communityComment_id")
     private CommunityComment communityComment;
 
@@ -39,5 +37,17 @@ public class CommunityLike {
         this.user = user;
         this.communityFeed = feed;
         this.status = true;
+    }
+
+    public CommunityLike(User user, CommunityComment comment) {
+        this.user = user;
+        this.communityComment = comment;
+        this.status = true;
+    }
+
+    public void pressFeedIsLike(User user, CommunityFeed feed) {
+        this.user = user;
+        this.communityFeed = feed;
+        this.status = false;
     }
 }

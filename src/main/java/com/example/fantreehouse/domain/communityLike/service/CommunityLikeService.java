@@ -6,6 +6,7 @@ import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 import com.example.fantreehouse.domain.communityLike.repository.CommunityLikeRepository;
+import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communitycomment.repository.CommunityCommentRepository;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
@@ -14,8 +15,11 @@ import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
+
 public class CommunityLikeService {
     private final CommunityLikeRepository likeRepository;
     private final UserRepository userRepository;
@@ -23,23 +27,62 @@ public class CommunityLikeService {
     private final ArtistGroupRepository artistGroupRepository;
     private final CommunityCommentRepository commentRepository;
 
+    //피드 좋아요
     public CommunityLike pressFeedLike(Long userId, Long feedId, String groupName) {
+        ArtistGroup artistGroup = findArtistGroup(groupName);
+        User user = findUser(userId);
+        CommunityFeed feed = findFeed(feedId);
+
+        if (likeRepository.findByUserIdAndCommunityFeedId(userId, feedId).isPresent()) {
+            throw new CustomException(ErrorType.DUPLICATE_LIKE);
+        }
+        CommunityLike feedLike = new CommunityLike(user, feed);
+        feed.pressFeedLike(user, feed);
+//        communityLike.pressFeedLike(user, feed);
+        likeRepository.save(feedLike);
+        return feedLike;
+    }
+
+    //피드 좋아요 취소
+    public void pressFeedIsLike(Long userId, Long feedId, String groupName) {
+        ArtistGroup artistGroup = findArtistGroup(groupName);
+        User user = findUser(userId);
+        CommunityFeed feed = findFeed(feedId);
+        CommunityLike feedLike = likeRepository.findByUserIdAndCommunityFeedId(userId, feedId).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_FEED_LIKE));
+
+        feed.pressFeedIsLike(user, feed);
+        likeRepository.delete(feedLike);
+    }
+
+    // 댓글 좋아요기능
+    public void pressCommentLike(Long userId, Long feedId, String groupName, Long commentId) {
         User user = findUser(userId);
         ArtistGroup artistGroup = findArtistGroup(groupName);
         CommunityFeed feed = findFeed(feedId);
-
-        CommunityLike communityLike = new CommunityLike(user, feed);
-
-        return null;
+        CommunityComment comment = findComment(commentId);
+        if (likeRepository.findByUserIdAndCommunityCommentId(userId, feedId).isPresent()) {
+            throw new CustomException(ErrorType.DUPLICATE_LIKE);
+        }
+        CommunityLike commentLike = new CommunityLike(user, comment);
+        comment.pressCommentLike(user, comment, feed);
+        likeRepository.save(commentLike);
     }
 
+    //피드 댓글 좋아요 취소기능
+    public void pressCommentIsLike(Long userId, Long commentId, String groupName, Long feedId) {
+        ArtistGroup artistGroup = findArtistGroup(groupName);
+        User user = findUser(userId);
+        CommunityFeed feed = findFeed(feedId);
+        CommunityComment comment = commentRepository.findById(commentId).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_COMMENT));
 
+        CommunityLike feedLike = likeRepository.findByUserIdAndCommunityCommentId(userId, commentId).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_COMMENT_LIKE));
 
-
-
-
-
-
+        comment.pressCommentIsLike(user, comment, feed);
+        likeRepository.delete(feedLike);
+    }
 
 
     //유저찾기
@@ -54,10 +97,15 @@ public class CommunityLikeService {
                 -> new CustomException(ErrorType.NOT_USER_FEED));
     }
 
+    // 댓글 찾기
+    public CommunityComment findComment(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_USER_FEED));
+    }
+
     //아티스트 그룹찾기
     public ArtistGroup findArtistGroup(String groupName) {
         return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
     }
-
 }

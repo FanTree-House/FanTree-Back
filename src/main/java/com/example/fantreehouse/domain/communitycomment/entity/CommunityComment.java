@@ -48,4 +48,16 @@ public class CommunityComment extends Timestamped {
         this.contents = requestDto.getContents();
         this.nickname = user.getNickname();
     }
+
+    public void pressCommentLike(User user, CommunityComment comment, CommunityFeed feed) {
+        this.user = user;
+        this.communityFeed = feed;
+        this.likes = comment.getLikes() + 1L;
+    }
+
+    public void pressCommentIsLike(User user, CommunityComment comment, CommunityFeed feed) {
+        this.user = user;
+        this.communityFeed = feed;
+        this.likes = comment.getLikes() - 1L;
+    }
 }

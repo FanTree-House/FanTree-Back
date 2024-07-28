@@ -55,6 +55,16 @@ public class CommunityFeed extends Timestamped {
     public void updateFeed(CommunityFeedUpdateRequestDto requestDto) {
         this.contents = requestDto.getContents();
         this.post_picture = requestDto.getPost_picture();
+    }
 
+    public void pressFeedLike(User user, CommunityFeed feed) {
+        this.user = user;
+        this.likes = feed.getLikes() + 1L;
+
+    }
+
+    public void pressFeedIsLike(User user, CommunityFeed feed) {
+        this.user = user;
+        this.likes = feed.getLikes() - 1L;
     }
 }

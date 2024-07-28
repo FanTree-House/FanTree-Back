@@ -1,10 +1,10 @@
 ### 커뮤니티 보드 피드 생성
-POST http://localhost:8080/artist/Mouse/feeds
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMTU1OTc3LCJpYXQiOjE3MjIxNTQxNzd9.H_A09CNDcGRRqIQDw20mOpfOnvCrOhTtwiWM0fA3qK0
+POST http://localhost:8080/artist/2NE1/feeds
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMTc2ODM0LCJpYXQiOjE3MjIxNzUwMzR9.zom_kDkfi9jlg_7mmZpk4qTm7Z7Hu4lx9H4s5GO48BA
 Content-Type: application/json
 
 {
-  "contents": "좋아요 엔티티 테스트중입니다",
+  "contents": "좋아요 테스트중입니다 4",
   "post_picture": "비어있음"
 }
 
