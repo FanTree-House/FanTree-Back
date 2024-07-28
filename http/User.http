@@ -113,8 +113,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "etest2",
-  "password": "test1234"
+  "id": "smenter1",
+  "password": "smenter123"
 }
 
 > {%
@@ -129,8 +129,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "etest2",
-  "password": "test1234"
+  "id": "artist1",
+  "password": "artist123!@#"
 }
 
 > {%

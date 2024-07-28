@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class AuthorizedException extends RuntimeException{
+public class UnAuthorizedException extends RuntimeException{
   private final ErrorCode errorCode;
 }

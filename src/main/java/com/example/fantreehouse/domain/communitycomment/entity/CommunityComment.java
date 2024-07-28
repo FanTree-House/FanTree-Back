@@ -41,6 +41,4 @@ public class CommunityComment extends Timestamped {
         this.contents = requestDto.getContents();
         this.nickname = user.getNickname();
     }
-
-
 }

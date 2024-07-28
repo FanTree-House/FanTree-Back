@@ -37,6 +37,9 @@ public class Artist extends Timestamped {
     @OneToOne(mappedBy = "artist")
     private User user;
 
+//    @OneToOne(mappedBy = "artist")
+//    private User user;
+//
     @Builder
     public Artist(Long id, String artistName, String artistProfilePicture, User user) {
         this.id = id;
