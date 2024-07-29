@@ -3,6 +3,22 @@
 @feedId=1
 @artistFeedCommentId=1
 
+### 아티스트 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "artist1",
+  "password": "artist123!@#"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
 ### 아티스트 Feed에 댓글1 생성 (아티스트 Feed 작성자 본인)
 POST http://localhost:8080/{{groupName}}/feed/{{feedId}}/comment
 Content-Type: application/json

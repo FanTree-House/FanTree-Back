@@ -25,7 +25,7 @@ public class Feed extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String artistName; //작성한 artist 활동명
 
     @Column(nullable = false)

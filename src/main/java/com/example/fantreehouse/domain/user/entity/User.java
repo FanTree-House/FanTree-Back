@@ -3,6 +3,7 @@ package com.example.fantreehouse.domain.user.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.commentLike.entity.CommentLike;
 import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
@@ -66,6 +67,9 @@ public class User extends Timestamped {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FeedLike> feedLikeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<CommentLike> commentLikeList = new ArrayList<>();
 
     //픽업데이터와 일대다 매핑
     @OneToMany(mappedBy = "user")

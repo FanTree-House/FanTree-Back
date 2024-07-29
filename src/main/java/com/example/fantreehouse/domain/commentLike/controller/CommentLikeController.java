@@ -1,9 +1,9 @@
-package com.example.fantreehouse.domain.feedlike.controller;
+package com.example.fantreehouse.domain.commentLike.controller;
 
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
-import com.example.fantreehouse.domain.feedlike.service.FeedLikeService;
+import com.example.fantreehouse.domain.commentLike.service.CommentLikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +16,20 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/{groupName}/feed/{artistFeedId}")
-public class FeedLikeController {
+@RequestMapping("/{groupName}/feed/{artistFeedId}/comment/{artistFeedCommentId}")
+public class CommentLikeController {
 
-    private final FeedLikeService feedLikeService;
+    private final CommentLikeService commentLikeService;
 
     @PostMapping
     public ResponseEntity<ResponseMessageDto> addOrDeleteLike (
             @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
+            @PathVariable final Long artistFeedCommentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
-        feedLikeService.addOrCancelLike(groupName, artistFeedId, userDetails);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_LIKE_CHANGED));
+    ) {
+        commentLikeService.addOrCancelLike(groupName, artistFeedId, artistFeedCommentId, userDetails);
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.COMMENT_LIKE_CHANGED));
     }
-    //Feed 의 좋아요를 누른 유저 List 보기 <- 최신순, 페이지네이션
+
 }
