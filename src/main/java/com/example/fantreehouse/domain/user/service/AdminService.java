@@ -27,7 +27,7 @@ public class AdminService {
                 new CustomException(ErrorType.NOT_FOUND_ENTER));
 
         // 블랙리스트아닐 때
-        if (! UserStatusEnum.BLACK_LIST.equals(blacklistUser.getStatus())) { // 이거 블랙리스트 만들기전에 status를 저장해두고 나중에 풀어줄 때 그거 끌어다쓰면 될듯?
+        if (! UserStatusEnum.BLACK_LIST.equals(blacklistUser.getStatus())) {
             blacklistUser.transBlacklist();
         } else {
             blacklistUser.transUser();

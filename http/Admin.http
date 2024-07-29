@@ -1,8 +1,8 @@
 ### 블랙리스트 전환
 PATCH http://localhost:8080/admin/blacklist
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "loginId": "",
-  "userRole": "ADMIN"
+  "loginId": "user1"
 }
