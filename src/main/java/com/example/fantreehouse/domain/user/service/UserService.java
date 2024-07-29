@@ -57,7 +57,7 @@ public class UserService {
         }
 
         // 블랙리스트 검증
-        if (userRepository.getStatusFindByEmail(email).get().equals(UserStatusEnum.BLACK_LIST)) {
+        if (userRepository.findByEmailAndStatus(email, UserStatusEnum.BLACK_LIST).isPresent()) {
             throw new CustomException(ErrorType.BLACKLIST_EMAIL);
         }
 
