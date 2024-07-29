@@ -3,9 +3,9 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "id": "user1",
+  "id": "user12",
   "name": "user",
-  "nickname": "user",
+  "nickname": "user12",
   "email": "user1@email.com",
   "password": "user123123",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
