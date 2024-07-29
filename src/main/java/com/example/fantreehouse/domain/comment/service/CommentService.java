@@ -1,11 +1,9 @@
 package com.example.fantreehouse.domain.comment.service;
 
-import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
+import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
-import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artist.repository.ArtistRepository;
-import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.comment.dto.CommentRequestDto;
 import com.example.fantreehouse.domain.comment.dto.CommentResponseDto;
@@ -51,7 +49,6 @@ public class CommentService {
         );
 
         User feedWriter = foundFeed.getUser();
-        Long loginUserId = loginUser.getId();
 
         //구독자 리스트
         List<User> subscribers = foundFeed.getArtistGroup().getSubscriptionList().stream()
@@ -91,8 +88,8 @@ public class CommentService {
         foundComment.update(requestDto);
     }
 
-
     //comment 삭제 //작성자 본인, 아티스트의 경우 엔터와 어드민, 어떤 유저든 어드민 가능
+    @Transactional
     public void deleteComment(String groupName, Long feedId, Long artistFeedCommentId, UserDetailsImpl userDetails) {
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());

@@ -9,7 +9,6 @@ public class FeedResponseDto {
     private String contents;
     private String postPicture;
 
-    //좋아요 수
     private int likesCount;
 
     public FeedResponseDto(String contents, String postPicture, int likesCount) {
@@ -18,11 +17,11 @@ public class FeedResponseDto {
         this.likesCount = likesCount;
     }
 
-    public static FeedResponseDto of(Feed feed) {
+    public static FeedResponseDto of(Feed feed, int feedLikeCount) {
         return new FeedResponseDto(
                 feed.getContents(),
                 feed.getPostPicture(),
-                feed.getLikesCount()
+                feedLikeCount
         );
 
     }

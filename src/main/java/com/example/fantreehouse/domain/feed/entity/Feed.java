@@ -5,6 +5,7 @@ import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.comment.entity.Comment;
 import com.example.fantreehouse.domain.feed.dto.request.CreateFeedRequestDto;
 import com.example.fantreehouse.domain.feed.dto.request.UpdateFeedRequestDto;
+import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -24,7 +25,7 @@ public class Feed extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //유니크 설정할지 고려중
+    @Column(nullable = false, unique = true)
     private String artistName; //작성한 artist 활동명
 
     @Column(nullable = false)
@@ -32,12 +33,11 @@ public class Feed extends Timestamped {
 
     private String postPicture;
 
-    private int likesCount;
+    private int feedLikeCount;
 
     // 댓글이랑 일대다
     @OneToMany(mappedBy = "feed")
     private List<Comment> comments = new ArrayList<>();
-
 
     // 사용자랑 다대일
     @ManyToOne
@@ -49,12 +49,15 @@ public class Feed extends Timestamped {
     @JoinColumn(name="artist_group_id")
     private ArtistGroup artistGroup;
 
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedLike> feedLikeList = new ArrayList<>();
+
     @Builder
     public Feed(String artistName, String contents, String postPicture, User user, ArtistGroup artistGroup) {
         this.artistName = artistName;
         this.contents = contents;
         this.postPicture = postPicture;
-        this.likesCount = 0;
+        this.feedLikeCount = 0;
         this.user = user;
         this.artistGroup = artistGroup;
     }
@@ -72,13 +75,18 @@ public class Feed extends Timestamped {
 
     //file 업로드 기능 전까지 임시 사용
     public static Feed of(CreateFeedRequestDto requestDto, User user, ArtistGroup artistGroup) {
-        return com.example.fantreehouse.domain.feed.entity.Feed.builder()
+        return Feed.builder()
                 .artistName(requestDto.getArtistName())
                 .contents(requestDto.getContents())
                 .user(user)
                 .artistGroup(artistGroup)
                 .build();
     }
+
+    public static void feedLikeCount() {
+
+    }
+
     //filePath 설정 후 사용
 //    public Feed updateFeed(UpdateFeedRequestDto requestDto, String filePath) {
 //        return Feed.builder()

@@ -9,6 +9,7 @@ import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
+import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
@@ -60,6 +61,9 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user")
     private List<Feed> feedList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedLike> feedLikeList = new ArrayList<>();
+
     //픽업데이터와 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<PickUp> pickUpList = new ArrayList<>();
@@ -72,21 +76,13 @@ public class User extends Timestamped {
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
-    //아티스트와 일대다? 다대일? 일대일? 매핑
-    @OneToOne
-    @JoinColumn(name = "artist_id")
+    @OneToOne(mappedBy = "user")
     private Artist artist;
-//
-//    @OneToOne(mappedBy = "user")
-//    private Artist artist;
 
     //구독자와 일대다 매핑
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Subscription> subscriptions = new ArrayList<>();
 
-//    public void setArtist(Artist artist) {
-//        this.artist = artist;
-//    }
     //구독자 커뮤니티랑 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<CommunityFeed> communityFeedList = new ArrayList<>();
