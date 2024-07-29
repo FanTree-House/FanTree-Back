@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -21,15 +20,18 @@ public class EnterFeed extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    //엔터테이너먼트와 다대일 매핑
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
-    @ManyToOne
-    @JoinColumn(name = "artistGroup_id")
+    //아티스트그룹과 다대일 매핑
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 
-    @ManyToOne
+    //유저와 다대일 매핑
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -1,6 +1,6 @@
 package com.example.fantreehouse.common.exception;
 
-import com.example.fantreehouse.common.exception.errorcode.AuthorizedException;
+import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.common.exception.errorcode.CommonErrorCode;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.ErrorCode;
@@ -59,8 +59,8 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler {
 
 
   // AuthorizedException 예외처리
-  @ExceptionHandler(AuthorizedException.class)
-  public ResponseEntity<Object> handleCustomException(AuthorizedException e) {
+  @ExceptionHandler(UnAuthorizedException.class)
+  public ResponseEntity<Object> handleCustomException(UnAuthorizedException e) {
     log.warn("Authorized Exception");
     ErrorCode errorCode = e.getErrorCode();
     return handleExceptionInternal(errorCode, e);

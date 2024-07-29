@@ -1,0 +1,17 @@
+### 구독하기 (Subscript)
+
+POST http://localhost:8080/artistGroup/subscript/Mouse
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIxOTcyMDA5LCJpYXQiOjE3MjE5NzAyMDl9.74yvhM-twZYBceFqjnCfvez1XqXisZlIiVD9mZ6IYcQ
+Content-Type: application/json
+
+
+### 구독해지하기 (Subscript)
+DELETE http://localhost:8080/artistGroup/subscript/2NE1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDEiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDYzNjE1LCJpYXQiOjE3MjIwNjE4MTV9.KvfQAkHFfrlDHJI9Y6NeWusQOhGrKi9IK6ODY-aPOr8
+Content-Type: application/json
+
+### 구독한 아티스트그룹 전체보기
+
+GET http://localhost:8080/artistGroup/subscript
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDA2NjQyLCJpYXQiOjE3MjIwMDQ4NDJ9.r4HdabeIK06LarG7hquqW60uj2giMG_m-QrKOmVhGVs
+Content-Type: application/json

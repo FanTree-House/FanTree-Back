@@ -1,6 +1,7 @@
 ### 변수 정의
 @enterName = hybe
-@groupName = seventeen
+@groupName = aespa
+@artistId = 4
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
@@ -23,7 +24,7 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "enterName": "dentist"
+  "enterName": "SM"
 }
 
 ### 엔터 계정 수정 (엔터 넘버)
@@ -50,33 +51,37 @@ Authorization: {{Authorization}}
 
 
 ### 아티스트 그룹 생성
-POST http://localhost:8080/entertainments/SM
-Authorization: {{Authorization}}
-Content-Type: application/json
-
-{
-  "groupName": "seventeen",
-  "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "artistIds": [1]
-}
-
-### 특정 아티스트 그룹 조회
-GET http://localhost:8080/entertainments/SM/seventeen
-
-###아티스트 그룹 전체 조회
-GET http://localhost:8080/entertainments/SM/groupName
-
-### 아티스트 그룹 수정
-PATCH http://localhost:8080/entertainments/SM/seventeen
+POST http://localhost:8080/entertainments/{{enterName}}
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
   "groupName": "aespa",
   "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "artistIds": [1]
+  "artistIds": [1, 2]
 }
 
+### 특정 아티스트 그룹 조회
+GET http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
+
+###아티스트 그룹 전체 조회
+GET http://localhost:8080/entertainments/{{enterName}}/groupName
+
+### 아티스트 그룹 수정
+PATCH http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "groupName": "aespa",
+  "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
+  "artistIds": [3,4]
+}
+
+### 특정 아티스트 탈퇴
+DELETE http://localhost:8080/entertainments/{{enterName}}/{{groupName}}/artists/{{artistId}}
+Authorization: {{Authorization}}
+
 ### 아티스트 그룹 삭제
-DELETE http://localhost:8080/entertainments/SM/aespa
+DELETE http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
 Authorization: {{Authorization}}

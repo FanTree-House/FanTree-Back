@@ -4,7 +4,10 @@ import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CommunityFeedRepository extends JpaRepository<CommunityFeed, Long> {
-    List<CommunityFeed> findAllByUserId(Long userId);
+
+   Optional<List<CommunityFeed>> findAllByUserId(Long userId);
+
 }

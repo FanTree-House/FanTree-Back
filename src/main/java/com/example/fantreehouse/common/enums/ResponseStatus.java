@@ -7,33 +7,37 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ResponseStatus {
-    /*      사용예시
-    // 회원가입
-    SIGN_UP_SUCCESS(HttpStatus.OK, "회원가입에 성공하였습니다."),
-    DEACTIVATE_USER_SUCCESS(HttpStatus.OK, "회원탈퇴에 성공하였습니다."),
-
-    // 로그인
-    LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공하였습니다."),
-    LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃에 성공하였습니다."),
-    GET_USER_SUCCESS(HttpStatus.OK, "유저정보 조회에 성공하였습니다.")
-    ;*/
 
     // User
     LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공하였습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃에 성공하였습니다."),
     GET_USER_SUCCESS(HttpStatus.OK, "유저정보 조회에 성공하였습니다."),
 
-    // 구독자 커뮤니티
+    // 구독자 커뮤니티 피드
     CREATE_SUCCESS_FEED(HttpStatus.OK, "게시글이 생성되었습니다."),
     USER_COMMUNITY_UPDATE_SUCCESS(HttpStatus.OK, "게시글이 수정되었습니다."),
     USER_COMMUNITY_DELETE_SUCCESS(HttpStatus.OK, "게시글이 삭제되었습니다."),
+
+    // 구독자 커뮤니티와 아티스트피드의 댓글
     CREATE_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 생성되었습니다."),
     UPDATE_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 수정되었습니다."),
     DELETE_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 삭제되었습니다."),
+    READ_SUCCESS_COMMENT(HttpStatus.OK, "댓글이 조회되었습니다."),
+    // 좋아요
+    SUCCESS_FEED_LIKE(HttpStatus.OK,"피드를 좋아합니다!" ),
+    DELETE_FEED_LIKE(HttpStatus.OK, "피드의 좋아요를 취소합니다."),
+    SUCCESS_COMMENT_LIKE(HttpStatus.OK,"댓글을 좋아합니다!" ),
+    DELETE_COMMENT_LIKE(HttpStatus.OK, "댓글의 좋아요를 취소합니다."),
 
+    //프로필
     WITHDRAW_SUCCESS(HttpStatus.OK, "회원탈퇴에 성공하였습니다."),
     SIGNUP_SUCCESS(HttpStatus.OK, "회원가입에 성공하였습니다."),
     PROFILE_UPDATE(HttpStatus.OK, "프로필이 변경되었습니다."),
+
+     //구독활성, 비활성화
+    USER_SUCCESS_SUBSCRIPT(HttpStatus.OK, "해당 그룹을 구독하였습니다."),
+    USER_DELETE_SUBSCRIPT(HttpStatus.OK, "해당 그룹의 구독을 해지했습니다."),
+
     //RefreshToken
     UPDATE_TOKEN_SUCCESS_MESSAGE(HttpStatus.OK, "토큰이 재발급되었습니다."),
 
@@ -43,11 +47,25 @@ public enum ResponseStatus {
     ENTERTAINMENT_UPDATAE_SUCCESS(HttpStatus.OK,  "엔터테인먼트 계정 수정에 성공하였습니다."),
     ENTERTAINMENT_DELETE_SUCCESS(HttpStatus.OK,  "엔터테인먼트 계정 삭제에 성공하였습니다."),
 
+    // 아티스트
+    ARTIST_CREATED(HttpStatus.CREATED, "아티스트 등록에 성공하였습니다."),
+    ARTIST_UPDATED(HttpStatus.OK, "아티스트 프로필이 수정되었습니다."),
+    ARTIST_READ_SUCCESS(HttpStatus.OK, "아티스트가 조회되었습니다."),
+    ARTIST_DELETED(HttpStatus.OK, "아티스트 계정이 삭제되었습니다."),
+
     // 아티스트 그룹
     ARTIST_GROUP_CREATE_SUCCESS(HttpStatus.OK, "아티스트 그룹 생성에 성공하였습니다."),
     ARTIST_GROUP_RETRIEVE_SUCCESS(HttpStatus.OK, "아티스트 그룹 조회에 성공하였습니다."),
     ARTIST_GROUP_UPDATE_SUCCESS(HttpStatus.OK, "아티스트 그룹 수정에 성공하였습니다."),
+    ARTIST_REMOVE_SUCCESS(HttpStatus.OK, "그룹에서 아티스트 삭제를 성공하였습니다."),
     ARTIST_GROUP_DELETE_SUCCESS(HttpStatus.OK, "아티스트 그룹 삭제에 성공하였습니다."),
+
+    //Feed
+    FEED_CREATED(HttpStatus.CREATED, "글이 등록되었습니다."),
+    FEED_UPDATED(HttpStatus.OK, "수정되었습니다."),
+    FEED_READ_SUCCESS(HttpStatus.OK, "조회되었습니다."),
+    FEED_DELETED(HttpStatus.OK, "삭제되었습니다."),
+
 
     // 엔터 피드
     NOTICE_CREATE_SUCCESS(HttpStatus.OK, "공지사항 생성에 성공하였습니다."),

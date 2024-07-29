@@ -26,19 +26,54 @@ Content-Type: application/json
   "adminToken": "1np0t2ncesuuuud3rTaMeng5"
 }
 
+### 아티스트 회원가입
+POST http://localhost:8080/users/invite/artist
+Content-Type: application/json
+
+{
+  "id": "artist1",
+  "name": "artist1",
+  "nickname": "artist1",
+  "email": "artist1@gmail.com",
+  "password": "artist123!@#",
+  "profileImage": "",
+  "artist": true,
+  "artistToken": "acRos3knitterUp2eTt1ng5"
+}
+
 ### 엔터 회원가입
 POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "winter1",
-  "name": "winter1",
+  "id": "smenter1",
+  "name": "SMENTERTAINMENT",
   "nickname": "winter1",
-  "email": "winter1@email.com",
-  "password": "winter123",
+  "email": "smentertainment1@email.com",
+  "password": "smenter123",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
   "entertainment": true,
   "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
+}
+
+### 아티스트 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "etest2",
+  "name": "Etest2",
+  "nickname": "Etest2",
+  "email": "Etest@email.com",
+  "password": "test1234",
+  "id": "winter1",
+  "name": "winter1",
+  "nickname": "winter",
+  "email": "winter1@email.com",
+  "password": "winter123",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "artist": true,
+  "artistToken": "acRos3knitterUp2eTt1ng5"
 }
 
 ### 일반 유저 로그인
@@ -46,8 +81,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "user1",
-  "password": "user123123"
+  "id": "usertest2",
+  "password": "test1234"
 }
 
 > {%
@@ -78,8 +113,24 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "winter1",
-  "password": "winter123"
+  "id": "smenter1",
+  "password": "smenter123"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 아티스트 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "artist1",
+  "password": "artist123!@#"
 }
 
 > {%
