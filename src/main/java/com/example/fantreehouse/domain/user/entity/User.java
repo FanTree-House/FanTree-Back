@@ -3,12 +3,14 @@ package com.example.fantreehouse.domain.user.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.commentLike.entity.CommentLike;
 import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
+import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import com.example.fantreehouse.domain.user.dto.AdminRequestDto;
@@ -63,6 +65,12 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user")
     private List<Feed> feedList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedLike> feedLikeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<CommentLike> commentLikeList = new ArrayList<>();
+
     //픽업데이터와 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<PickUp> pickUpList = new ArrayList<>();
@@ -75,9 +83,7 @@ public class User extends Timestamped {
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
-    //아티스트와 일대일 매핑
-    @OneToOne
-    @JoinColumn(name = "artist_id")
+    @OneToOne(mappedBy = "user")
     private Artist artist;
 
     //구독자와 일대다 매핑

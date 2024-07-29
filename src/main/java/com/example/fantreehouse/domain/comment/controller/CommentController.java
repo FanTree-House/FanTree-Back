@@ -4,8 +4,8 @@ import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
-import com.example.fantreehouse.domain.comment.dto.CommentRequestDto;
-import com.example.fantreehouse.domain.comment.dto.CommentResponseDto;
+import com.example.fantreehouse.domain.comment.dto.request.CommentRequestDto;
+import com.example.fantreehouse.domain.comment.dto.response.CommentResponseDto;
 import com.example.fantreehouse.domain.comment.dto.request.CreateCommentRequestDto;
 import com.example.fantreehouse.domain.comment.service.CommentService;
 import jakarta.validation.Valid;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
