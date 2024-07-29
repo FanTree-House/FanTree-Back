@@ -39,22 +39,19 @@ public class CommunityFeedService {
     private final ArtistGroupRepository artistGroupRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final CommunityLikeRepository likeRepository;
-    private final DefaultSslBundleRegistry sslBundleRegistry;
-    private final CommunityLikeRepository communityLikeRepository;
 
     @Transactional //피드생성
-    public CommunityFeedResponseDto createFeed(CommunityFeedRequestDto requestDto, Long userId, String groupName) {
+    public CommunityFeedResponseDto createFeed(
+        CommunityFeedRequestDto requestDto,
+        Long userId,
+        String groupName) {
         User user = findUser(userId);
         ArtistGroup artistGroup = findArtistGroup(groupName);
         checkUserStatus(user.getStatus(), user.getUserRole());
 
-        List<Subscription> subscriptionList = subscriptionRepository.findAllByUserId(userId).orElseThrow(()
-                -> new CustomException(ErrorType.USER_NOT_FOUND));
-        for (Subscription subscription : subscriptionList) {
-            if (!subscription.getUser().getId().equals(userId)) {
-                throw new CustomException(ErrorType.UNAUTHORIZED_FEED_ACCESS);
-            }
-        }
+        // 구독자 체크
+        checksubscriptionList(userId);
+
         CommunityFeed feed = new CommunityFeed(requestDto, user, artistGroup);
         feedRepository.save(feed);
         return new CommunityFeedResponseDto(feed);
@@ -66,14 +63,10 @@ public class CommunityFeedService {
         ArtistGroup artistGroup = findArtistGroup(gruopName);
 
 
-        List<Subscription> subscriptionList = subscriptionRepository.findAllByUserId(userId).orElseThrow(()
-                -> new CustomException(ErrorType.USER_NOT_FOUND));
-        for (Subscription subscription : subscriptionList) {
-            if (!subscription.getUser().getId().equals(userId)) {
-                throw new CustomException(ErrorType.UNAUTHORIZED_FEED_ACCESS);
-            }
-        }
+        // 구독자 체크
+        checksubscriptionList(userId);
         List<CommunityFeed> feedList = feedRepository.findAll();
+
         if (feedList.isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_FEED);
         }
@@ -89,13 +82,9 @@ public class CommunityFeedService {
         CommunityFeed feed = feedRepository.findById(feedId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_FEED));
 
-        List<Subscription> subscriptionList = subscriptionRepository.findAllByUserId(userId).orElseThrow(()
-                -> new CustomException(ErrorType.USER_NOT_FOUND));
-        for (Subscription subscription : subscriptionList) {
-            if (!subscription.getUser().getId().equals(userId)) {
-                throw new CustomException(ErrorType.UNAUTHORIZED_FEED_ACCESS);
-            }
-        }
+        // 구독자 체크
+        checksubscriptionList(userId);
+
         return feed;
     }
 
@@ -156,5 +145,19 @@ public class CommunityFeedService {
             throw new CustomException(ErrorType.UNAUTHORIZED_FEED_CREATE);
         }
     }
+
+    //구독자 체크
+    private void checksubscriptionList(Long userId){
+        List<Subscription> subscriptionList = subscriptionRepository
+            .findAllByUserId(userId).orElseThrow(()
+                -> new CustomException(ErrorType.USER_NOT_FOUND));
+        for (Subscription subscription : subscriptionList) {
+            if (!subscription.getUser().getId().equals(userId)) {
+                throw new CustomException(ErrorType.UNAUTHORIZED_FEED_ACCESS);
+            }
+        }
+    }
+
+
 }
 

@@ -1,6 +1,8 @@
 package com.example.fantreehouse.domain.user.dto;
 
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -16,6 +18,8 @@ public class SignUpRequestDto {
 
   private String nickname;
 
+  @Email
+  @NotEmpty(message = "이메일을 입력해 주세요")
   private String email;
 
   @Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*()_+\\-=\\[\\]{}|;:'\",.<>?/]+$", message = "비밀번호는 알파벳 대소문자, 숫자 및 특수문자만 포함할 수 있습니다.")

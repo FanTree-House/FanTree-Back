@@ -37,7 +37,6 @@ public class CommentService {
     private final FeedRepository feedRepository;
     private final CommentRepository commentRepository;
     private final ArtistGroupRepository artistGroupRepository;
-    private final ArtistRepository artistRepository;
 
     //댓글 작성 - 해당 아티스트 & 구독한 유저가
     public void createComment(String groupName, Long feedId, UserDetailsImpl userDetails, CreateCommentRequestDto requestDto) {

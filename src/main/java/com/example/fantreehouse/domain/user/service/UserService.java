@@ -1,5 +1,6 @@
 package com.example.fantreehouse.domain.user.service;
 
+import com.example.fantreehouse.auth.RedisUtil;
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
+  private final RedisUtil redisUtil;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
@@ -46,19 +48,22 @@ public class UserService {
         String nickname = requestDto.getNickname();
         String profile = requestDto.getProfileImage();
 
-        //ID 검증
-        if (userRepository.findByLoginId(id).isPresent()){
-            throw new DuplicatedException(ErrorType.DUPLICATE_ID);
-        }
+        //ID 중복확인
+        duplicatedId(id);
 
-        //닉네임 검증
-        if (userRepository.findByNickname(nickname).isPresent()){
-            throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
-        }
+        //닉네임 중복확인
+        duplicatedNickName(nickname);
 
         // 블랙리스트 검증
         if (userRepository.findByEmailAndStatus(email, UserStatusEnum.BLACK_LIST).isPresent()) {
             throw new CustomException(ErrorType.BLACKLIST_EMAIL);
+        }
+
+        //이메일 검증 -> Null 검사
+
+
+        if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.equals(redisUtil.getData(id).getStatus())){
+          throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
         }
 
         UserRoleEnum role = UserRoleEnum.USER;
@@ -155,5 +160,23 @@ public class UserService {
     return userRepository.findById(id).orElseThrow(
         () -> new NotFoundException(ErrorType.USER_NOT_FOUND)
     );
+  }
+
+  private void duplicatedId(String id){
+    if (userRepository.findByLoginId(id).isPresent()){
+      throw new DuplicatedException(ErrorType.DUPLICATE_ID);
+    }
+  }
+
+  private void duplicatedNickName(String nickname){
+    if (userRepository.findByNickname(nickname).isPresent()){
+      throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
+    }
+  }
+
+  private void validBlackList(String email, UserStatusEnum status){
+    if (userRepository.findByEmailAndStatus(email, status).get().equals(UserStatusEnum.BLACK_LIST)) {
+      throw new CustomException(ErrorType.BLACKLIST_EMAIL);
+    }
   }
 }
