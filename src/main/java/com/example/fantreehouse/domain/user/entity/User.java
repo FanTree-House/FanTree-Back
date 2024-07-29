@@ -12,7 +12,9 @@ import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
+import com.example.fantreehouse.domain.user.dto.AdminRequestDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +40,7 @@ public class User extends Timestamped {
 
     private String nickname; // 로그인 한 닉네임
 
+    @Email
     private String email;
 
     private String password;
@@ -119,7 +122,6 @@ public class User extends Timestamped {
         return refreshToken == null ? true : false;
     }
 
-
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
@@ -144,4 +146,16 @@ public class User extends Timestamped {
         this.kakaoId=kakaoId;
     }
 
+
+    public void transBlacklist() {
+        this.status = UserStatusEnum.BLACK_LIST;
+    }
+
+    public void transRole(UserRoleEnum roleEnum) {
+        this.userRole = roleEnum;
+    }
+
+    public void transUser() {
+        this.status = UserStatusEnum.ACTIVE_USER;
+    }
 }

@@ -33,3 +33,5 @@ Content-Type: application/json
 ### 상품 삭제
 DELETE http://localhost:8080/shop/product/{{productId}}
 Authorization: {{Authorization}}
+
+
