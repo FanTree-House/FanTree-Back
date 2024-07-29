@@ -4,5 +4,15 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "loginId": "user1"
+  "loginId": "dnwls"
+}
+
+### 권한 수정
+PATCH http://localhost:8080/admin/role
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "loginId": "dnwls",
+  "userRole": "USER"
 }
