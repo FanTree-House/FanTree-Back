@@ -33,9 +33,11 @@ public enum ResponseStatus {
     WITHDRAW_SUCCESS(HttpStatus.OK, "회원탈퇴에 성공하였습니다."),
     SIGNUP_SUCCESS(HttpStatus.OK, "회원가입에 성공하였습니다."),
     PROFILE_UPDATE(HttpStatus.OK, "프로필이 변경되었습니다."),
+
      //구독활성, 비활성화
     USER_SUCCESS_SUBSCRIPT(HttpStatus.OK, "해당 그룹을 구독하였습니다."),
     USER_DELETE_SUBSCRIPT(HttpStatus.OK, "해당 그룹의 구독을 해지했습니다."),
+
     //RefreshToken
     UPDATE_TOKEN_SUCCESS_MESSAGE(HttpStatus.OK, "토큰이 재발급되었습니다."),
 
@@ -80,8 +82,12 @@ public enum ResponseStatus {
     PRODUCT_READ_SUCCESS(HttpStatus.OK, "상품 조회에 성공하였습니다."),
     PRODUCT_UPDATE_SUCCESS(HttpStatus.OK, "상품 수정에 성공하였습니다."),
     PRODUCT_DELETE_SUCCESS(HttpStatus.OK, "상품 삭제에 성공하였습니다."),
-;
 
+    // 어드민 권한
+    TRANSFORM_BLACKLIST_SUCCESS(HttpStatus.OK, "블랙리스트 전환에 성공하였습니다."),
+    USER_ROLE_UPDATE_SUCCESS(HttpStatus.OK, "회원권환 수정에 성공하였습니다."),
+
+    ;
 
     private final HttpStatus httpStatus;
     private final String message;

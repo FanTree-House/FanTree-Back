@@ -85,10 +85,14 @@ public enum ErrorType implements ErrorCode {
 
     //엔터피드
     ENTER_FEED_NOT_FOUND(HttpStatus.NOT_FOUND, "피드를 찾을 수 없습니다."),
+
     // 상품
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
     NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다."),
+
     ;
+
+
 
     private final HttpStatus httpStatus;
     private final String message;

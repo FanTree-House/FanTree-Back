@@ -72,7 +72,7 @@ public class ProductService {
      */
     @Transactional
     public void updateProduct(Long productId, ProductRequestDto requestDto, User user) {
-        // [예외1] - Entertainment 권한 체크
+        // [예외1] - Admin 권한 체크
         checkEntertainmentAuthority(user);
 
         // [예외2] - 존재하지 않는 상품
