@@ -16,5 +16,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   Optional<User> findByKakaoId(Long kakaoId);
 
-  Optional<UserStatusEnum> getStatusFindByEmail(String email);
+  Optional<UserStatusEnum> findByEmailAndStatus(String email, UserStatusEnum status);
 }
