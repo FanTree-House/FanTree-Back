@@ -101,7 +101,6 @@ public class FeedController {
             @RequestParam int page
     ) {
         Page<FeedResponseDto> pagedFeed = feedService.getAllFeed(groupName, userDetails, page);
-
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, pagedFeed));
     }
 

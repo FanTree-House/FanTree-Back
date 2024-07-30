@@ -1,4 +1,4 @@
-package com.example.fantreehouse.domain.comment.dto;
+package com.example.fantreehouse.domain.comment.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

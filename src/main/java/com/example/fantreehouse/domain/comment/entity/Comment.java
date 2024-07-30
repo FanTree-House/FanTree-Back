@@ -1,12 +1,11 @@
 package com.example.fantreehouse.domain.comment.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
-import com.example.fantreehouse.domain.comment.dto.CommentRequestDto;
+import com.example.fantreehouse.domain.comment.dto.request.CommentRequestDto;
 import com.example.fantreehouse.domain.comment.dto.request.CreateCommentRequestDto;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

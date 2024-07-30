@@ -1,16 +1,16 @@
 ### 변수 정의
 @enterName = hybe
-@groupName = aespa
-@artistId = 4
+#@groupName = aespa
+#@artistId = 4
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
-Authorization: {{Authorization}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWVudGVyMSIsImF1dGgiOiJFTlRFUlRBSU5NRU5UIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjIyNzQ5MTAsImlhdCI6MTcyMjI3MzExMH0.rpfOBeP_X7nUcdMbSg86B2tNcddvd1vH5NmRQ7udDjg
 Content-Type: application/json
 
 {
   "enterName": "hybe",
-  "enterNumber": 12334678,
+  "enterNumber": 12334678910,
   "enterLogo": "image"
 }
 
@@ -52,13 +52,13 @@ Authorization: {{Authorization}}
 
 ### 아티스트 그룹 생성
 POST http://localhost:8080/entertainments/{{enterName}}
-Authorization: {{Authorization}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWVudGVyMSIsImF1dGgiOiJFTlRFUlRBSU5NRU5UIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjIzMjA0MjYsImlhdCI6MTcyMjMxODYyNn0.ecn2DMfo-v3gdA3Fj8j7gJhzkQVH_u8NWA7NBQZ3H8w
 Content-Type: application/json
 
 {
-  "groupName": "aespa",
+  "groupName": "에스파형님",
   "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "artistIds": [1, 2]
+  "artistIds": []
 }
 
 ### 특정 아티스트 그룹 조회

@@ -7,7 +7,7 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "productName": "더 더더 나중에",
+  "productName": "더 더더 나중에5",
   "stock": 123,
   "type": "타입",
   "artist": "아티스트",

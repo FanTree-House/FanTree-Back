@@ -12,10 +12,12 @@ import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupReposit
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentResponseDto;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRepository;
+import com.example.fantreehouse.domain.product.product.dto.ProductResponseDto;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,6 +83,32 @@ public class ArtistGroupService {
         return artistGroups.stream()
                 .map(this::convertToResponseDto)
                 .collect(Collectors.toList());
+    }
+
+//
+//    public Page<ProductResponseDto> searchProduct(String productName, int page, int size) {
+//        Page<ProductResponseDto> allProduct = productRepository.findAll(pageable).map(ProductResponseDto::new);
+//        List<ProductResponseDto> searchProduct = productRepository.findByProductNameContaining(productName, pageable).stream()
+//                .map(ProductResponseDto::new).toList();
+//        if (productName.isEmpty()) {
+//            return allProduct;
+//        } return new PageImpl<>(searchProduct);
+
+    /**
+     * 아티스트그룹 검색기능
+     * @param groupName
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<ArtistGroupResponseDto> searchArtistGroup(String groupName, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
+        Page<ArtistGroupResponseDto> allArtistGroup = artistGroupRepository.findAll(pageable).map(ArtistGroupResponseDto::new);
+        List<ArtistGroupResponseDto> searchArtistGroup = artistGroupRepository.findByGroupNameContaining(groupName, pageable).stream()
+                .map(ArtistGroupResponseDto::new).toList();
+        if (groupName.isEmpty()) {
+            return allArtistGroup;
+        } return new PageImpl<>(searchArtistGroup);
     }
 
     /**

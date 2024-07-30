@@ -6,6 +6,8 @@ import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
+import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
+import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
 import com.example.fantreehouse.domain.user.dto.ProfileRequestDto;
 import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
@@ -20,7 +22,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
 
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,7 @@ public class UserService {
   private final RedisUtil redisUtil;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final ArtistGroupRepository artistGroupRepository;
 
     @Value("${auth.admin_token}")
     private String ADMIN_TOKEN;
