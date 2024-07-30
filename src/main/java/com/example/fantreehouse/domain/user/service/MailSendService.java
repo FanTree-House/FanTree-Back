@@ -5,6 +5,7 @@ import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.domain.user.dto.EmailCheckRequestDto;
+import com.example.fantreehouse.domain.user.dto.EmailRequestDto;
 import com.example.fantreehouse.domain.user.entity.MailAuth;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
@@ -41,23 +42,25 @@ public class MailSendService {
   }
 
   //임의의 6자리 양수를 반환합니다.
-  public void makeRandomNumber() {
+  public int makeRandomNumber() {
     Random r = new Random();
     String randomNumber = "";
     for (int i = 0; i < 6; i++) {
       randomNumber += Integer.toString(r.nextInt(10));
     }
     authNumber = Integer.parseInt(randomNumber);
+    return authNumber;
   }
 
   //mail을 어디서 보내는지, 어디로 보내는지 , 인증 번호를 html 형식으로 어떻게 보내는지 작성합니다.
-  public String joinEmail(String email, MailAuth mailAuth) {
-    makeRandomNumber();
-    String loginId = mailAuth.getLoginId();
+  public String joinEmail(EmailRequestDto requestDto) {
+    String randomNumber = String.valueOf(makeRandomNumber());
+    String loginId = requestDto.getLoginId();
     // 환경변수 설정
     String setFrom = "zergskybmw@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
-    String toMail = email;
+    String toMail = requestDto.getEmail();
     String title = "회원 가입 인증 이메일 입니다."; // 이메일 제목
+    MailAuth mailAuth = new MailAuth(loginId,toMail,randomNumber);
     String content =
         "FANTREE 가입을 위해 인증번호가 필요합니다.." +    //html 형식으로 작성 !
             "<br><br>" +

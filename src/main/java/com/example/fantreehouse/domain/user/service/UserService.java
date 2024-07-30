@@ -65,7 +65,6 @@ public class UserService {
 
         //이메일 검증 -> Null 검사
 
-
         if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.equals(redisUtil.getData(id).getStatus())){
           throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
         }

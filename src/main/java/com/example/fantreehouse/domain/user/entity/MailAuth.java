@@ -28,7 +28,7 @@ public class MailAuth {
   @Enumerated(EnumType.STRING)
   private UserStatusEnum status;
 
-  public MailAuth(String loginId, String email, String authNum, UserStatusEnum status){
+  public MailAuth(String loginId, String email, String authNum){
     this.loginId = loginId;
     this.email = email;
     this.authNum = authNum;
@@ -38,6 +38,4 @@ public class MailAuth {
   public void validEmail(){
     this.status = UserStatusEnum.ACTIVE_USER;
   }
-
-
 }

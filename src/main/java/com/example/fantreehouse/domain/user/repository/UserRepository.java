@@ -2,6 +2,7 @@ package com.example.fantreehouse.domain.user.repository;
 
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

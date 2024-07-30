@@ -3,7 +3,6 @@ package com.example.fantreehouse.domain.user.controller;
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.domain.user.dto.EmailCheckRequestDto;
 import com.example.fantreehouse.domain.user.dto.EmailRequestDto;
-import com.example.fantreehouse.domain.user.entity.MailAuth;
 import com.example.fantreehouse.domain.user.service.MailSendService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +19,19 @@ public class MailController {
   private final MailSendService mailSendService;
 
   @PostMapping("/mailsend")
-  public String mailSend(@RequestBody @Valid EmailRequestDto requestDto, MailAuth mailAuth) {
-    return mailSendService.joinEmail(requestDto.getEmail(), mailAuth);
+  public ResponseEntity mailSend(@RequestBody @Valid EmailRequestDto requestDto) {
+    mailSendService.joinEmail(requestDto);
+    return ResponseEntity.ok().body("메일을 확인해주세요.");
   }
 
   @PutMapping("/mailableCheck")
   public ResponseEntity AuthCheck(@RequestBody @Valid EmailCheckRequestDto requestDto) {
 
-    String email = requestDto.getEmail();
-    if (requestDto.getAuthNum() == null) {
+    String loginId = requestDto.getLoginId();
+    if (null == requestDto.getAuthNum()) {
       return ResponseEntity.status(200).body(ErrorType.AUTH_NUM_NOTFOUND);
     }
-    mailSendService.CheckAuthNum(email, requestDto);
+    mailSendService.CheckAuthNum(loginId, requestDto);
     return ResponseEntity.ok().body("인증 완료 했습니다");
   }
 }
