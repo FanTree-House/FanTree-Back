@@ -10,11 +10,13 @@ import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+
 public class EntertainmentService {
 
     private final EntertainmentRepository enterRepository;
@@ -33,7 +35,6 @@ public class EntertainmentService {
         checkEntertainmentAuthority(user);
 
         Entertainment enter = new Entertainment(enterRequestDto, user);
-
         // [예외2] - Entertainment 소속사 이름, 사업자번호 중복체크
         checkEnterNameOrNumberExisits(enter);
 

@@ -7,7 +7,11 @@ import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupRequestDto;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupResponseDto;
 import com.example.fantreehouse.domain.artistgroup.service.ArtistGroupService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +20,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/entertainments")
+@RequiredArgsConstructor
 public class ArtistGroupController {
 
     private final ArtistGroupService artistGroupService;
 
-    @Autowired
-    public ArtistGroupController(ArtistGroupService artistGroupService) {
-        this.artistGroupService = artistGroupService;
-    }
+//    @Autowired
+//    public ArtistGroupController(ArtistGroupService artistGroupService) {
+//        this.artistGroupService = artistGroupService;
+//    }
 
     /**
      * [createArtistGroup] 아티스트 그룹 생성
@@ -66,6 +71,15 @@ public class ArtistGroupController {
     public ResponseEntity<ResponseDataDto<List<ArtistGroupResponseDto>>> getAllArtistGroups(@PathVariable String enterName) {
         List<ArtistGroupResponseDto> artistGroups = artistGroupService.getAllArtistGroupResponseDtos(enterName);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_GROUP_RETRIEVE_SUCCESS, artistGroups));
+    }
+
+    @GetMapping("/artistGroup/search")
+    public ResponseEntity<List<ArtistGroupResponseDto>> searchArtistGroup(@RequestParam String groupName,
+                                                                          @PageableDefault(page = 0, size = 5, sort = "id",
+                                                                                  direction = Sort.Direction.ASC)
+                                                                          Pageable pageable) {
+        List<ArtistGroupResponseDto> artistGroupResponseDto = artistGroupService.searchArtistGroup(groupName, pageable);
+        return ResponseEntity.ok(artistGroupResponseDto);
     }
 
     /**

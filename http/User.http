@@ -4,10 +4,10 @@ Content-Type: application/json
 
 {
   "id": "user1",
-  "name": "user",
-  "nickname": "user",
+  "name": "user1",
+  "nickname": "user1",
   "email": "user1@email.com",
-  "password": "user123123",
+  "password": "test1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
 }
 
@@ -50,7 +50,7 @@ Content-Type: application/json
   "name": "SMENTERTAINMENT",
   "nickname": "winter1",
   "email": "smentertainment1@email.com",
-  "password": "smenter123",
+  "password": "test1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
   "entertainment": true,
   "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
@@ -81,7 +81,7 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "usertest2",
+  "id": "user1",
   "password": "test1234"
 }
 
@@ -114,7 +114,7 @@ Content-Type: application/json
 
 {
   "id": "smenter1",
-  "password": "smenter123"
+  "password": "test1234"
 }
 
 > {%

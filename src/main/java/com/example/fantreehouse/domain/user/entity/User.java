@@ -15,6 +15,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ import java.util.Optional;
 
 @Entity
 @Getter
+@Setter
+
 @NoArgsConstructor
 public class User extends Timestamped {
 
@@ -84,9 +87,6 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Subscription> subscriptions = new ArrayList<>();
 
-//    public void setArtist(Artist artist) {
-//        this.artist = artist;
-//    }
     //구독자 커뮤니티랑 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<CommunityFeed> communityFeedList = new ArrayList<>();
