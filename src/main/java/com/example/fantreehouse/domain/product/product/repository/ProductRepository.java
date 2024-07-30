@@ -1,6 +1,8 @@
 package com.example.fantreehouse.domain.product.product.repository;
 
+import com.example.fantreehouse.domain.product.product.dto.ProductResponseDto;
 import com.example.fantreehouse.domain.product.product.entity.Product;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByProductNameContaining(String productName);
+
+    List<Product> findByProductNameContaining(String productName, Pageable pageable);
 }
