@@ -7,6 +7,7 @@ import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupRequestDto;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupResponseDto;
 import com.example.fantreehouse.domain.artistgroup.service.ArtistGroupService;
+import com.example.fantreehouse.domain.product.product.dto.ProductResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,23 +74,30 @@ public class ArtistGroupController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_GROUP_RETRIEVE_SUCCESS, artistGroups));
     }
 
+    /**
+     * 아티스트그룹 검색 조회
+     * @param groupName
+     * @param page
+     * @param size
+     * @return
+     */
     @GetMapping("/artistGroup/search")
-    public ResponseEntity<List<ArtistGroupResponseDto>> searchArtistGroup(@RequestParam String groupName,
-                                                                          @PageableDefault(page = 0, size = 5, sort = "id",
-                                                                                  direction = Sort.Direction.ASC)
-                                                                          Pageable pageable) {
-        List<ArtistGroupResponseDto> artistGroupResponseDto = artistGroupService.searchArtistGroup(groupName, pageable);
-        return ResponseEntity.ok(artistGroupResponseDto);
+    public ResponseEntity<ResponseDataDto<Page<ArtistGroupResponseDto>>> searchArtistGroup(
+            @RequestParam String groupName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size) {
+        Page<ArtistGroupResponseDto> responseDto = artistGroupService.searchArtistGroup(groupName, page, size);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_READ_SUCCESS, responseDto));
     }
 
-    /**
-     * [updateArtistGroup] 아티스트 그룹 수정
-     * @param enterName 엔터테인먼트 이름
-     * @param groupName 그룹 이름
-     * @param request 요청 객체
-     * @param userDetails 로그인한 사용자 정보
-     * @return 응답 메시지 DTO
-     */
+        /**
+         * [updateArtistGroup] 아티스트 그룹 수정
+         * @param enterName 엔터테인먼트 이름
+         * @param groupName 그룹 이름
+         * @param request 요청 객체
+         * @param userDetails 로그인한 사용자 정보
+         * @return 응답 메시지 DTO
+         */
     @PatchMapping("/{enterName}/{groupName}")
     public ResponseEntity<ResponseMessageDto> updateArtistGroup(
             @PathVariable String enterName,

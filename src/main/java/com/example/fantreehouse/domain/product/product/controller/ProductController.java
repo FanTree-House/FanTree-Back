@@ -57,6 +57,23 @@ public class ProductController {
     }
 
     /**
+     * 상품검색조회
+     * @param productName
+     * @param page
+     * @param size
+     * @return
+     */
+    @GetMapping("/search")
+    public ResponseEntity<ResponseDataDto<Page<ProductResponseDto>>> searchProduct(
+            @RequestParam String productName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
+        Page<ProductResponseDto> responseDto = productService.searchProduct(productName, page, size);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.PRODUCT_READ_SUCCESS, responseDto));
+
+    }
+    /**
      * 상품 수정
      * @param productId
      * @param requestDto

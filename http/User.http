@@ -20,7 +20,7 @@ Content-Type: application/json
   "name": "admin1",
   "nickname": "admin1",
   "email": "admin1@email.com",
-  "password": "admin123123",
+  "password": "test1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
   "admin": true,
   "adminToken": "1np0t2ncesuuuud3rTaMeng5"
