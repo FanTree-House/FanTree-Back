@@ -15,6 +15,7 @@ import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRep
 import com.example.fantreehouse.domain.product.product.dto.ProductResponseDto;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -24,18 +25,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ArtistGroupService {
 
     private final ArtistGroupRepository artistGroupRepository;
     private final EntertainmentRepository entertainmentRepository;
     private final ArtistRepository artistRepository;
-
-    @Autowired
-    public ArtistGroupService(ArtistGroupRepository artistGroupRepository, EntertainmentRepository entertainmentRepository, ArtistRepository artistRepository) {
-        this.artistGroupRepository = artistGroupRepository;
-        this.entertainmentRepository = entertainmentRepository;
-        this.artistRepository = artistRepository;
-    }
 
     /**
      * [createArtistGroup] 아티스트 그룹 생성

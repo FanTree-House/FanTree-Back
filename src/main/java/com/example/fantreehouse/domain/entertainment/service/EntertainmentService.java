@@ -25,7 +25,7 @@ public class EntertainmentService {
     /**
      * 엔터 계정 생성
      * @param enterRequestDto
-     * @param user
+     * @param userId
      */
     @Transactional
     public void createEnter(EntertainmentRequestDto enterRequestDto, Long userId) {

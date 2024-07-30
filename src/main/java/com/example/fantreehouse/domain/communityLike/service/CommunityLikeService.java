@@ -38,7 +38,6 @@ public class CommunityLikeService {
         }
         CommunityLike feedLike = new CommunityLike(user, feed);
         feed.pressFeedLike(user, feed);
-//        communityLike.pressFeedLike(user, feed);
         likeRepository.save(feedLike);
         return feedLike;
     }
@@ -61,9 +60,11 @@ public class CommunityLikeService {
         ArtistGroup artistGroup = findArtistGroup(groupName);
         CommunityFeed feed = findFeed(feedId);
         CommunityComment comment = findComment(commentId);
+
         if (likeRepository.findByUserIdAndCommunityCommentId(userId, feedId).isPresent()) {
             throw new CustomException(ErrorType.DUPLICATE_LIKE);
         }
+
         CommunityLike commentLike = new CommunityLike(user, comment);
         comment.pressCommentLike(user, comment, feed);
         likeRepository.save(commentLike);
@@ -74,6 +75,7 @@ public class CommunityLikeService {
         ArtistGroup artistGroup = findArtistGroup(groupName);
         User user = findUser(userId);
         CommunityFeed feed = findFeed(feedId);
+
         CommunityComment comment = commentRepository.findById(commentId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_COMMENT));
 
