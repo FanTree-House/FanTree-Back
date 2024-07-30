@@ -33,13 +33,10 @@ public class Artist extends Timestamped {
     @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 
-    //유저와 다 대 일 매핑
-    @OneToOne(mappedBy = "artist")
+    @OneToOne
+    @JoinColumn(name="user_id")
     private User user;
 
-//    @OneToOne(mappedBy = "artist")
-//    private User user;
-//
     @Builder
     public Artist(Long id, String artistName, String artistProfilePicture, User user) {
         this.id = id;

@@ -1,6 +1,7 @@
 package com.example.fantreehouse.domain.user.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
+import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
@@ -59,6 +60,11 @@ public class UserService {
             throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
         }
 
+        // 블랙리스트 검증
+        if (userRepository.findByEmailAndStatus(email, UserStatusEnum.BLACK_LIST).isPresent()) {
+            throw new CustomException(ErrorType.BLACKLIST_EMAIL);
+        }
+
         UserRoleEnum role = UserRoleEnum.USER;
         if(requestDto.isAdmin()) {
             if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())){
@@ -79,7 +85,6 @@ public class UserService {
               throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
             }
             role = UserRoleEnum.ENTERTAINMENT;
-
         }
 
         User user = new User(
@@ -94,6 +99,7 @@ public class UserService {
         userRepository.save(user);
         return new SignUpResponseDto(user);
     }
+
 
   //회원 탈퇴
   @Transactional
@@ -147,6 +153,7 @@ public class UserService {
   public ProfileResponseDto getProfile(Long userId) {
     return new ProfileResponseDto(findById(userId));
   }
+
 
   private User findById(Long id) {
     return userRepository.findById(id).orElseThrow(
