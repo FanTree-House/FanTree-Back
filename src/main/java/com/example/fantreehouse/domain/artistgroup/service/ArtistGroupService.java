@@ -15,6 +15,8 @@ import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRep
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,6 +87,29 @@ public class ArtistGroupService {
         List<ArtistGroup> artistGroups = getAllArtistGroups(enterName);
         return artistGroups.stream()
                 .map(this::convertToResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    /**검색기능조회
+     * @param groupName
+     * @param pageable
+     * @return
+     */
+    public List<ArtistGroupResponseDto> searchArtistGroup(String groupName, Pageable pageable) {
+
+        Page<ArtistGroup> searchGroup = null;
+        Page<ArtistGroup> findAllGroup = artistGroupRepository.findAll(pageable);
+
+        if (groupName.isEmpty()) {
+            return findAllGroup.stream()
+                    .map(ArtistGroupResponseDto::new)
+                    .toList();
+        }
+        if (!groupName.isEmpty()) {
+            searchGroup = artistGroupRepository.findByGroupNameContaining(groupName, pageable);
+        }
+        return searchGroup.stream()
+                .map(ArtistGroupResponseDto::new)
                 .collect(Collectors.toList());
     }
 

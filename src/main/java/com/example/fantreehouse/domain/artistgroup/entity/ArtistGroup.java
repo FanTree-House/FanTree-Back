@@ -29,6 +29,8 @@ public class ArtistGroup extends Timestamped {
 
     private String artistProfilePicture;
 
+
+
     //엔터테이너먼트와 다대일 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entertainment_id")
@@ -58,6 +60,11 @@ public class ArtistGroup extends Timestamped {
         this.groupName = groupName;
         this.artistProfilePicture = artistProfilePicture;
         this.entertainment = entertainment;
+    }
+
+    public ArtistGroup(ArtistGroup artistGroup) {
+        this.groupName = artistGroup.getGroupName();
+        this.artistProfilePicture = artistGroup.getArtistProfilePicture();
     }
 
     // 아티스트 추가 메서드

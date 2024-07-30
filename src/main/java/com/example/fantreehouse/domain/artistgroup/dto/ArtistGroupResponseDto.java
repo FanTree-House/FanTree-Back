@@ -1,8 +1,10 @@
 package com.example.fantreehouse.domain.artistgroup.dto;
 
 import com.example.fantreehouse.domain.artist.dto.ArtistResponseDto;
+import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentResponseDto;
 import lombok.Getter;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -21,4 +23,11 @@ public class ArtistGroupResponseDto {
         this.entertainment = entertainment;
         this.artists = artists;
     }
+
+    public ArtistGroupResponseDto(ArtistGroup artistGroup) {
+        this.id = artistGroup.getId();
+        this.groupName = artistGroup.getGroupName();
+        this.artistProfilePicture = artistGroup.getArtistProfilePicture();
+    }
+
 }
