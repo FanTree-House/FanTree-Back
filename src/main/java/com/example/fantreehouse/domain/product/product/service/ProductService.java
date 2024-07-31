@@ -2,7 +2,6 @@ package com.example.fantreehouse.domain.product.product.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
-import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.product.product.dto.ProductRequestDto;
 import com.example.fantreehouse.domain.product.product.dto.ProductResponseDto;
 import com.example.fantreehouse.domain.product.product.entity.Product;
@@ -10,12 +9,11 @@ import com.example.fantreehouse.domain.product.product.repository.ProductReposit
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -65,6 +63,24 @@ public class ProductService {
     }
 
     /**
+     * 상품 검색 기능 구현
+     * @param productName
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<ProductResponseDto> searchProduct(String productName, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
+        Page<ProductResponseDto> allProduct = productRepository.findAll(pageable).map(ProductResponseDto::new);
+        List<ProductResponseDto> searchProduct = productRepository.findByProductNameContaining(productName, pageable).stream()
+                .map(ProductResponseDto::new).toList();
+        if (productName.isEmpty()) {
+            return allProduct;
+        } return new PageImpl<>(searchProduct);
+    }
+
+
+    /**
      * 상품 수정
      * @param productId
      * @param requestDto
@@ -72,7 +88,7 @@ public class ProductService {
      */
     @Transactional
     public void updateProduct(Long productId, ProductRequestDto requestDto, User user) {
-        // [예외1] - Entertainment 권한 체크
+        // [예외1] - Admin 권한 체크
         checkEntertainmentAuthority(user);
 
         // [예외2] - 존재하지 않는 상품
@@ -111,4 +127,6 @@ public class ProductService {
             throw new CustomException(ErrorType.NOT_AVAILABLE_PERMISSION);
         }
     }
+
+
 }

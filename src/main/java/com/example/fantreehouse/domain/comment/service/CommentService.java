@@ -1,17 +1,16 @@
 package com.example.fantreehouse.domain.comment.service;
 
-import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
+import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
-import com.example.fantreehouse.domain.artist.entity.Artist;
-import com.example.fantreehouse.domain.artist.repository.ArtistRepository;
-import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
-import com.example.fantreehouse.domain.comment.dto.CommentRequestDto;
-import com.example.fantreehouse.domain.comment.dto.CommentResponseDto;
+import com.example.fantreehouse.domain.comment.dto.request.CommentRequestDto;
+import com.example.fantreehouse.domain.comment.dto.response.CommentResponseDto;
 import com.example.fantreehouse.domain.comment.dto.request.CreateCommentRequestDto;
 import com.example.fantreehouse.domain.comment.entity.Comment;
 import com.example.fantreehouse.domain.comment.repository.CommentRepository;
+import com.example.fantreehouse.domain.commentLike.entity.CommentLike;
+import com.example.fantreehouse.domain.commentLike.repository.CommentLikeRepository;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feed.repository.FeedRepository;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
@@ -20,6 +19,7 @@ import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class CommentService {
     private final FeedRepository feedRepository;
     private final CommentRepository commentRepository;
     private final ArtistGroupRepository artistGroupRepository;
-    private final ArtistRepository artistRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     //댓글 작성 - 해당 아티스트 & 구독한 유저가
     public void createComment(String groupName, Long feedId, UserDetailsImpl userDetails, CreateCommentRequestDto requestDto) {
@@ -51,17 +51,12 @@ public class CommentService {
         );
 
         User feedWriter = foundFeed.getUser();
-        Long loginUserId = loginUser.getId();
 
         //구독자 리스트
         List<User> subscribers = foundFeed.getArtistGroup().getSubscriptionList().stream()
                 .map(Subscription::getUser).toList();
 
         checkCommentAuthorization(loginUser, feedWriter, subscribers);
-
-        //댓글에 저장될 이름
-        //유저의 경우 nickname (닉네임)
-        //아티스트의 경우 artistName (활동명)
 
         Comment newComment = Comment.of(requestDto, foundFeed, loginUser);
         commentRepository.save(newComment);
@@ -91,8 +86,8 @@ public class CommentService {
         foundComment.update(requestDto);
     }
 
-
     //comment 삭제 //작성자 본인, 아티스트의 경우 엔터와 어드민, 어떤 유저든 어드민 가능
+    @Transactional
     public void deleteComment(String groupName, Long feedId, Long artistFeedCommentId, UserDetailsImpl userDetails) {
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
@@ -130,7 +125,14 @@ public class CommentService {
         PageRequest pageRequest = PageRequest.of(page, COMMENT_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Comment> pageComment = commentRepository.findAllByFeedId(feedId, pageRequest);
 
-        return pageComment.map(CommentResponseDto::of);
+        List<CommentResponseDto> commentLikeResponseDtoList = pageComment.getContent().stream()
+                .map(comment -> {
+                    List<CommentLike> commentLikeList = commentLikeRepository.findAllCommentLikeByCommentId(comment.getId());
+                    int feedLikeCount = commentLikeList.size();
+                    return CommentResponseDto.of(comment, feedLikeCount);
+                })
+                .toList();
+        return new PageImpl<>(commentLikeResponseDtoList, pageRequest, pageComment.getTotalElements());
     }
 
 

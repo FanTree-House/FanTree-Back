@@ -43,13 +43,9 @@ public class FeedController {
     @PostMapping
     public ResponseEntity<ResponseDataDto<CreateFeedResponseDto>> createFeed(
             @PathVariable final String groupName,
-//            @RequestPart(value = "file", required = false) MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody final CreateFeedRequestDto requestDto
-//    ) throws IOException {
     ) {
-
-//        CreateFeedResponseDto responseDto = feedService.createFeed(groupName, userDetails, file, requestDto);
         CreateFeedResponseDto responseDto = feedService.createFeed(groupName, userDetails, requestDto);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_CREATED, responseDto));
     }
@@ -59,7 +55,6 @@ public class FeedController {
      *
      * @param groupName
      * @param artistFeedId
-//     * @param file
      * @param requestDto
      * @return
      * @throws IOException
@@ -68,13 +63,9 @@ public class FeedController {
     public ResponseEntity<ResponseDataDto<UpdateFeedResponseDto>> updateFeed(
             @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
-//            @RequestPart(value = "file", required = false) MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody final UpdateFeedRequestDto requestDto
-//    ) throws IOException {
     ) {
-
-//        UpdateFeedResponseDto responseDto = feedService.updateFeed(groupName, artistFeedId, userDetails, file, requestDto);
         UpdateFeedResponseDto responseDto = feedService.updateFeed(groupName, artistFeedId, userDetails, requestDto);
 
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_UPDATED, responseDto));
@@ -110,7 +101,6 @@ public class FeedController {
             @RequestParam int page
     ) {
         Page<FeedResponseDto> pagedFeed = feedService.getAllFeed(groupName, userDetails, page);
-
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, pagedFeed));
     }
 

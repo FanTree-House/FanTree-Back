@@ -31,7 +31,11 @@ public class CommunityCommentService {
 
 
     //댓글생성
-    public CommunityCommentResponseDto creatComment(CommunityCommentRequestDto requestDto, Long userId, Long feedId) {
+    public CommunityCommentResponseDto creatComment(
+        CommunityCommentRequestDto requestDto,
+        Long userId,
+        Long feedId) {
+
         User user = findUser(userId);
         CommunityFeed feed = findFeed(feedId);
         CommunityComment comment = new CommunityComment(requestDto, user, feed);
@@ -41,29 +45,41 @@ public class CommunityCommentService {
     }
 
     //댓글 전체조회
-    public List<CommunityCommentResponseDto> findAllComment(String groupName, Long feedId, Long userId) {
+    public List<CommunityCommentResponseDto> findAllComment(
+        String groupName,
+        Long feedId,
+        Long userId) {
+
         User user = findUser(userId);
         ArtistGroup artistGroup = findArtistGroup(groupName);
+
         List<CommunityFeed> feedList = feedRepository.findAllByUserId(userId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_FEED));
         List<CommunityComment> commentList = commentRepository.findByCommunityFeed_Id(feedId);
+
         if (commentList.isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_COMMENT);
         }
+
         return commentList.stream()
                 .map(CommunityCommentResponseDto::new)
                 .toList();
     }
 
     //댓글수정
-    public CommunityComment updateComment(Long commentId, CommunityCommentUpdateRequestDto requestDto,
-                                          Long userId, String groupName) {
+    public CommunityComment updateComment(
+        Long commentId,
+        CommunityCommentUpdateRequestDto requestDto,
+        Long userId,
+        String groupName) {
+
         User user = findUser(userId);
         ArtistGroup artistGroup = findArtistGroup(groupName);
         CommunityComment comment = findComment(commentId);
-        if (!comment.getUser().getId().equals(userId)) {
-            throw new CustomException(ErrorType.NOT_USER_COMMENT);
-        }
+
+        //본인 댓글 확인
+        checkMyComment(commentId, userId);
+
         comment.updateComment(requestDto, user);
         return comment;
     }
@@ -73,9 +89,10 @@ public class CommunityCommentService {
         ArtistGroup artistGroup = findArtistGroup(groupName);
         User user = findUser(userId);
         CommunityComment comment = findComment(commentId);
-        if (!comment.getUser().getId().equals(userId)) {
-            throw new CustomException(ErrorType.NOT_USER_COMMENT);
-        }
+
+        //본인 댓글 확인
+        checkMyComment(commentId, userId);
+
         commentRepository.delete(comment);
     }
 
@@ -102,6 +119,15 @@ public class CommunityCommentService {
     public CommunityComment findComment(Long commentId) {
         return commentRepository.findAllById(commentId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_COMMENT));
+    }
+
+    //자기가 쓴 댓글 검증
+    public void checkMyComment(Long commentId,Long userId){
+        CommunityComment comment = findComment(commentId);
+
+        if (!comment.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorType.NOT_USER_COMMENT);
+        }
     }
 }
 

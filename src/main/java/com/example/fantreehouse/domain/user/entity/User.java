@@ -3,18 +3,23 @@ package com.example.fantreehouse.domain.user.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.commentLike.entity.CommentLike;
 import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
+import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
+import com.example.fantreehouse.domain.user.dto.AdminRequestDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,8 @@ import java.util.Optional;
 
 @Entity
 @Getter
+@Setter
+
 @NoArgsConstructor
 public class User extends Timestamped {
 
@@ -37,6 +44,7 @@ public class User extends Timestamped {
 
     private String nickname; // 로그인 한 닉네임
 
+    @Email
     private String email;
 
     private String password;
@@ -60,6 +68,12 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user")
     private List<Feed> feedList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedLike> feedLikeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<CommentLike> commentLikeList = new ArrayList<>();
+
     //픽업데이터와 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<PickUp> pickUpList = new ArrayList<>();
@@ -72,21 +86,13 @@ public class User extends Timestamped {
     @JoinColumn(name = "entertainment_id")
     private Entertainment entertainment;
 
-    //아티스트와 일대다? 다대일? 일대일? 매핑
-    @OneToOne
-    @JoinColumn(name = "artist_id")
+    @OneToOne(mappedBy = "user")
     private Artist artist;
-//
-//    @OneToOne(mappedBy = "user")
-//    private Artist artist;
 
     //구독자와 일대다 매핑
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Subscription> subscriptions = new ArrayList<>();
 
-//    public void setArtist(Artist artist) {
-//        this.artist = artist;
-//    }
     //구독자 커뮤니티랑 일대다 매핑
     @OneToMany(mappedBy = "user")
     private List<CommunityFeed> communityFeedList = new ArrayList<>();
@@ -123,7 +129,6 @@ public class User extends Timestamped {
         return refreshToken == null ? true : false;
     }
 
-
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
@@ -148,4 +153,16 @@ public class User extends Timestamped {
         this.kakaoId=kakaoId;
     }
 
+
+    public void transBlacklist() {
+        this.status = UserStatusEnum.BLACK_LIST;
+    }
+
+    public void transRole(UserRoleEnum roleEnum) {
+        this.userRole = roleEnum;
+    }
+
+    public void transUser() {
+        this.status = UserStatusEnum.ACTIVE_USER;
+    }
 }

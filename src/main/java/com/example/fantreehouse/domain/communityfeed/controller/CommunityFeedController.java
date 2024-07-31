@@ -34,9 +34,11 @@ public class CommunityFeedController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<?> createFeed( @RequestBody CommunityFeedRequestDto requestDto,
-                                                         @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                          @PathVariable String groupName) {
+    public ResponseEntity<?> createFeed(
+        @RequestBody CommunityFeedRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable String groupName) {
+
         feedService.createFeed(requestDto, userDetails.getUser().getId(), groupName);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CREATE_SUCCESS_FEED));
     }
@@ -48,9 +50,12 @@ public class CommunityFeedController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<?> findAllFeed(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                         @PathVariable String groupName) {
-        List<CommunityFeedResponseDto> responseDto = feedService.findAllFeed(userDetails.getUser().getId(), groupName);
+    public ResponseEntity<?> findAllFeed(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable String groupName) {
+
+        List<CommunityFeedResponseDto> responseDto = feedService
+            .findAllFeed(userDetails.getUser().getId(), groupName);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -62,9 +67,11 @@ public class CommunityFeedController {
      * @return
      */
     @GetMapping("/{feedId}")
-     public ResponseEntity<?> findFeed(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                        @PathVariable Long feedId,
-                                       @PathVariable  String groupName) {
+     public ResponseEntity<?> findFeed(
+         @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long feedId,
+        @PathVariable  String groupName) {
+
         CommunityFeed feed = feedService.findFeed(feedId ,userDetails.getUser().getId(),groupName);
         CommunityFeedResponseDto responseDto = new CommunityFeedResponseDto(feed);
         return ResponseEntity.ok(responseDto);
@@ -79,12 +86,14 @@ public class CommunityFeedController {
      * @return
      */
     @PatchMapping("/{feedId}")
-    public ResponseEntity<ResponseMessageDto> updateFeed(@Valid @RequestBody CommunityFeedUpdateRequestDto requestDto,
-                                                            @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                            @PathVariable Long feedId,
-                                                         @PathVariable String groupName) {
+    public ResponseEntity<ResponseMessageDto> updateFeed(
+        @Valid @RequestBody CommunityFeedUpdateRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long feedId,
+        @PathVariable String groupName) {
         feedService.updateFeed(requestDto, feedId, userDetails.getUser().getId(), groupName);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_UPDATE_SUCCESS));
+        return ResponseEntity
+            .ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_UPDATE_SUCCESS));
     }
 
     /***
@@ -95,11 +104,14 @@ public class CommunityFeedController {
      * @return
      */
     @DeleteMapping("/{feedId}")
-    public ResponseEntity<ResponseMessageDto> deleteFeed(@PathVariable Long feedId,
-                                                         @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                         @PathVariable  String groupName,
-                                                         UserRoleEnum userRoleEnum) {
+    public ResponseEntity<ResponseMessageDto> deleteFeed(
+        @PathVariable Long feedId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable  String groupName,
+        UserRoleEnum userRoleEnum) {
+
         feedService.deleteFeed(feedId, userDetails.getUser().getId(), groupName, userRoleEnum);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_DELETE_SUCCESS));
+        return ResponseEntity
+            .ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_DELETE_SUCCESS));
     }
 }

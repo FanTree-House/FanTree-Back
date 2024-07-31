@@ -1,6 +1,8 @@
 package com.example.fantreehouse.domain.user.entity;
 
 public enum UserStatusEnum {
+    //이메일 인증이 되지 않은 상태인 유저
+    NON_AUTH_USER(Status.NON_AUTH),
 
     ACTIVE_USER(Status.USER), //일반 유저
     WITHDRAW_USER(Status.WITHDRAW_USER), //탈퇴한 유저
@@ -22,5 +24,6 @@ public enum UserStatusEnum {
         public static final String WITHDRAW_USER = "NON_USER";
         public static final String BLACK_LIST = "BLACK_LIST";
         public static final String INACTIVE_USER = "INACTIVE_USER";
+        public static final String NON_AUTH = "NON_AUTH";
     }
 }

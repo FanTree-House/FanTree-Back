@@ -13,6 +13,7 @@ import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,17 +23,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class EnterFeedService {
 
     private final EnterFeedRepository enterFeedRepository;
     private final ArtistGroupRepository artistGroupRepository;
-
-    @Autowired
-    public EnterFeedService(EnterFeedRepository enterFeedRepository,
-                            ArtistGroupRepository artistGroupRepository) {
-        this.enterFeedRepository = enterFeedRepository;
-        this.artistGroupRepository = artistGroupRepository;
-    }
 
     /**
      * [createFeed] 엔터피드를 생성합니다.

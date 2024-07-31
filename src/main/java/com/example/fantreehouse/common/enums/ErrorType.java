@@ -35,7 +35,13 @@ public enum ErrorType implements ErrorCode {
     REFRESH_TOKEN_MISMATCH(HttpStatus.NOT_FOUND, "REFRESH_TOKEN 값이 일치 하지 않습니다."),
     MISMATCH_ADMINTOKEN(HttpStatus.OK, "Admin 토큰값이 일치하지 않습니다."),
     MISMATCH_ARTISTTOKEN(HttpStatus.OK, "Artist 토큰값이 일치하지 않습니다."),
-    MISMATCH_ENTERTAINMENTTOKEN(HttpStatus.OK, "Entertainment 토큰값이 일치하지 않습니다."),
+    MISMATCH_ENTERTAINMENTTOKEN(HttpStatus.OK, "Entertainment 토큰값이 일치하지 않습니다."),	AUTH_NUM_NOTFOUND(HttpStatus.NOT_FOUND,
+        "인증번호가 없습니다 확인부탁드립니다."),
+    AUTH_MISMATCH(HttpStatus.NOT_FOUND,
+        "인증번호가 틀렸습니다. 확인부탁드립니다."),
+    EMAIL_DUPLICATE(HttpStatus.NOT_FOUND,
+        "이메일 중복"),
+    NOT_AUTH_EMAIL(HttpStatus.OK, "이메일이 인증되지 않았습니다."),
 
     //Feed
     FEED_NOT_FOUND(HttpStatus.NOT_FOUND,"찾는 피드가 없습니다."),
@@ -85,10 +91,14 @@ public enum ErrorType implements ErrorCode {
 
     //엔터피드
     ENTER_FEED_NOT_FOUND(HttpStatus.NOT_FOUND, "피드를 찾을 수 없습니다."),
+
     // 상품
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
     NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다."),
+
     ;
+
+
 
     private final HttpStatus httpStatus;
     private final String message;

@@ -42,14 +42,19 @@ public class EnterFeedController {
             @PathVariable String groupName,
             @PathVariable Long feedId) {
 
-        EnterFeedResponseDto notice = enterFeedService.getFeed(groupName, feedId, FeedCategory.NOTICE);
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.NOTICE_RETRIEVE_SUCCESS, notice));
+        EnterFeedResponseDto notice = enterFeedService.getFeed(
+            groupName, feedId, FeedCategory.NOTICE);
+        return ResponseEntity.ok
+            (new ResponseDataDto<>(ResponseStatus.NOTICE_RETRIEVE_SUCCESS, notice));
     }
 
     @GetMapping("/{groupName}/notice")
-    public ResponseEntity<ResponseDataDto<List<EnterFeedResponseDto>>> getAllNotices(@PathVariable String groupName) {
-        List<EnterFeedResponseDto> notices = enterFeedService.getAllFeeds(groupName, FeedCategory.NOTICE);
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.NOTICE_RETRIEVE_SUCCESS, notices));
+    public ResponseEntity<ResponseDataDto<List<EnterFeedResponseDto>>> getAllNotices(
+        @PathVariable String groupName) {
+        List<EnterFeedResponseDto> notices = enterFeedService
+            .getAllFeeds(groupName, FeedCategory.NOTICE);
+        return ResponseEntity.ok
+            (new ResponseDataDto<>(ResponseStatus.NOTICE_RETRIEVE_SUCCESS, notices));
     }
 
     @PatchMapping("/{groupName}/notice/{feedId}")
@@ -90,14 +95,21 @@ public class EnterFeedController {
             @PathVariable String groupName,
             @PathVariable Long feedId) {
 
-        EnterFeedResponseDto schedule = enterFeedService.getFeed(groupName, feedId, FeedCategory.SCHEDULE);
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.SCHEDULE_RETRIEVE_SUCCESS, schedule));
+        EnterFeedResponseDto schedule = enterFeedService.getFeed(
+            groupName,
+            feedId,
+            FeedCategory.SCHEDULE);
+        return ResponseEntity.ok
+            (new ResponseDataDto<>(ResponseStatus.SCHEDULE_RETRIEVE_SUCCESS, schedule));
     }
 
     @GetMapping("/{groupName}/schedule")
-    public ResponseEntity<ResponseDataDto<List<EnterFeedResponseDto>>> getAllSchedules(@PathVariable String groupName) {
-        List<EnterFeedResponseDto> schedules = enterFeedService.getAllFeeds(groupName, FeedCategory.SCHEDULE);
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.SCHEDULE_RETRIEVE_SUCCESS, schedules));
+    public ResponseEntity<ResponseDataDto<List<EnterFeedResponseDto>>> getAllSchedules(
+        @PathVariable String groupName) {
+        List<EnterFeedResponseDto> schedules = enterFeedService.
+            getAllFeeds(groupName, FeedCategory.SCHEDULE);
+        return ResponseEntity.ok
+            (new ResponseDataDto<>(ResponseStatus.SCHEDULE_RETRIEVE_SUCCESS, schedules));
     }
 
     @PatchMapping("/{groupName}/schedule/{feedId}")
@@ -118,7 +130,7 @@ public class EnterFeedController {
             @PathVariable Long feedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        enterFeedService.deleteFeed(groupName, feedId, userDetails.getUser(), FeedCategory.SCHEDULE);
+        enterFeedService.deleteFeed(groupName,feedId,userDetails.getUser(), FeedCategory.SCHEDULE);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SCHEDULE_DELETE_SUCCESS));
     }
 }

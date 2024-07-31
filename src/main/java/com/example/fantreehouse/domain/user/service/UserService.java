@@ -1,9 +1,13 @@
 package com.example.fantreehouse.domain.user.service;
 
+import com.example.fantreehouse.auth.RedisUtil;
 import com.example.fantreehouse.common.enums.ErrorType;
+import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
+import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
+import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
 import com.example.fantreehouse.domain.user.dto.ProfileRequestDto;
 import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
@@ -18,7 +22,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
 
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +31,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
+  private final RedisUtil redisUtil;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final ArtistGroupRepository artistGroupRepository;
 
     @Value("${auth.admin_token}")
     private String ADMIN_TOKEN;
@@ -45,14 +52,25 @@ public class UserService {
         String nickname = requestDto.getNickname();
         String profile = requestDto.getProfileImage();
 
-        //ID 검증
-        if (userRepository.findByLoginId(id).isPresent()){
-            throw new DuplicatedException(ErrorType.DUPLICATE_ID);
+        //ID 중복확인
+        duplicatedId(id);
+
+        //닉네임 중복확인
+        duplicatedNickName(nickname);
+
+        // 블랙리스트 검증
+        if (userRepository.findByEmailAndStatus(email, UserStatusEnum.BLACK_LIST).isPresent()) {
+            throw new CustomException(ErrorType.BLACKLIST_EMAIL);
         }
 
-        //닉네임 검증
-        if (userRepository.findByNickname(nickname).isPresent()){
-            throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
+        //이메일 검증 -> Null 검사
+        if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.equals(redisUtil.getData(id).getStatus())){
+          throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
+        }
+
+        //redis에 저장된 이메일과 응답받은 이메일이 동일한지 체크
+        if (!email.equals(redisUtil.getData(id).getEmail())){
+          throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
         }
 
         UserRoleEnum role = UserRoleEnum.USER;
@@ -75,7 +93,6 @@ public class UserService {
               throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
             }
             role = UserRoleEnum.ENTERTAINMENT;
-
         }
 
         User user = new User(
@@ -88,8 +105,10 @@ public class UserService {
             role
         );
         userRepository.save(user);
+        redisUtil.deleteData(id);
         return new SignUpResponseDto(user);
     }
+
 
   //회원 탈퇴
   @Transactional
@@ -144,9 +163,28 @@ public class UserService {
     return new ProfileResponseDto(findById(userId));
   }
 
+
   private User findById(Long id) {
     return userRepository.findById(id).orElseThrow(
         () -> new NotFoundException(ErrorType.USER_NOT_FOUND)
     );
+  }
+
+  private void duplicatedId(String id){
+    if (userRepository.findByLoginId(id).isPresent()){
+      throw new DuplicatedException(ErrorType.DUPLICATE_ID);
+    }
+  }
+
+  private void duplicatedNickName(String nickname){
+    if (userRepository.findByNickname(nickname).isPresent()){
+      throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
+    }
+  }
+
+  private void validBlackList(String email, UserStatusEnum status){
+    if (userRepository.findByEmailAndStatus(email, status).get().equals(UserStatusEnum.BLACK_LIST)) {
+      throw new CustomException(ErrorType.BLACKLIST_EMAIL);
+    }
   }
 }
