@@ -1,7 +1,6 @@
 package com.example.fantreehouse.domain.artistgroup.dto;
 
 import com.example.fantreehouse.domain.artist.dto.ArtistResponseDto;
-import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentResponseDto;
 import lombok.Getter;
 
@@ -22,4 +21,5 @@ public class ArtistGroupResponseDto {
         this.entertainmentDto = entertainmentDto;
         this.artistDtos = artistDtos;
     }
+
 }

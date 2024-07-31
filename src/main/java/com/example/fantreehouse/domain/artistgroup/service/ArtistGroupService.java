@@ -15,6 +15,7 @@ import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRep
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +69,7 @@ public class ArtistGroupService {
 
         return artistGroupRepository.save(artistGroup);
     }
+
     /**
      * [getArtistGroupResponseDto] 아티스트 그룹 DTO 조회
      * @param enterName 엔터테인먼트 이름
@@ -91,6 +93,33 @@ public class ArtistGroupService {
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     * 아티스트그룹 검색기능
+     * @param groupName
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<ArtistGroupResponseDto> searchArtistGroup(String groupName, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
+
+        // 전체 아티스트 그룹을 변환하는 부분
+        Page<ArtistGroupResponseDto> allArtistGroup = artistGroupRepository.findAll(pageable)
+                .map(this::convertToResponseDto);
+
+        // 검색된 아티스트 그룹을 변환하는 부분
+        List<ArtistGroupResponseDto> searchArtistGroup = artistGroupRepository.findByGroupNameContaining(groupName, pageable).stream()
+                .map(this::convertToResponseDto)
+                .toList();
+
+        // 검색어가 없으면 전체를 반환, 아니면 검색 결과를 반환
+        if (groupName.isEmpty()) {
+            return allArtistGroup;
+        }
+        return new PageImpl<>(searchArtistGroup, pageable, searchArtistGroup.size());
+    }
+
     /**
      * [updateArtistGroup] 아티스트 그룹 수정
      * @param enterName 엔터테인먼트 이름
@@ -105,7 +134,7 @@ public class ArtistGroupService {
         ArtistGroup artistGroup = getArtistGroup(enterName, groupName);
         artistGroup.setGroupName(request.getGroupName());
         artistGroup.setArtistProfilePicture(request.getArtistProfilePicture());
-        artistGroup.setGroupInfo(request.getGroupInfo()); // groupInfo 필드 업데이트
+        artistGroup.setGroupInfo(request.getGroupInfo());
 
         artistGroup.clearArtists();
         for (Long artistId : request.getArtistIds()) {
