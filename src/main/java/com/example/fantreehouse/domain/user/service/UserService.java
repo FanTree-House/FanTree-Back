@@ -64,8 +64,12 @@ public class UserService {
         }
 
         //이메일 검증 -> Null 검사
-
         if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.equals(redisUtil.getData(id).getStatus())){
+          throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
+        }
+
+        //redis에 저장된 이메일과 응답받은 이메일이 동일한지 체크
+        if (!email.equals(redisUtil.getData(id).getEmail())){
           throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
         }
 
@@ -101,6 +105,7 @@ public class UserService {
             role
         );
         userRepository.save(user);
+        redisUtil.deleteData(id);
         return new SignUpResponseDto(user);
     }
 
