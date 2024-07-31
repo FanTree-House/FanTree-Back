@@ -3,21 +3,19 @@ package com.example.fantreehouse.domain.user.service;
 import com.example.fantreehouse.auth.RedisUtil;
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
-import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.domain.user.dto.EmailCheckRequestDto;
 import com.example.fantreehouse.domain.user.dto.EmailRequestDto;
 import com.example.fantreehouse.domain.user.entity.MailAuth;
-import com.example.fantreehouse.domain.user.entity.User;
-import com.example.fantreehouse.domain.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.mail.javamail.MimeMessageHelper;
+
+import java.util.Random;
 
 @Service
 @Slf4j
