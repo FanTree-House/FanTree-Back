@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/artist/{groupName}/feeds/{feedId}/comments/like")
+@RequestMapping("/artist/{groupName}/feeds/{feedId}/comments")
 
 public class CommunityCommentController {
 

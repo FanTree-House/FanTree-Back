@@ -4,8 +4,8 @@ Content-Type: application/json
 
 {
   "id": "test1234",
-  "name": "명수",
-  "nickname": "GGDD2",
+  "name": "artist",
+  "nickname": "artist1",
   "email": "test@email.com",
   "password": "test1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
@@ -24,7 +24,7 @@ Content-Type: application/json
 ### 아티스트 계정 생성
 POST http://localhost:8080/artist
 Content-Type: application/json
-Authorization: {{Authorization}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MTIzNCIsImF1dGgiOiJBUlRJU1QiLCJzdGF0dXMiOiJBQ1RJVkVfVVNFUiIsImV4cCI6MTcyMjMzNjEzNSwiaWF0IjoxNzIyMzM0MzM1fQ.uBn571EoAxK0leT2NuGsGT6lhUcUM-z2P_Pr5Zxzg_U
 
 {
   "artistName": "artist1",

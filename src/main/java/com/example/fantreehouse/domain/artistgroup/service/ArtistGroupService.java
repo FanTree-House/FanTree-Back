@@ -90,14 +90,6 @@ public class ArtistGroupService {
                 .collect(Collectors.toList());
     }
 
-//
-//    public Page<ProductResponseDto> searchProduct(String productName, int page, int size) {
-//        Page<ProductResponseDto> allProduct = productRepository.findAll(pageable).map(ProductResponseDto::new);
-//        List<ProductResponseDto> searchProduct = productRepository.findByProductNameContaining(productName, pageable).stream()
-//                .map(ProductResponseDto::new).toList();
-//        if (productName.isEmpty()) {
-//            return allProduct;
-//        } return new PageImpl<>(searchProduct);
 
     /**
      * 아티스트그룹 검색기능
