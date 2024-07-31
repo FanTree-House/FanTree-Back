@@ -24,7 +24,7 @@ public class AdminService {
 
         // [예외 2] - 존재하지 않는 계정
         User blacklistUser = userRepository.findByLoginId(requestDto.getLoginId()).orElseThrow(() ->
-                new CustomException(ErrorType.NOT_FOUND_ENTER));
+                new CustomException(ErrorType.USER_NOT_FOUND));
 
         // 블랙리스트아닐 때
         if (! UserStatusEnum.BLACK_LIST.equals(blacklistUser.getStatus())) {
@@ -43,7 +43,7 @@ public class AdminService {
 
         // [예외 2] - 존재하지 않는 계정
         User transRoleUser = userRepository.findByLoginId(requestDto.getLoginId()).orElseThrow(() ->
-                new CustomException(ErrorType.NOT_FOUND_ENTER));
+                new CustomException(ErrorType.USER_NOT_FOUND));
 
         transRoleUser.transRole(requestDto.getUserRole());
 

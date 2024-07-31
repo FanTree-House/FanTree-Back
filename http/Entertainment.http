@@ -5,7 +5,7 @@
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbnRlcjEiLCJhdXRoIjoiRU5URVJUQUlOTUVOVCIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMzM1NTkwLCJpYXQiOjE3MjIzMzM3OTB9.lXq-RaFgxXGls-U4W7tjYaNvo4yRkkNzhuQEkI444LY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWVudGVyMSIsImF1dGgiOiJFTlRFUlRBSU5NRU5UIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjIyNzQ5MTAsImlhdCI6MTcyMjI3MzExMH0.rpfOBeP_X7nUcdMbSg86B2tNcddvd1vH5NmRQ7udDjg
 Content-Type: application/json
 
 {
@@ -51,13 +51,14 @@ Authorization: {{Authorization}}
 
 
 ### 아티스트 그룹 생성
-POST http://localhost:8080/entertainments/hybe
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbnRlcjEiLCJhdXRoIjoiRU5URVJUQUlOTUVOVCIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMzM1NTkwLCJpYXQiOjE3MjIzMzM3OTB9.lXq-RaFgxXGls-U4W7tjYaNvo4yRkkNzhuQEkI444LY
+POST http://localhost:8080/entertainments/{{enterName}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWVudGVyMSIsImF1dGgiOiJFTlRFUlRBSU5NRU5UIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjIzMjA0MjYsImlhdCI6MTcyMjMxODYyNn0.ecn2DMfo-v3gdA3Fj8j7gJhzkQVH_u8NWA7NBQZ3H8w
 Content-Type: application/json
 
 {
-  "groupName": "seventeen",
+  "groupName": "에스파",
   "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
+  "groupInfo" : "두 줄 소개",
   "artistIds": []
 }
 
@@ -68,14 +69,14 @@ GET http://localhost:8080/entertainments/hybe/seventeen
 GET http://localhost:8080/entertainments/{{enterName}}/groupName
 
 ### 아티스트 그룹 수정
-PATCH http://localhost:8080/entertainments/hybe/seventeen
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbnRlcjEiLCJhdXRoIjoiRU5URVJUQUlOTUVOVCIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMzM1NTkwLCJpYXQiOjE3MjIzMzM3OTB9.lXq-RaFgxXGls-U4W7tjYaNvo4yRkkNzhuQEkI444LY
+PATCH http://localhost:8080/entertainments/{{enterName}}/에스파형님들
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "groupName": "seventeen",
+  "groupName": "aespa",
   "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "artistIds": [1]
+  "artistIds": [3,4]
 }
 
 ### 특정 아티스트 탈퇴

@@ -12,10 +12,9 @@ import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupReposit
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentResponseDto;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRepository;
-import com.example.fantreehouse.domain.product.product.dto.ProductResponseDto;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,18 +23,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ArtistGroupService {
 
     private final ArtistGroupRepository artistGroupRepository;
     private final EntertainmentRepository entertainmentRepository;
     private final ArtistRepository artistRepository;
-
-    @Autowired
-    public ArtistGroupService(ArtistGroupRepository artistGroupRepository, EntertainmentRepository entertainmentRepository, ArtistRepository artistRepository) {
-        this.artistGroupRepository = artistGroupRepository;
-        this.entertainmentRepository = entertainmentRepository;
-        this.artistRepository = artistRepository;
-    }
 
     /**
      * [createArtistGroup] 아티스트 그룹 생성
@@ -51,12 +44,16 @@ public class ArtistGroupService {
         Entertainment entertainment = entertainmentRepository.findByEnterName(enterName)
                 .orElseThrow(() -> new CustomException(ErrorType.ENTERTAINMENT_NOT_FOUND));
 
-
         if (artistGroupRepository.findByGroupName(request.getGroupName()).isPresent()) {
             throw new CustomException(ErrorType.DUPLICATE_GROUP_NAME);
         }
 
-        ArtistGroup artistGroup = new ArtistGroup(request.getGroupName(), request.getArtistProfilePicture(), entertainment);
+        ArtistGroup artistGroup = new ArtistGroup(
+                request.getGroupName(),
+                request.getArtistProfilePicture(),
+                request.getGroupInfo(),
+                entertainment
+        );
 
         for (Long artistId : request.getArtistIds()) {
             Artist artist = artistRepository.findById(artistId)
@@ -100,12 +97,21 @@ public class ArtistGroupService {
      */
     public Page<ArtistGroupResponseDto> searchArtistGroup(String groupName, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
-        Page<ArtistGroupResponseDto> allArtistGroup = artistGroupRepository.findAll(pageable).map(ArtistGroupResponseDto::new);
+
+        // 전체 아티스트 그룹을 변환하는 부분
+        Page<ArtistGroupResponseDto> allArtistGroup = artistGroupRepository.findAll(pageable)
+                .map(this::convertToResponseDto);
+
+        // 검색된 아티스트 그룹을 변환하는 부분
         List<ArtistGroupResponseDto> searchArtistGroup = artistGroupRepository.findByGroupNameContaining(groupName, pageable).stream()
-                .map(ArtistGroupResponseDto::new).toList();
+                .map(this::convertToResponseDto)
+                .toList();
+
+        // 검색어가 없으면 전체를 반환, 아니면 검색 결과를 반환
         if (groupName.isEmpty()) {
             return allArtistGroup;
-        } return new PageImpl<>(searchArtistGroup);
+        }
+        return new PageImpl<>(searchArtistGroup, pageable, searchArtistGroup.size());
     }
 
     /**
@@ -122,6 +128,7 @@ public class ArtistGroupService {
         ArtistGroup artistGroup = getArtistGroup(enterName, groupName);
         artistGroup.setGroupName(request.getGroupName());
         artistGroup.setArtistProfilePicture(request.getArtistProfilePicture());
+        artistGroup.setGroupInfo(request.getGroupInfo());
 
         artistGroup.clearArtists();
         for (Long artistId : request.getArtistIds()) {

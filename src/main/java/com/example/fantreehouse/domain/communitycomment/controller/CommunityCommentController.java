@@ -36,9 +36,11 @@ public class CommunityCommentController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<ResponseMessageDto> creatComment(@Valid @RequestBody CommunityCommentRequestDto requestDto,
-                                                            @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                            @PathVariable Long feedId) {
+    public ResponseEntity<ResponseMessageDto> creatComment(
+        @Valid @RequestBody CommunityCommentRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long feedId) {
+
         commentService.creatComment(requestDto, userDetails.getUser().getId(), feedId);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CREATE_SUCCESS_COMMENT));
     }
@@ -51,11 +53,13 @@ public class CommunityCommentController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<?> findComment(@PathVariable String groupName,
-                                         @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                         @PathVariable Long feedId) {
-        List<CommunityCommentResponseDto> responseDto = commentService.findAllComment(groupName, feedId,
-                                                                                        userDetails.getUser().getId());
+    public ResponseEntity<?> findComment(
+        @PathVariable String groupName,
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long feedId) {
+
+        List<CommunityCommentResponseDto> responseDto = commentService
+            .findAllComment(groupName, feedId, userDetails.getUser().getId());
         return ResponseEntity.ok(responseDto);
     }
 
@@ -69,14 +73,16 @@ public class CommunityCommentController {
      */
     @Transactional
     @PatchMapping("/{commentId}")
-    public ResponseEntity<?> updateComment(@Valid @RequestBody CommunityCommentUpdateRequestDto requestDto,
-                                                            @PathVariable Long commentId,
-                                                            @PathVariable String groupName,
-                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        CommunityComment comment = commentService.updateComment(commentId, requestDto, userDetails.getUser().getId(),groupName);
-        CommunityCommentUpdateResponseDto responseDto = new CommunityCommentUpdateResponseDto(comment);
+    public ResponseEntity<?> updateComment(
+        @Valid @RequestBody CommunityCommentUpdateRequestDto requestDto,
+        @PathVariable Long commentId,
+        @PathVariable String groupName,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        CommunityComment comment = commentService
+            .updateComment(commentId, requestDto, userDetails.getUser().getId(),groupName);
+        CommunityCommentUpdateResponseDto responseDto =
+            new CommunityCommentUpdateResponseDto(comment);
         return ResponseEntity.ok(responseDto);
-//        return ResponseEntity.ok(responseDto);
     }
 
     /**
@@ -88,9 +94,10 @@ public class CommunityCommentController {
      */
     @Transactional
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<ResponseMessageDto> deleteComment(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                            @PathVariable Long commentId,
-                                                            @PathVariable String groupName) {
+    public ResponseEntity<ResponseMessageDto> deleteComment(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long commentId,
+        @PathVariable String groupName) {
         commentService.deleteComment(commentId, userDetails.getUser().getId(), groupName);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.DELETE_SUCCESS_COMMENT));
     }

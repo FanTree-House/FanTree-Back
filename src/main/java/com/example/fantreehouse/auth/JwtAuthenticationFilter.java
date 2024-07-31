@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
       // 사용자 상태 체크
       UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-      if (userDetails.getUser().getStatus() == UserStatusEnum.BLACK_LIST) {
+      if (userDetails.getUser().getStatus().equals(UserStatusEnum.BLACK_LIST)) {
         throw new DisabledException("로그인이 불가능한 사용자입니다."); // 블랙리스트 예외 처리
       }
 

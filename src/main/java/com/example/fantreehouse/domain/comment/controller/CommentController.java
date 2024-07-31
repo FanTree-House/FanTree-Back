@@ -61,7 +61,8 @@ public class CommentController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody CommentRequestDto requestDto
     ) {
-        commentService.updateComment(groupName, feedId, artistFeedCommentId, userDetails, requestDto);
+        commentService
+            .updateComment(groupName, feedId, artistFeedCommentId, userDetails, requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.UPDATE_SUCCESS_COMMENT));
     }
 
@@ -100,7 +101,8 @@ public class CommentController {
             @RequestParam int page
 
     ) {
-        Page<CommentResponseDto> pageComment = commentService.getAllComment(groupName, feedId, userDetails, page);
+        Page<CommentResponseDto> pageComment = commentService
+            .getAllComment(groupName, feedId, userDetails, page);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.READ_SUCCESS_COMMENT, pageComment));
     }
 
