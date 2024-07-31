@@ -52,12 +52,13 @@ Authorization: {{Authorization}}
 
 ### 아티스트 그룹 생성
 POST http://localhost:8080/entertainments/{{enterName}}
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWVudGVyMSIsImF1dGgiOiJFTlRFUlRBSU5NRU5UIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjIzMjA0MjYsImlhdCI6MTcyMjMxODYyNn0.ecn2DMfo-v3gdA3Fj8j7gJhzkQVH_u8NWA7NBQZ3H8w
+Authorization:  {{Authorization}}
 Content-Type: application/json
 
 {
-  "groupName": "에스파형님",
+  "groupName": "에스파",
   "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
+  "groupInfo" : "두 줄 소개",
   "artistIds": []
 }
 
@@ -68,14 +69,14 @@ GET http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
 GET http://localhost:8080/entertainments/{{enterName}}/groupName
 
 ### 아티스트 그룹 수정
-PATCH http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
+PATCH http://localhost:8080/entertainments/{{enterName}}/에스파형님들
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
   "groupName": "aespa",
-  "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "artistIds": [3,4]
+  "groupInfo": "그럴 수 있지",
+  "artistIds": []
 }
 
 ### 특정 아티스트 탈퇴
