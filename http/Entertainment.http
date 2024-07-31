@@ -56,9 +56,10 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "groupName": "aespa",
+  "groupName": "sebbb",
   "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "artistIds": [1, 2]
+  "groupInfo" : "아주 멋져",
+  "artistIds": []
 }
 
 ### 특정 아티스트 그룹 조회
@@ -75,7 +76,8 @@ Content-Type: application/json
 {
   "groupName": "aespa",
   "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "artistIds": [3,4]
+  "groupInfo" : "아주 멋져..?",
+  "artistIds": []
 }
 
 ### 특정 아티스트 탈퇴

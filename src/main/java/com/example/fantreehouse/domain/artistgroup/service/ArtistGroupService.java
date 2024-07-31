@@ -49,12 +49,16 @@ public class ArtistGroupService {
         Entertainment entertainment = entertainmentRepository.findByEnterName(enterName)
                 .orElseThrow(() -> new CustomException(ErrorType.ENTERTAINMENT_NOT_FOUND));
 
-
         if (artistGroupRepository.findByGroupName(request.getGroupName()).isPresent()) {
             throw new CustomException(ErrorType.DUPLICATE_GROUP_NAME);
         }
 
-        ArtistGroup artistGroup = new ArtistGroup(request.getGroupName(), request.getArtistProfilePicture(), entertainment);
+        ArtistGroup artistGroup = new ArtistGroup(
+                request.getGroupName(),
+                request.getArtistProfilePicture(),
+                request.getGroupInfo(),
+                entertainment
+        );
 
         for (Long artistId : request.getArtistIds()) {
             Artist artist = artistRepository.findById(artistId)
@@ -64,7 +68,6 @@ public class ArtistGroupService {
 
         return artistGroupRepository.save(artistGroup);
     }
-
     /**
      * [getArtistGroupResponseDto] 아티스트 그룹 DTO 조회
      * @param enterName 엔터테인먼트 이름
@@ -102,6 +105,7 @@ public class ArtistGroupService {
         ArtistGroup artistGroup = getArtistGroup(enterName, groupName);
         artistGroup.setGroupName(request.getGroupName());
         artistGroup.setArtistProfilePicture(request.getArtistProfilePicture());
+        artistGroup.setGroupInfo(request.getGroupInfo()); // groupInfo 필드 업데이트
 
         artistGroup.clearArtists();
         for (Long artistId : request.getArtistIds()) {
