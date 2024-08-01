@@ -31,6 +31,7 @@ public class ArtistGroup extends Timestamped {
 
     private String groupInfo;
 
+    private String enterName;
 
     //엔터테이너먼트와 다대일 매핑
     @ManyToOne(fetch = FetchType.LAZY)
@@ -69,6 +70,7 @@ public class ArtistGroup extends Timestamped {
         this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;
         this.groupInfo = groupInfo;
         this.entertainment = entertainment;
+        this.enterName = entertainment.getEnterName();
     }
 
     public ArtistGroup(ArtistGroup artistGroup) {
@@ -101,8 +103,8 @@ public class ArtistGroup extends Timestamped {
     }
 
     // 아티스트 프로필 사진 설정 메서드
-    public void setArtistGroupProfileUrl(String artistGroupProfileImageUrl) {
-        this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;
+    public void setArtistProfilePicture(String artistProfilePicture) {
+        this.artistProfilePicture = artistProfilePicture;
     }
 
     // 아티스트 제거 메서드
@@ -117,10 +119,6 @@ public class ArtistGroup extends Timestamped {
 
     public void setGroupInfo(String groupInfo) {
         this.groupInfo = groupInfo;
-    }
-
-    public void updateImageUrl(String imageUrl) {
-        this.artistGroupProfileImageUrl = (imageUrl);
     }
 
 

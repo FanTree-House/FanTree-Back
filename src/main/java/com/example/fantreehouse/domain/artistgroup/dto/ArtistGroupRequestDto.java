@@ -6,6 +6,7 @@ import java.util.List;
 
 @Getter
 public class ArtistGroupRequestDto {
+    private String enterName;
     private String groupName;
     private String groupInfo;
     private List<Long> artistIds;
