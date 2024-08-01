@@ -46,6 +46,7 @@ Content-Type: application/json
     client.global.set("Authorization", response.headers.valueOf("Authorization"));
     client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
 %}
+
 ### 아티스트 단건 조회
 GET http://localhost:8080/artist/{{artistId}}
 Authorization: {{Authorization}}

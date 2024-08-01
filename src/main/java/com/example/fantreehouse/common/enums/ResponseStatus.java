@@ -12,6 +12,8 @@ public enum ResponseStatus {
     LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공하였습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃에 성공하였습니다."),
     GET_USER_SUCCESS(HttpStatus.OK, "유저정보 조회에 성공하였습니다."),
+    UNIQUE_ID(HttpStatus.OK, "사용할 수 있는 ID입니다."),
+    UNIQUE_NICKNAME(HttpStatus.OK, "사용할 수 있는 닉네임입니다."),
 
     // 구독자 커뮤니티 피드
     CREATE_SUCCESS_FEED(HttpStatus.OK, "게시글이 생성되었습니다."),

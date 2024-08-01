@@ -138,7 +138,7 @@ public class User extends Timestamped {
         this.password = newEncodePw.orElse(this.password);
     }
 
-    public User(String loginId, String password, String name, String nickname, String email, UserRoleEnum userRole, UserStatusEnum status, Long kakaoId) {
+    public User(String loginId, String name, String nickname, String email, String password, UserRoleEnum userRole, UserStatusEnum status, Long kakaoId) {
         this.loginId = loginId;
         this.name = name;
         this.nickname = nickname;
@@ -152,7 +152,6 @@ public class User extends Timestamped {
     public void kakaoIdUpdate(Long kakaoId) {
         this.kakaoId=kakaoId;
     }
-
 
     public void transBlacklist() {
         this.status = UserStatusEnum.BLACK_LIST;
