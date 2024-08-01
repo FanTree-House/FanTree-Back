@@ -177,6 +177,7 @@ public class ProductService {
         Product product = productRepository.findById(productId).orElseThrow(() ->
                 new CustomException(ErrorType.NOT_FOUND_PRODUCT));
 
+        s3FileUploader.deleteFilesInBucket(product.getProductPictureUrl());
         productRepository.delete(product);
     }
 

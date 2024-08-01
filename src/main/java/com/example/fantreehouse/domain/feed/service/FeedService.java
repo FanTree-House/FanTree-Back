@@ -1,6 +1,7 @@
 package com.example.fantreehouse.domain.feed.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
@@ -226,9 +227,12 @@ public class FeedService {
             throw new UnAuthorizedException(UNAUTHORIZED);
         }
 
-        s3FileUploader.deleteFilesFromS3(foundFeed.getImageUrls());
+        s3FileUploader.deleteFilesInBucket(foundFeed.getImageUrls());
         feedRepository.delete(foundFeed);
+
     }
+
+
 
     //유저 status 확인 (활동 여부)
     private void checkUserStatus(UserStatusEnum userStatusEnum) {

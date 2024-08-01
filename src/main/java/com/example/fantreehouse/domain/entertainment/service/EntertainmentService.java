@@ -138,6 +138,7 @@ public class EntertainmentService {
         // [예외 2] - 존재하지 않는 엔터테이먼트 계정
         Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
 
+        s3FileUploader.deleteFileInBucket(enter.getEnterLogo());
         enterRepository.delete(enter);
     }
 

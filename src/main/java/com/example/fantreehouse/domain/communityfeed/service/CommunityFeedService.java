@@ -158,6 +158,7 @@ public class CommunityFeedService {
                 userRoleEnum.equals(UserRoleEnum.ENTERTAINMENT))) {
             throw new CustomException(ErrorType.UNAUTHORIZED_FEED_DELETE);
         }
+        s3FileUploader.deleteFilesInBucket(feed.getImageUrls());
         feedRepository.delete(feed);
     }
 

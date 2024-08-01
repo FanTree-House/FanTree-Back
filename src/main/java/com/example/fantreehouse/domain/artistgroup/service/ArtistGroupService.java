@@ -215,6 +215,7 @@ public class ArtistGroupService {
         verifyEntertainmentOrAdminAuthority(user);
 
         ArtistGroup artistGroup = getArtistGroup(enterName, groupName);
+        s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
         artistGroupRepository.delete(artistGroup);
     }
 

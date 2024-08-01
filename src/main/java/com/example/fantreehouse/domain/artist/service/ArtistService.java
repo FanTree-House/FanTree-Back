@@ -142,6 +142,7 @@ public class ArtistService {
             throw new UnAuthorizedException(UNAUTHORIZED);
         }
 
+        s3FileUploader.deleteFileInBucket(foundArtist.getArtistProfileImageUrl());
         artistRepository.delete(foundArtist);
     }
 

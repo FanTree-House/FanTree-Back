@@ -2,6 +2,7 @@ package com.example.fantreehouse.domain.s3.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
+import com.example.fantreehouse.common.config.S3Config;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.domain.enterfeed.entity.FeedCategory;
@@ -246,60 +247,25 @@ public class S3FileUploader {
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
-    // Dir 단건 삭제
-    public void deleteFileFromS3(String fileDir) {
-        ObjectListing objectListing = amazonS3Client.listObjects(bucket, fileDir);
-
-        if (objectListing.getObjectSummaries().isEmpty()) {
-            return;
-        }
-
-        while (true) {
-            for (S3ObjectSummary summary : objectListing.getObjectSummaries()) {
-                try {
-                    amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, summary.getKey()));
-                } catch (Exception e) {
-                    throw new S3Exception(DELETE_ERROR);
-                }
-            }
-
-            if (objectListing.isTruncated()) {
-                objectListing = amazonS3Client.listNextBatchOfObjects(objectListing);
-            } else {
-                break;
-            }
-
+    //Dir 단건 삭제
+    public void deleteFileInBucket(String fileDir) {
+        try {
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileDir));
+        } catch (Exception e) {
+            throw new S3Exception(DELETE_ERROR);
         }
     }
 
-    //Dir 다건(List) 삭제
-    public void deleteFilesFromS3(List<String> fileDirList) {
+    //Dir 다건 삭제
+    public void deleteFilesInBucket(List<String> filedDirs) {
 
-        for (String fileDir : fileDirList) {
-            ObjectListing objectListing = amazonS3Client.listObjects(bucket, fileDir);
+        for (String fileDir : filedDirs) {
+            try {
+                amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileDir));
 
-            if (objectListing.getObjectSummaries().isEmpty()) {
-                return;
-            }
-
-            while (true) {
-                for (S3ObjectSummary summary : objectListing.getObjectSummaries()) {
-                    try {
-                        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, summary.getKey()));
-                    } catch (Exception e) {
-                        throw new S3Exception(DELETE_ERROR);
-                    }
-                }
-
-                if (objectListing.isTruncated()) {
-                    objectListing = amazonS3Client.listNextBatchOfObjects(objectListing);
-                } else {
-                    break;
-                }
-
+            } catch (Exception e) {
+                throw new S3Exception(DELETE_ERROR);
             }
         }
-
     }
-
 }
