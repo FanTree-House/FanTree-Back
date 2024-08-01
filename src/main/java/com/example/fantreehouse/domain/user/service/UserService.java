@@ -6,7 +6,10 @@ import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
+import com.example.fantreehouse.domain.s3.service.S3FileUploader;
+import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
 import com.example.fantreehouse.domain.user.dto.ProfileRequestDto;
 import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
 import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
@@ -20,8 +23,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
+
+import static com.example.fantreehouse.common.enums.ErrorType.ARTIST_NOT_FOUND;
+import static com.example.fantreehouse.common.enums.ErrorType.UPLOAD_ERROR;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +55,7 @@ public class UserService {
         String name = requestDto.getName();
         String email = requestDto.getEmail();
         String nickname = requestDto.getNickname();
-        String profile = requestDto.getProfileImage();
+        String profile = requestDto.getProfileImageUrl();
 
         //ID 중복확인
         duplicatedId(id);
@@ -56,6 +63,10 @@ public class UserService {
         //닉네임 중복확인
         duplicatedNickName(nickname);
 
+        //비밀번호 재입력 및 확인
+        checkPassword(password, checkPassowrd);
+
+        String encodePassword = passwordEncoder.encode(password);
         // 블랙리스트 검증
         if (userRepository.findByEmailAndStatus(email, UserStatusEnum.BLACK_LIST).isPresent()) {
             throw new CustomException(ErrorType.BLACKLIST_EMAIL);

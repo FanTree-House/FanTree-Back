@@ -61,6 +61,7 @@ public class ArtistGroupService {
         ArtistGroup artistGroup = new ArtistGroup(
                 request.getGroupName(),
                 request.getGroupInfo(),
+                enterName,
                 entertainment
         );
 

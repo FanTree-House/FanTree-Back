@@ -60,12 +60,19 @@ public class ArtistGroup extends Timestamped {
     private List<Feed> feedList = new ArrayList<>();
 
 
-    public ArtistGroup(String groupName, String groupInfo, Entertainment entertainment, String enterName) {
+    public ArtistGroup(String groupName, String artistGroupProfileImageUrl, String groupInfo, Entertainment entertainment, String enterName) {
         this.groupName = groupName;
-        this.artistGroupProfileImageUrl = "default";
+        this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;
         this.groupInfo = groupInfo;
         this.entertainment = entertainment;
         this.enterName = enterName;
+    }
+
+    public ArtistGroup(String groupName, String groupInfo, String enterName, Entertainment entertainment) {
+        this.groupName = groupName;
+        this.groupInfo = groupInfo;
+        this.enterName = enterName;
+        this.entertainment = entertainment;
     }
 
     public ArtistGroup(ArtistGroup artistGroup) {
@@ -99,7 +106,7 @@ public class ArtistGroup extends Timestamped {
 
     // 아티스트 프로필 사진 설정 메서드
     public void setArtistProfilePicture(String artistProfilePicture) {
-        this.artistProfilePicture = artistProfilePicture;
+        this.artistGroupProfileImageUrl = artistProfilePicture;
     }
 
     // 아티스트 제거 메서드
@@ -117,4 +124,7 @@ public class ArtistGroup extends Timestamped {
     }
 
 
+    public void updateImageUrl(String imageUrl) {
+        this.artistGroupProfileImageUrl = imageUrl;
+    }
 }

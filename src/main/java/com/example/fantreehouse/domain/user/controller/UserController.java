@@ -5,11 +5,9 @@ import com.example.fantreehouse.auth.JwtTokenHelper;
 import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
-import com.example.fantreehouse.domain.user.dto.ProfileRequestDto;
-import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
-import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
-import com.example.fantreehouse.domain.user.dto.WithdrawRequestDto;
+import com.example.fantreehouse.domain.user.dto.*;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.service.UserService;
@@ -20,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import static com.example.fantreehouse.common.enums.ErrorType.OVER_LOAD;
 
 @Slf4j
 @RestController

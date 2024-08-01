@@ -49,7 +49,6 @@ public class EntertainmentService {
         Entertainment enter = new Entertainment(
             enterRequestDto.getEnterName(),
             enterRequestDto.getEnterNumber(),
-            enterRequestDto.getEnterLogo(),
             user);
         // [예외2] - Entertainment 소속사 이름, 사업자번호 중복체크
         checkEnterNameOrNumberExisits(enter);
