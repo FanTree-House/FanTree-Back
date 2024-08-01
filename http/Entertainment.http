@@ -5,7 +5,7 @@
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWVudGVyMSIsImF1dGgiOiJFTlRFUlRBSU5NRU5UIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjIyNzQ5MTAsImlhdCI6MTcyMjI3MzExMH0.rpfOBeP_X7nUcdMbSg86B2tNcddvd1vH5NmRQ7udDjg
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbnRlcjEiLCJhdXRoIjoiRU5URVJUQUlOTUVOVCIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyNTEwNjUyLCJpYXQiOjE3MjI1MDg4NTJ9.yyOg-pYmQtUbdrK-CD4iU0Yl8jJqPTgWIqfHxh8sheg
 Content-Type: application/json
 
 {

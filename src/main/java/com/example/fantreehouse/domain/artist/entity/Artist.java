@@ -48,7 +48,7 @@ public class Artist extends Timestamped {
     public static Artist of(ArtistRequestDto requestDto, User loginUser) {
         return Artist.builder()
                 .artistName(requestDto.getArtistName())
-                .artistProfilePicture(requestDto.getArtistProfilePicture()) //추후변경예정
+                .artistProfilePicture(requestDto.getFile().getOriginalFilename()) //추후변경예정
                 .user(loginUser)
                 .build();
     }
@@ -65,6 +65,6 @@ public class Artist extends Timestamped {
 
     public void updateArtist(ArtistRequestDto requestDto) {
         this.artistName = requestDto.getArtistName();
-        this.artistProfilePicture = requestDto.getArtistProfilePicture();
+        this.artistProfilePicture = requestDto.getFile().getOriginalFilename();
     }
 }

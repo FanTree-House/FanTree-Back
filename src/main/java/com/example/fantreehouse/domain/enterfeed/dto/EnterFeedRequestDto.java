@@ -1,22 +1,40 @@
 package com.example.fantreehouse.domain.enterfeed.dto;
 
 import com.example.fantreehouse.domain.enterfeed.entity.FeedCategory;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import jdk.jfr.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @NoArgsConstructor
+@Getter
+
 public class EnterFeedRequestDto {
     private String title;
     private String contents;
-    private String postPicture;
+    @Setter
     private FeedCategory category;
     private LocalDate date;
+
+    public EnterFeedRequestDto(String title, String contents, LocalDate date, FeedCategory category) {
+        this.title = title;
+        this.contents = contents;
+        this.date = date;
+        this.category = category;
+    }
+
+    public EnterFeedRequestDto(String title, String contents, FeedCategory category)
+    {
+        this.title = title;
+        this.contents = contents;
+        this.category = category;
+    }
 }

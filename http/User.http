@@ -6,7 +6,7 @@ Content-Type: application/json
   "id": "user1",
   "name": "user1",
   "nickname": "user11",
-  "email": "user1@email.com",
+  "email": "7642510@naver.com",
   "password": "test1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
 }
@@ -31,11 +31,11 @@ POST http://localhost:8080/users/invite/artist
 Content-Type: application/json
 
 {
-  "id": "artist1",
-  "name": "artist1",
-  "nickname": "artist1",
-  "email": "artist1@gmail.com",
-  "password": "artist123!@#",
+  "id": "test2",
+  "name": "artist2",
+  "nickname": "artist2",
+  "email": "artist2@gmail.com",
+  "password": "test1234",
   "profileImage": "",
   "artist": true,
   "artistToken": "acRos3knitterUp2eTt1ng5"
@@ -49,7 +49,7 @@ Content-Type: application/json
   "id": "enter1",
   "name": "SMENTERTAINMENT",
   "nickname": "enter1",
-  "email": "smentertainment1@email.com",
+  "email": "7642510@naver.com",
   "password": "test1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
   "entertainment": true,

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -33,7 +34,7 @@ public class ArtistController {
     @PostMapping
     public ResponseEntity<ResponseMessageDto> createArtist(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestBody final ArtistRequestDto requestDto) {
+            @Valid @ModelAttribute ArtistRequestDto requestDto) {
 
         artistService.createArtist(userDetails, requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_CREATED));

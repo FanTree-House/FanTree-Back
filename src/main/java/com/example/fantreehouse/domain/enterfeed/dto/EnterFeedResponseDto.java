@@ -13,15 +13,13 @@ public class EnterFeedResponseDto {
     private Long id;
     private String title;
     private String contents;
-    private String postPicture;
     private FeedCategory category;
     private LocalDate date;
 
-    public EnterFeedResponseDto(Long id, String title, String contents, String postPicture, FeedCategory category, LocalDate   date) {
+    public EnterFeedResponseDto(Long id, String title, String contents,  FeedCategory category, LocalDate   date) {
         this.id = id;
         this.title = title;
         this.contents = contents;
-        this.postPicture = postPicture;
         this.category = category;
         this.date = date;
     }

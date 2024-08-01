@@ -1,9 +1,11 @@
 package com.example.fantreehouse.domain.artist.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class ArtistRequestDto {
@@ -13,7 +15,11 @@ public class ArtistRequestDto {
     @NotBlank(message = "활동명을 입력해주세요.")
     private String artistName; //활동명
 
-    @NotBlank(message = "프로필사진을 업로드해주세요.")
-    private String artistProfilePicture;
+    private MultipartFile file;
 
+    @JsonCreator //object mapper에서 생성자를 찾는 어노테이션 생성자를 못찾을떄 , 비선호어노테이션
+    public ArtistRequestDto(String artistName, MultipartFile file) {
+        this.artistName = artistName;
+        this.file = file;
+    }
 }
