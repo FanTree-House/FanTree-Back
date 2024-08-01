@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ArtistGroupRepository extends JpaRepository<ArtistGroup, Long> {
-    List<ArtistGroup> findAllByEntertainmentEnterName(String enterName);
-
-    Optional<ArtistGroup> findByEntertainmentEnterNameAndGroupName(String enterName, String groupName);
 
     Optional<ArtistGroup> findByGroupName(String groupName);
 

@@ -32,16 +32,15 @@ public class ArtistGroupService {
 
     /**
      * [createArtistGroup] 아티스트 그룹 생성
-     * @param enterName 엔터테인먼트 이름
      * @param request 요청 객체
      * @param user 로그인한 사용자 정보
      * @return 생성된 아티스트 그룹
      */
     @Transactional
-    public ArtistGroup createArtistGroup(String enterName, ArtistGroupRequestDto request, User user) {
+    public ArtistGroup createArtistGroup(ArtistGroupRequestDto request, User user) {
         verifyEntertainmentAuthority(user);
 
-        Entertainment entertainment = entertainmentRepository.findByEnterName(enterName)
+        Entertainment entertainment = entertainmentRepository.findByEnterName(request.getEnterName())
                 .orElseThrow(() -> new CustomException(ErrorType.ENTERTAINMENT_NOT_FOUND));
 
         if (artistGroupRepository.findByGroupName(request.getGroupName()).isPresent()) {
@@ -52,7 +51,8 @@ public class ArtistGroupService {
                 request.getGroupName(),
                 request.getArtistProfilePicture(),
                 request.getGroupInfo(),
-                entertainment
+                entertainment,
+                request.getEnterName()
         );
 
         for (Long artistId : request.getArtistIds()) {
@@ -66,22 +66,20 @@ public class ArtistGroupService {
 
     /**
      * [getArtistGroupResponseDto] 아티스트 그룹 DTO 조회
-     * @param enterName 엔터테인먼트 이름
      * @param groupName 그룹 이름
      * @return 아티스트 그룹 응답 DTO
      */
-    public ArtistGroupResponseDto getArtistGroupResponseDto(String enterName, String groupName) {
-        ArtistGroup artistGroup = getArtistGroup(enterName, groupName);
+    public ArtistGroupResponseDto getArtistGroupResponseDto(String groupName) {
+        ArtistGroup artistGroup = getArtistGroup(groupName);
         return convertToResponseDto(artistGroup);
     }
 
     /**
      * [getAllArtistGroupResponseDtos] 모든 아티스트 그룹 DTO 조회
-     * @param enterName 엔터테인먼트 이름
      * @return 아티스트 그룹 응답 DTO 리스트
      */
-    public List<ArtistGroupResponseDto> getAllArtistGroupResponseDtos(String enterName) {
-        List<ArtistGroup> artistGroups = getAllArtistGroups(enterName);
+    public List<ArtistGroupResponseDto> getAllArtistGroupResponseDtos() {
+        List<ArtistGroup> artistGroups = getAllArtistGroups();
         return artistGroups.stream()
                 .map(this::convertToResponseDto)
                 .collect(Collectors.toList());
@@ -116,16 +114,15 @@ public class ArtistGroupService {
 
     /**
      * [updateArtistGroup] 아티스트 그룹 수정
-     * @param enterName 엔터테인먼트 이름
      * @param groupName 그룹 이름
      * @param request 요청 객체
      * @param user 로그인한 사용자 정보
      * @return 수정된 아티스트 그룹
      */
     @Transactional
-    public ArtistGroup updateArtistGroup(String enterName, String groupName, ArtistGroupRequestDto request, User user) {
+    public ArtistGroup updateArtistGroup(String groupName, ArtistGroupRequestDto request, User user) {
         verifyEntertainmentOrAdminAuthority(user);
-        ArtistGroup artistGroup = getArtistGroup(enterName, groupName);
+        ArtistGroup artistGroup = getArtistGroup(groupName);
         artistGroup.setGroupName(request.getGroupName());
         artistGroup.setArtistProfilePicture(request.getArtistProfilePicture());
         artistGroup.setGroupInfo(request.getGroupInfo());
@@ -142,16 +139,15 @@ public class ArtistGroupService {
 
     /**
      * [removeArtistFromGroup] 아티스트 그룹에서 아티스트 탈퇴
-     * @param enterName 엔터테인먼트 이름
      * @param groupName 그룹 이름
      * @param artistId 아티스트 ID
      * @param user 로그인한 사용자 정보
      */
     @Transactional
-    public void removeArtistFromGroup(String enterName, String groupName, Long artistId, User user) {
+    public void removeArtistFromGroup(String groupName, Long artistId, User user) {
         verifyEntertainmentOrAdminAuthority(user);
 
-        ArtistGroup artistGroup = getArtistGroup(enterName, groupName);
+        ArtistGroup artistGroup = getArtistGroup(groupName);
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new CustomException(ErrorType.ARTIST_NOT_FOUND));
 
@@ -170,15 +166,14 @@ public class ArtistGroupService {
 
     /**
      * [deleteArtistGroup] 아티스트 그룹 삭제
-     * @param enterName 엔터테인먼트 이름
      * @param groupName 그룹 이름
      * @param user 로그인한 사용자 정보
      */
     @Transactional
-    public void deleteArtistGroup(String enterName, String groupName, User user) {
+    public void deleteArtistGroup(String groupName, User user) {
         verifyEntertainmentOrAdminAuthority(user);
 
-        ArtistGroup artistGroup = getArtistGroup(enterName, groupName);
+        ArtistGroup artistGroup = getArtistGroup(groupName);
         artistGroupRepository.delete(artistGroup);
     }
 
@@ -204,22 +199,20 @@ public class ArtistGroupService {
 
     /**
      * [getArtistGroup] 아티스트 그룹 조회
-     * @param enterName 엔터테인먼트 이름
      * @param groupName 그룹 이름
      * @return 아티스트 그룹
      */
-    private ArtistGroup getArtistGroup(String enterName, String groupName) {
-        return artistGroupRepository.findByEntertainmentEnterNameAndGroupName(enterName, groupName)
+    private ArtistGroup getArtistGroup(String groupName) {
+        return artistGroupRepository.findByGroupName(groupName)
                 .orElseThrow(() -> new CustomException(ErrorType.ARTIST_GROUP_NOT_FOUND));
     }
 
     /**
      * [getAllArtistGroups] 모든 아티스트 그룹 조회
-     * @param enterName 엔터테인먼트 이름
      * @return 아티스트 그룹 리스트
      */
-    private List<ArtistGroup> getAllArtistGroups(String enterName) {
-        return artistGroupRepository.findAllByEntertainmentEnterName(enterName);
+    private List<ArtistGroup> getAllArtistGroups() {
+        return artistGroupRepository.findAll();
     }
 
     /**
@@ -232,6 +225,6 @@ public class ArtistGroupService {
         List<ArtistResponseDto> artistDtos = artistGroup.getArtists().stream()
                 .map(artist -> new ArtistResponseDto(artist.getId(), artist.getArtistName()))
                 .collect(Collectors.toList());
-        return new ArtistGroupResponseDto(artistGroup.getId(), artistGroup.getGroupName(), artistGroup.getArtistProfilePicture(), entertainmentDto, artistDtos);
+        return new ArtistGroupResponseDto(artistGroup.getId(), artistGroup.getGroupName(), artistGroup.getArtistProfilePicture(), entertainmentDto, artistDtos, artistGroup.getEnterName());
     }
 }

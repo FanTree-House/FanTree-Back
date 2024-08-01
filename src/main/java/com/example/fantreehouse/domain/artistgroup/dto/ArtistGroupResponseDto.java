@@ -13,13 +13,15 @@ public class ArtistGroupResponseDto {
     private String artistProfilePicture;
     private EntertainmentResponseDto entertainmentDto;
     private List<ArtistResponseDto> artistDtos;
+    private String enterName;
 
-    public ArtistGroupResponseDto(Long id, String groupName, String artistProfilePicture, EntertainmentResponseDto entertainmentDto, List<ArtistResponseDto> artistDtos) {
+    public ArtistGroupResponseDto(Long id, String groupName, String artistProfilePicture, EntertainmentResponseDto entertainmentDto, List<ArtistResponseDto> artistDtos, String enterName) {
         this.id = id;
         this.groupName = groupName;
         this.artistProfilePicture = artistProfilePicture;
         this.entertainmentDto = entertainmentDto;
         this.artistDtos = artistDtos;
+        this.enterName = enterName;
     }
 
 
