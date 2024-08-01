@@ -1,6 +1,7 @@
 package com.example.fantreehouse.domain.feed.service;
 
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artist.entity.Artist;
@@ -16,6 +17,8 @@ import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feed.repository.FeedRepository;
 import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.feedlike.repository.FeedLikeRepository;
+import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
+import com.example.fantreehouse.domain.s3.service.S3FileUploader;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
@@ -26,11 +29,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.common.enums.PageSize.FEED_PAGE_SIZE;
+import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +47,7 @@ public class FeedService {
     private final ArtistRepository artistRepository;
     private final ArtistGroupRepository artistGroupRepository;
     private final FeedLikeRepository feedLikeRepository;
+    private final S3FileUploader s3FileUploader;
 
 
     /**
@@ -48,12 +55,13 @@ public class FeedService {
      *
      * @param groupName
      * @param userDetails
-//     * @param file
+     * @param files
      * @param requestDto
      * @return
      */
     @Transactional
-    public CreateFeedResponseDto createFeed(String groupName, UserDetailsImpl userDetails, CreateFeedRequestDto requestDto) {
+    public CreateFeedResponseDto createFeed(String groupName, UserDetailsImpl userDetails,
+                                            List<MultipartFile> files, CreateFeedRequestDto requestDto) {
 
         User loginUser = userDetails.getUser(); //로그인 유저
         checkUserStatus(loginUser.getStatus()); // 활성유저인지 확인
@@ -69,14 +77,29 @@ public class FeedService {
             throw new NotFoundException(ARTIST_NOT_FOUND);
         }
 
-        Feed newFeed = Feed.of(requestDto, loginUser, artistGroup);//file 기능 전 임시 사용
+        Feed newFeed = Feed.of(requestDto, loginUser, artistGroup);
         feedRepository.save(newFeed);
+
+        List<String> imageUrls = new ArrayList<>();
+        if (areFilesExist(files)) { //이미지가 존재할 때만
+            try {
+                for (MultipartFile file : files) {
+                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, requestDto.getArtistName(), newFeed.getId());
+                    imageUrls.add(imageUrl);
+                }
+            } catch (Exception e) {
+                throw new S3Exception(UPLOAD_ERROR);
+            }
+        }
+
+        ImageUrlCarrier carrier = new ImageUrlCarrier(newFeed.getId(), imageUrls);
+        updateFeedImageUrls(carrier);
+
         return CreateFeedResponseDto.of(newFeed);
     }
 
     /**
      * Feed 수정
-     *
      * @param groupName
      * @param artistFeedId
      * @param userDetails
@@ -84,7 +107,8 @@ public class FeedService {
      * @return
      */
     @Transactional
-    public UpdateFeedResponseDto updateFeed(String groupName, Long artistFeedId, UserDetailsImpl userDetails, UpdateFeedRequestDto requestDto) {
+    public UpdateFeedResponseDto updateFeed(String groupName, Long artistFeedId, UserDetailsImpl userDetails,
+                                            List<MultipartFile> files, UpdateFeedRequestDto requestDto) {
 
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
@@ -98,14 +122,26 @@ public class FeedService {
         checkArtistGroup(loginArtist, groupName);
         checkWriter(loginUser.getId(), foundFeed.getUser().getId());
 
-//        //파일 경로 추출 후, updateFeed 매개변수로 넣기 (file 은 임시)
-//        String filePath = ;
+        foundFeed.updateFeed(requestDto);
 
-//        Feed updatedFeed = foundFeed.updateFeed(requestDto, filePath);
-        foundFeed.updateFeed(requestDto); //file 기능 전 임시 사용
+        List<String> imageUrls = new ArrayList<>();
+        if (areFilesExist(files)) {
+            try {
+                for (MultipartFile file : files) {
+                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, loginArtist.getArtistName(), foundFeed.getId());
+                    imageUrls.add(imageUrl);
+                }
+            } catch (Exception e) {
+                throw new S3Exception(UPLOAD_ERROR);
+            }
+        }
+
+        ImageUrlCarrier carrier = new ImageUrlCarrier(foundFeed.getId(), imageUrls);
+        updateFeedImageUrls(carrier);
 
         return UpdateFeedResponseDto.of(foundFeed);
     }
+
 
     /**
      * Feed 단건 조회 - 로그인 회원 누구나
@@ -181,6 +217,7 @@ public class FeedService {
             throw new UnAuthorizedException(UNAUTHORIZED);
         }
 
+        s3FileUploader.deleteFilesFromS3(foundFeed.getImageUrls());
         feedRepository.delete(foundFeed);
     }
 
@@ -195,6 +232,15 @@ public class FeedService {
     private void checkUserRole(UserRoleEnum userRoleEnum) {
         if (!userRoleEnum.equals(UserRoleEnum.ARTIST)) {
             throw new UnAuthorizedException(UNAUTHORIZED);
+        }
+    }
+
+    private void updateFeedImageUrls(ImageUrlCarrier carrier) {
+        if (!carrier.getImageUrls().isEmpty()) {
+            Feed feed = feedRepository.findById(carrier.getId())
+                    .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
+            feed.updateImageUrls(carrier.getImageUrls());
+            feedRepository.save(feed);
         }
     }
 

@@ -2,6 +2,8 @@ package com.example.fantreehouse.domain.communityfeed.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
+import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
@@ -13,6 +15,8 @@ import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequ
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
 import com.example.fantreehouse.domain.feed.entity.Feed;
+import com.example.fantreehouse.domain.s3.service.S3FileUploader;
+import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import com.example.fantreehouse.domain.subscription.repository.SubscriptionRepository;
 import com.example.fantreehouse.domain.user.entity.User;
@@ -23,11 +27,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ssl.DefaultSslBundleRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.fantreehouse.common.enums.ErrorType.NOT_AVAILABLE_PERMISSION;
-import static com.example.fantreehouse.common.enums.ErrorType.NOT_MATCH_USER;
+import static com.example.fantreehouse.common.enums.ErrorType.*;
+import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +45,12 @@ public class CommunityFeedService {
     private final ArtistGroupRepository artistGroupRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final CommunityLikeRepository likeRepository;
+    private final S3FileUploader s3FileUploader;
 
     @Transactional //피드생성
     public CommunityFeedResponseDto createFeed(
         CommunityFeedRequestDto requestDto,
+        List<MultipartFile> files,
         Long userId,
         String groupName) {
         User user = findUser(userId);
@@ -54,7 +62,32 @@ public class CommunityFeedService {
 
         CommunityFeed feed = new CommunityFeed(requestDto, user, artistGroup);
         feedRepository.save(feed);
+
+        List<String> imageUrls = new ArrayList<>();
+        if (areFilesExist(files)) {
+            try {
+                for (MultipartFile file : files) {
+                    String imageUrl = s3FileUploader.saveCommunityImage(file, groupName, feed.getId());
+                    imageUrls.add(imageUrl);
+                }
+            } catch (Exception e) {
+                throw new S3Exception(UPLOAD_ERROR);
+            }
+        }
+
+        ImageUrlCarrier carrier = new ImageUrlCarrier(feed.getId(), imageUrls);
+        updateCommunityFeedImageUrls(carrier);
+
         return new CommunityFeedResponseDto(feed);
+    }
+
+    private void updateCommunityFeedImageUrls(ImageUrlCarrier carrier) {
+        if (!carrier.getImageUrls().isEmpty()) {
+            CommunityFeed feed = feedRepository.findById(carrier.getId())
+                    .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
+            feed.updateImageUrls(carrier.getImageUrls());
+            feedRepository.save(feed);
+        }
     }
 
     //    피드 전체 조회
@@ -90,7 +123,7 @@ public class CommunityFeedService {
 
     //피드 업데이트
     @Transactional
-    public void updateFeed(CommunityFeedUpdateRequestDto requestDto, Long feedId, Long userId, String groupName) {
+    public void updateFeed(CommunityFeedUpdateRequestDto requestDto, List<MultipartFile> files, Long feedId, Long userId, String groupName) {
         User user = findUser(userId);
         ArtistGroup artistGroup = findArtistGroup(groupName);
         CommunityFeed feed = findFeed(feedId);
@@ -98,6 +131,21 @@ public class CommunityFeedService {
             throw new CustomException(ErrorType.NOT_USER_FEED);
         }
         feed.updateFeed(requestDto);
+
+        List<String> imageUrls = new ArrayList<>();
+        if (areFilesExist(files)) {
+            try {
+                for (MultipartFile file : files) {
+                    String imageUrl = s3FileUploader.saveCommunityImage(file, groupName, feed.getId());
+                    imageUrls.add(imageUrl);
+                }
+            } catch (Exception e) {
+                throw new S3Exception(UPLOAD_ERROR);
+            }
+        }
+
+        ImageUrlCarrier carrier = new ImageUrlCarrier(feed.getId(), imageUrls);
+        updateCommunityFeedImageUrls(carrier);
     }
 
     // 피드 삭제 - 작성자와 UserRole이 엔터와 어드민이면 삭제가능

@@ -26,7 +26,7 @@ public class SignUpRequestDto {
   @Size(min = 8, max = 15)
   private String password;
 
-  private String profileImage;
+  private String profileImageUrl;
 
   private boolean admin = false;
   private String adminToken = "";
@@ -36,5 +36,9 @@ public class SignUpRequestDto {
 
   private boolean entertainment = false;
   private String entertainmentToken = "";
+
+  public void updateImageUrl(String imageUrl) {
+    this.profileImageUrl = (imageUrl);
+  }
 
 }

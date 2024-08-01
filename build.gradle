@@ -50,8 +50,12 @@ dependencies {
 
     //redis 추가
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-}
 
+
+    //AWS 관련
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.0'
+
+}
 tasks.named('test') {
     useJUnitPlatform()
 }

@@ -33,7 +33,8 @@ public class Product extends Timestamped {
     private String artist;
 
     @Column
-    private String productPicture;
+    @ElementCollection
+    private List<String> productPictureUrl;
 
     @Column
     private Integer price;
@@ -46,7 +47,7 @@ public class Product extends Timestamped {
         this.stock = productRequestDto.getStock();
         this.type = productRequestDto.getType();
         this.artist = productRequestDto.getArtist();
-        this.productPicture = productRequestDto.getProductPicture();
+//        this.productPictureUrl = productRequestDto.getproductPictureUrl();
         this.price = productRequestDto.getPrice();
     }
 
@@ -66,11 +67,16 @@ public class Product extends Timestamped {
         this.artist = artist;
     }
 
-    public void updateProductPicture(String productPicture) {
-        this.productPicture = productPicture;
-    }
+//    public void updateProductPicture(String productPicture) {
+//        this.productPicture = productPicture;
+//    }
 
     public void updatePrice(Integer price) {
         this.price = price;
+    }
+
+    public void updateImageUrls(List<String> imageUrls) {
+        this.productPictureUrl.clear();
+        this.productPictureUrl.addAll(imageUrls);
     }
 }

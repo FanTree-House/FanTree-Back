@@ -3,6 +3,7 @@ package com.example.fantreehouse.domain.artistgroup.controller;
 import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupRequestDto;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupResponseDto;
@@ -12,8 +13,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static com.example.fantreehouse.common.enums.ErrorType.OVER_LOAD;
 
 @RestController
 @RequestMapping("/entertainments")
@@ -29,23 +33,29 @@ public class ArtistGroupController {
 
     /**
      * [createArtistGroup] 아티스트 그룹 생성
-     * @param enterName 엔터테인먼트 이름
-     * @param request 요청 객체
+     *
+     * @param enterName   엔터테인먼트 이름
+     * @param request     요청 객체
      * @param userDetails 로그인한 사용자 정보
      * @return 응답 메시지 DTO
      */
     @PostMapping("/{enterName}")
     public ResponseEntity<ResponseMessageDto> createArtistGroup(
             @PathVariable String enterName,
-            @RequestBody ArtistGroupRequestDto request,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-        artistGroupService.createArtistGroup(enterName, request, userDetails.getUser());
+            @RequestPart MultipartFile file,
+            @RequestPart ArtistGroupRequestDto request,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new S3Exception(OVER_LOAD);
+        }
+        artistGroupService.createArtistGroup(enterName, file, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_GROUP_CREATE_SUCCESS));
     }
 
     /**
      * [getArtistGroup] 아티스트 그룹 조회
+     *
      * @param enterName 엔터테인먼트 이름
      * @param groupName 그룹 이름
      * @return 아티스트 그룹 응답 DTO
@@ -61,6 +71,7 @@ public class ArtistGroupController {
 
     /**
      * [getAllArtistGroups] 모든 아티스트 그룹 조회
+     *
      * @param enterName 엔터테인먼트 이름
      * @return 아티스트 그룹 응답 DTO 리스트
      */
@@ -72,6 +83,7 @@ public class ArtistGroupController {
 
     /**
      * 아티스트그룹 검색 조회
+     *
      * @param groupName
      * @param page
      * @param size
@@ -86,30 +98,36 @@ public class ArtistGroupController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_READ_SUCCESS, responseDto));
     }
 
-        /**
-         * [updateArtistGroup] 아티스트 그룹 수정
-         * @param enterName 엔터테인먼트 이름
-         * @param groupName 그룹 이름
-         * @param request 요청 객체
-         * @param userDetails 로그인한 사용자 정보
-         * @return 응답 메시지 DTO
-         */
+    /**
+     * [updateArtistGroup] 아티스트 그룹 수정
+     *
+     * @param enterName   엔터테인먼트 이름
+     * @param groupName   그룹 이름
+     * @param request     요청 객체
+     * @param userDetails 로그인한 사용자 정보
+     * @return 응답 메시지 DTO
+     */
     @PatchMapping("/{enterName}/{groupName}")
     public ResponseEntity<ResponseMessageDto> updateArtistGroup(
             @PathVariable String enterName,
             @PathVariable String groupName,
-            @RequestBody ArtistGroupRequestDto request,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-        artistGroupService.updateArtistGroup(enterName, groupName, request, userDetails.getUser());
+            @RequestPart(required = false) MultipartFile file,
+            @RequestPart ArtistGroupRequestDto request,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        if (file != null && file.getSize() > 10 * 1024 * 1024) {
+            throw new S3Exception(OVER_LOAD);
+        }
+        artistGroupService.updateArtistGroup(enterName, groupName, file, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_GROUP_UPDATE_SUCCESS));
     }
 
     /**
      * [removeArtistFromGroup] 아티스트 그룹에서 아티스트 탈퇴
-     * @param enterName 엔터테인먼트 이름
-     * @param groupName 그룹 이름
-     * @param artistId 아티스트 ID
+     *
+     * @param enterName   엔터테인먼트 이름
+     * @param groupName   그룹 이름
+     * @param artistId    아티스트 ID
      * @param userDetails 로그인한 사용자 정보
      * @return 응답 메시지 DTO
      */
@@ -126,8 +144,9 @@ public class ArtistGroupController {
 
     /**
      * [deleteArtistGroup] 아티스트 그룹 삭제
-     * @param enterName 엔터테인먼트 이름
-     * @param groupName 그룹 이름
+     *
+     * @param enterName   엔터테인먼트 이름
+     * @param groupName   그룹 이름
      * @param userDetails 로그인한 사용자 정보
      * @return 응답 메시지 DTO
      */

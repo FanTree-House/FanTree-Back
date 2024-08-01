@@ -22,8 +22,8 @@ public class ProductRequestDto {
     @Size(min = 1, max = 20, message = "상품명은 최대 20글자 입니다.")
     private String artist;
 
-    @NotBlank(message = "상품사진을 등록해주세요.")
-    private String productPicture;
+//    @NotBlank(message = "상품사진을 등록해주세요.")
+//    private String productPicture;
 
     @NotNull(message = "가격을 설정해주세요.")
     private  Integer price;

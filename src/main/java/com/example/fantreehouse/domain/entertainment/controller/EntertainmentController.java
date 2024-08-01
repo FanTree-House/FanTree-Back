@@ -4,6 +4,7 @@ package com.example.fantreehouse.domain.entertainment.controller;
 import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentRequestDto;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentResponseDto;
@@ -13,6 +14,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import static com.example.fantreehouse.common.enums.ErrorType.OVER_LOAD;
 
 @RestController
 @AllArgsConstructor
@@ -29,9 +33,14 @@ public class EntertainmentController {
      */
     @PostMapping
     public ResponseEntity<ResponseMessageDto> createEnter(
-            @Valid @RequestBody EntertainmentRequestDto enterRequestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        entertainmentService.createEnter(enterRequestDto , userDetails.getUser().getId());
+            @RequestPart(value = "file") MultipartFile file,
+            @Valid @RequestPart EntertainmentRequestDto enterRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new S3Exception(OVER_LOAD);
+        }
+        entertainmentService.createEnter(file, enterRequestDto , userDetails.getUser().getId());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ENTERTAINMENT_CREATE_SUCCESS));
     }
 
@@ -58,10 +67,15 @@ public class EntertainmentController {
      */
     @PatchMapping("/{enterName}")
     public ResponseEntity<ResponseMessageDto> updateEnter(
+            @RequestPart(value = "file") MultipartFile file,
             @PathVariable String enterName,
             @RequestBody EntertainmentRequestDto enterRequestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        entertainmentService.updateEnter(enterName, enterRequestDto , userDetails.getUser());
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new S3Exception(OVER_LOAD);
+        }
+        entertainmentService.updateEnter(file, enterName, enterRequestDto , userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ENTERTAINMENT_UPDATAE_SUCCESS));
     }
 

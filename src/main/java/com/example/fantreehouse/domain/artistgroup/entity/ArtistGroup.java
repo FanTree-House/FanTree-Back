@@ -27,7 +27,8 @@ public class ArtistGroup extends Timestamped {
     @Column(nullable = false, unique = true)
     private String groupName;
 
-    private String artistProfilePicture;
+    private String artistGroupProfileImageUrl;
+
     private String groupInfo;
 
 
@@ -56,23 +57,23 @@ public class ArtistGroup extends Timestamped {
     @OneToMany(mappedBy = "artistGroup")
     private List<Feed> feedList = new ArrayList<>();
 
-    public ArtistGroup(String groupName, String artistProfilePicture, Entertainment entertainment) {
+    public ArtistGroup(String groupName, String artistGroupProfileImageUrl, Entertainment entertainment) {
         this.groupName = groupName;
-        this.artistProfilePicture = artistProfilePicture;
+        this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;
         this.entertainment = entertainment;
     }
 
 
-    public ArtistGroup(String groupName, String artistProfilePicture, String groupInfo, Entertainment entertainment) {
+    public ArtistGroup(String groupName, String artistGroupProfileImageUrl, String groupInfo, Entertainment entertainment) {
         this.groupName = groupName;
-        this.artistProfilePicture = artistProfilePicture;
+        this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;
         this.groupInfo = groupInfo;
         this.entertainment = entertainment;
     }
 
     public ArtistGroup(ArtistGroup artistGroup) {
         this.groupName = artistGroup.getGroupName();
-        this.artistProfilePicture = artistGroup.getArtistProfilePicture();
+        this.artistGroupProfileImageUrl = artistGroup.getArtistGroupProfileImageUrl();
     }
 
     // 아티스트 추가 메서드
@@ -100,8 +101,8 @@ public class ArtistGroup extends Timestamped {
     }
 
     // 아티스트 프로필 사진 설정 메서드
-    public void setArtistProfilePicture(String artistProfilePicture) {
-        this.artistProfilePicture = artistProfilePicture;
+    public void setArtistGroupProfileUrl(String artistGroupProfileImageUrl) {
+        this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;
     }
 
     // 아티스트 제거 메서드
@@ -116,6 +117,10 @@ public class ArtistGroup extends Timestamped {
 
     public void setGroupInfo(String groupInfo) {
         this.groupInfo = groupInfo;
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.artistGroupProfileImageUrl = (imageUrl);
     }
 
 

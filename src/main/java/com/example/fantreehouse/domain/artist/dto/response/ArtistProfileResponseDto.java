@@ -8,24 +8,24 @@ import lombok.Getter;
 public class ArtistProfileResponseDto {
 
     private String artistName; //활동명
-    private String artistProfilePicture;
-    private Long subscriberCount;
+    private String getArtistProfileImageUrl;
     private ArtistGroup artistGroup;
+    private String introduction;
 
-    public ArtistProfileResponseDto(String artistName, String artistProfilePicture,
-                                    Long subscriberCount, ArtistGroup artistGroup) {
+    public ArtistProfileResponseDto(String artistName, String getArtistProfileImageUrl,
+                                    ArtistGroup artistGroup, String introduction) {
         this.artistName = artistName;
-        this.artistProfilePicture = artistProfilePicture;
-        this.subscriberCount = subscriberCount;
+        this.getArtistProfileImageUrl = getArtistProfileImageUrl;
         this.artistGroup = artistGroup;
+        this.introduction = introduction;
     }
 
     public static ArtistProfileResponseDto of(Artist artist) {
         return new ArtistProfileResponseDto(
                 artist.getArtistName(),
-                artist.getArtistProfilePicture(),
-                artist.getSubscriberCount(),
-                artist.getArtistGroup()
+                artist.getArtistProfileImageUrl(),
+                artist.getArtistGroup(),
+                artist.getIntroduction()
         );
     }
 

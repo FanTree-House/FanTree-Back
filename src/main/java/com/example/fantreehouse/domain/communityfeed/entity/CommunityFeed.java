@@ -27,6 +27,9 @@ public class CommunityFeed extends Timestamped {
     private String post_picture;
     private String nickname;
     private Long likes = 0L;
+
+    @ElementCollection
+    private List<String> imageUrls = new ArrayList<>();
     //유저와 다대일 매핑
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -66,5 +69,10 @@ public class CommunityFeed extends Timestamped {
     public void pressFeedIsLike(User user, CommunityFeed feed) {
         this.user = user;
         this.likes = feed.getLikes() - 1L;
+    }
+
+    public void updateImageUrls(List<String> imageUrls) {
+        this.imageUrls.clear();
+        this.imageUrls.addAll(imageUrls);
     }
 }
