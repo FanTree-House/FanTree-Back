@@ -15,7 +15,8 @@ public class ArtistGroupResponseDto {
     private List<ArtistResponseDto> artistDtos;
     private String enterName;
 
-    public ArtistGroupResponseDto(Long id, String groupName, String artistGroupProfileImageUrl, EntertainmentResponseDto entertainmentDto, List<ArtistResponseDto> artistDtos, String enterName) {
+    public ArtistGroupResponseDto(Long id, String groupName, String artistGroupProfileImageUrl, EntertainmentResponseDto entertainmentDto,
+                                  List<ArtistResponseDto> artistDtos, String enterName) {
         this.id = id;
         this.groupName = groupName;
         this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;

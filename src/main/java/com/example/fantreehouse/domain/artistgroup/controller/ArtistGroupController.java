@@ -108,7 +108,7 @@ public class ArtistGroupController {
         if (file != null && file.getSize() > 10 * 1024 * 1024) {
             throw new S3Exception(OVER_LOAD);
         }
-        artistGroupService.updateArtistGroup(enterName, groupName, file, request, userDetails.getUser());
+        artistGroupService.updateArtistGroup(groupName, file, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_GROUP_UPDATE_SUCCESS));
     }
 

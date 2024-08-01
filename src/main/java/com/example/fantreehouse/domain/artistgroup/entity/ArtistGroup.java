@@ -58,16 +58,10 @@ public class ArtistGroup extends Timestamped {
     @OneToMany(mappedBy = "artistGroup")
     private List<Feed> feedList = new ArrayList<>();
 
-    public ArtistGroup(String groupName, String artistGroupProfileImageUrl, Entertainment entertainment) {
-        this.groupName = groupName;
-        this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;
-        this.entertainment = entertainment;
-    }
 
-
-    public ArtistGroup(String groupName, String artistGroupProfileImageUrl, String groupInfo, Entertainment entertainment) {
+    public ArtistGroup(String groupName, String groupInfo, Entertainment entertainment) {
         this.groupName = groupName;
-        this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;
+        this.artistGroupProfileImageUrl = "default";
         this.groupInfo = groupInfo;
         this.entertainment = entertainment;
         this.enterName = entertainment.getEnterName();
@@ -103,8 +97,8 @@ public class ArtistGroup extends Timestamped {
     }
 
     // 아티스트 프로필 사진 설정 메서드
-    public void setArtistProfilePicture(String artistProfilePicture) {
-        this.artistProfilePicture = artistProfilePicture;
+    public void setArtistProfilePicture(String artistGroupProfileImageUrl) {
+        this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;
     }
 
     // 아티스트 제거 메서드
@@ -122,4 +116,7 @@ public class ArtistGroup extends Timestamped {
     }
 
 
+    public void updateImageUrl(String imageUrl) {
+        this.artistGroupProfileImageUrl = imageUrl;
+    }
 }
