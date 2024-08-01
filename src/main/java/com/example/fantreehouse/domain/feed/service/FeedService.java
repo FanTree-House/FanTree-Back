@@ -1,5 +1,6 @@
 package com.example.fantreehouse.domain.feed.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
@@ -48,6 +49,7 @@ public class FeedService {
     private final ArtistGroupRepository artistGroupRepository;
     private final FeedLikeRepository feedLikeRepository;
     private final S3FileUploader s3FileUploader;
+    private final AmazonS3Client amazonS3Client;
 
 
     /**
@@ -81,7 +83,7 @@ public class FeedService {
         feedRepository.save(newFeed);
 
         List<String> imageUrls = new ArrayList<>();
-        if (areFilesExist(files)) { //이미지가 존재할 때만
+        if (areFilesExist(files)) {
             try {
                 for (MultipartFile file : files) {
                     String imageUrl = s3FileUploader.saveArtistFeedImage(file, requestDto.getArtistName(), newFeed.getId());
@@ -166,8 +168,13 @@ public class FeedService {
         List<FeedLike> feedLikeList = feedLikeRepository.findAllFeedLikeByFeedId(artistFeedId);
         int feedLikeCount = feedLikeList.size();
 
-        return FeedResponseDto.of(foundFeed, feedLikeCount);
+        List<String> imageUrls = new ArrayList<>();
+
+
+        return FeedResponseDto.of(foundFeed, feedLikeCount, imageUrls);
     }
+
+
 
     //Feed 다건 조회(페이지) - 로그인 회원 누구나
     public Page<FeedResponseDto> getAllFeed(String groupName, UserDetailsImpl userDetails, Integer page) {
@@ -185,7 +192,9 @@ public class FeedService {
                 .map(feed -> {
                     List<FeedLike> feedLikeList = feedLikeRepository.findAllFeedLikeByFeedId(feed.getId());
                     int feedLikeCount = feedLikeList.size();
-                    return FeedResponseDto.of(feed, feedLikeCount);
+
+                    List<String> imageUrls = new ArrayList<>();
+                    return FeedResponseDto.of(feed, feedLikeCount, imageUrls);
                 })
                 .toList();
 

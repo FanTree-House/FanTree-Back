@@ -74,6 +74,6 @@ public class Artist extends Timestamped {
     }
 
     public void updateImageUrl(String imageUrl) {
-        this.artistProfileImageUrl = (imageUrl);
+        this.artistProfileImageUrl = imageUrl;
     }
 }

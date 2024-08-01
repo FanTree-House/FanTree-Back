@@ -31,7 +31,7 @@ public class Feed extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     private List<String> imageUrls = new ArrayList<>();
 
     private int feedLikeCount;

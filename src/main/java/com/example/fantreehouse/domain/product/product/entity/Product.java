@@ -47,7 +47,7 @@ public class Product extends Timestamped {
         this.stock = productRequestDto.getStock();
         this.type = productRequestDto.getType();
         this.artist = productRequestDto.getArtist();
-//        this.productPictureUrl = productRequestDto.getproductPictureUrl();
+        this.productPictureUrl = new ArrayList<>();
         this.price = productRequestDto.getPrice();
     }
 

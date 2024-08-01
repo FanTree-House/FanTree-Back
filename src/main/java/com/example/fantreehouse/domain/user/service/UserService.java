@@ -106,6 +106,7 @@ public class UserService {
                 password,
                 role
         );
+        userRepository.save(user);
 
         String imageUrl;
         try {
@@ -117,7 +118,7 @@ public class UserService {
         ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), imageUrl);
         updateUserImageUrl(carrier);
 
-        userRepository.save(user);
+
         redisUtil.deleteData(id);
         return new SignUpResponseDto(user);
     }

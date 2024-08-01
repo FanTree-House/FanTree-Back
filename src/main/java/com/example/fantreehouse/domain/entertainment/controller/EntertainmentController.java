@@ -69,7 +69,7 @@ public class EntertainmentController {
     public ResponseEntity<ResponseMessageDto> updateEnter(
             @RequestPart(value = "file") MultipartFile file,
             @PathVariable String enterName,
-            @RequestBody EntertainmentRequestDto enterRequestDto,
+            @RequestPart EntertainmentRequestDto enterRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         if (file.getSize() > 10 * 1024 * 1024) {

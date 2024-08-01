@@ -50,6 +50,8 @@ public class EntertainmentService {
         // [예외2] - Entertainment 소속사 이름, 사업자번호 중복체크
         checkEnterNameOrNumberExisits(enter);
 
+        enterRepository.save(enter);
+
         String imageUrl;
         try {
             imageUrl = s3FileUploader.saveProfileImage(file, enter.getId(), UserRoleEnum.ENTERTAINMENT);
@@ -59,8 +61,6 @@ public class EntertainmentService {
 
         ImageUrlCarrier carrier = new ImageUrlCarrier(enter.getId(), imageUrl);
         updateEnterLogoUrl(carrier);
-
-        enterRepository.save(enter);
     }
 
 
@@ -106,6 +106,8 @@ public class EntertainmentService {
             enter.updateEnterNumber(enterRequestDto.getEnterNumber());
         }
 
+        enterRepository.save(enter);
+
         String imageUrl = null;
         if (S3FileUploaderUtil.isFileExists(file)) {
             try {
@@ -117,9 +119,6 @@ public class EntertainmentService {
 
         ImageUrlCarrier carrier = new ImageUrlCarrier(enter.getId(), imageUrl);
         updateEnterLogoUrl(carrier);
-
-        enter.updateEnterLogo(enterRequestDto.getEnterLogo());
-        enterRepository.save(enter);
     }
 
 
@@ -163,6 +162,8 @@ public class EntertainmentService {
             Entertainment entertainment = enterRepository.findById(carrier.getId())
                     .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
             entertainment.updateEnterLogo(carrier.getImageUrl());
+            enterRepository.save(entertainment);
+
         }
     }
 }

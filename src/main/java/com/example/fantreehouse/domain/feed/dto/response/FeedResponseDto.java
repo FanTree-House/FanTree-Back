@@ -18,10 +18,10 @@ public class FeedResponseDto {
         this.likesCount = likesCount;
     }
 
-    public static FeedResponseDto of(Feed feed, int feedLikeCount) {
+    public static FeedResponseDto of(Feed feed, int feedLikeCount, List<String> imageUrls) {
         return new FeedResponseDto(
                 feed.getContents(),
-                feed.getImageUrls(),
+                imageUrls,
                 feedLikeCount
         );
 

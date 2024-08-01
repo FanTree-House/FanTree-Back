@@ -93,7 +93,7 @@ public class ProductController {
             @PathVariable Long productId,
             @RequestBody ProductRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        productService.updateProduct(productId, requestDto, userDetails.getUser());
+        productService.updateProduct(files, productId, requestDto, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.PRODUCT_UPDATE_SUCCESS));
     }
 

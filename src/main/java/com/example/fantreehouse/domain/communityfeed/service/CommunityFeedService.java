@@ -143,7 +143,6 @@ public class CommunityFeedService {
                 throw new S3Exception(UPLOAD_ERROR);
             }
         }
-
         ImageUrlCarrier carrier = new ImageUrlCarrier(feed.getId(), imageUrls);
         updateCommunityFeedImageUrls(carrier);
     }
