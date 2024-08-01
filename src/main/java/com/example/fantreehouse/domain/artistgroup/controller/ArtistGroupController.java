@@ -72,7 +72,7 @@ public class ArtistGroupController {
      * @param size
      * @return
      */
-    @GetMapping("/artistGroup/search")
+    @GetMapping("/search")
     public ResponseEntity<ResponseDataDto<Page<ArtistGroupResponseDto>>> searchArtistGroup(
             @RequestParam String groupName,
             @RequestParam(defaultValue = "0") int page,
@@ -81,13 +81,14 @@ public class ArtistGroupController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_READ_SUCCESS, responseDto));
     }
 
-        /**
-         * [updateArtistGroup] 아티스트 그룹 수정
-         * @param groupName 그룹 이름
-         * @param request 요청 객체
-         * @param userDetails 로그인한 사용자 정보
-         * @return 응답 메시지 DTO
-         */
+
+    /**
+     * [updateArtistGroup] 아티스트 그룹 수정
+     * @param groupName 그룹 이름
+     * @param request 요청 객체
+     * @param userDetails 로그인한 사용자 정보
+     * @return 응답 메시지 DTO
+     */
     @PatchMapping("/{groupName}")
     public ResponseEntity<ResponseMessageDto> updateArtistGroup(
             @PathVariable String groupName,
