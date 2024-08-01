@@ -4,46 +4,45 @@ package com.example.fantreehouse.domain.user.controller;
 import com.example.fantreehouse.auth.JwtTokenHelper;
 import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
+import com.example.fantreehouse.common.enums.ResponseStatus;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
-import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
-import com.example.fantreehouse.domain.user.dto.DuplicateIdRequestDto;
-import com.example.fantreehouse.domain.user.dto.DuplicatedNicknameRequestDto;
-import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
-import com.example.fantreehouse.domain.user.dto.ProfileRequestDto;
-import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
-import com.example.fantreehouse.domain.user.dto.WithdrawRequestDto;
+import com.example.fantreehouse.domain.user.dto.*;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.service.UserService;
-import com.example.fantreehouse.common.enums.ResponseStatus;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import static com.example.fantreehouse.common.enums.ErrorType.OVER_LOAD;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
-  private final UserService userService;
-  private final JwtTokenHelper jwtTokenHelper;
+    private final UserService userService;
+    private final JwtTokenHelper jwtTokenHelper;
 
 
-  @PostMapping(value = {"","/invite/entertainment", "/invite/artist", "/admin"})
-  public ResponseEntity<ResponseMessageDto> signUp(
-      @Valid @RequestBody SignUpRequestDto requestDto) {
-      userService.signUp(requestDto);
-      return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
-  }
+    @PostMapping(value = {"", "/invite/entertainment", "/invite/artist", "/admin"})
+    public ResponseEntity<ResponseMessageDto> signUp(
+            @RequestPart(value = "file") MultipartFile file,
+            @Valid @RequestPart SignUpRequestDto requestDto) {
+
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new S3Exception(OVER_LOAD);
+        }
+        userService.signUp(file, requestDto);
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
+    }
 
   @PutMapping("/withDraw")
   public ResponseEntity<ResponseMessageDto> withDraw(
@@ -81,17 +80,21 @@ public class UserController {
         .body(new ResponseDataDto(ResponseStatus.UPDATE_TOKEN_SUCCESS_MESSAGE, newAccessToken));
   }
 
-  @PutMapping
-  public ResponseEntity<ResponseDataDto> updateProfile(
-      @AuthenticationPrincipal UserDetailsImpl userDetails,
-      @Valid @RequestBody ProfileRequestDto requestDto) {
+    @PutMapping
+    public ResponseEntity<ResponseDataDto> updateProfile(
+            @RequestPart(value = "file") MultipartFile file,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @Valid @RequestPart ProfileRequestDto requestDto) {
 
-    Long userId = userDetails.getUser().getId();
-    ProfileResponseDto updateProfile = userService.updateProfile(userId, requestDto);
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new S3Exception(OVER_LOAD);
+        }
+        Long userId = userDetails.getUser().getId();
+        ProfileResponseDto updateProfile = userService.updateProfile(file, userId, requestDto);
 
-    return ResponseEntity.ok()
-        .body(new ResponseDataDto(ResponseStatus.PROFILE_UPDATE, updateProfile));
-  }
+        return ResponseEntity.ok()
+                .body(new ResponseDataDto(ResponseStatus.PROFILE_UPDATE, updateProfile));
+    }
 
   @GetMapping
   public ResponseEntity<ProfileResponseDto> getProfile(

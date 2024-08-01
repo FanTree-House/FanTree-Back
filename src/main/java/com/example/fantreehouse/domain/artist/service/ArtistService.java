@@ -1,5 +1,6 @@
 package com.example.fantreehouse.domain.artist.service;
 
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
@@ -8,6 +9,11 @@ import com.example.fantreehouse.domain.artist.dto.request.ArtistRequestDto;
 import com.example.fantreehouse.domain.artist.dto.response.ArtistProfileResponseDto;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artist.repository.ArtistRepository;
+import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
+import com.example.fantreehouse.domain.feed.entity.Feed;
+import com.example.fantreehouse.domain.s3.service.S3FileUploader;
+import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
+import com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
@@ -18,6 +24,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.common.enums.PageSize.ARTIST_PAGE_SIZE;
@@ -29,10 +39,11 @@ import static com.example.fantreehouse.common.enums.PageSize.ARTIST_PAGE_SIZE;
 public class ArtistService {
 
     private final ArtistRepository artistRepository;
+    private final S3FileUploader s3FileUploader;
 
     // 아티스트 계정 생성
     @Transactional
-    public void createArtist(UserDetailsImpl userDetails, ArtistRequestDto requestDto) {
+    public void createArtist(UserDetailsImpl userDetails, MultipartFile file, ArtistRequestDto requestDto) {
         User loginUser = userDetails.getUser();
 
         checkUserStatus(loginUser.getStatus());
@@ -53,24 +64,52 @@ public class ArtistService {
         // artist 등록
         Artist newArtist = Artist.of(requestDto, loginUser);
         artistRepository.save(newArtist);
+
+        //이미지 반드시 존재(필수) - if 필요 없음
+        String imageUrl;
+        try{
+            imageUrl = s3FileUploader.saveProfileImage(file, newArtist.getId(), UserRoleEnum.ARTIST);
+        } catch (Exception e) {
+            throw new S3Exception(UPLOAD_ERROR);
+        }
+
+        ImageUrlCarrier carrier = new ImageUrlCarrier(newArtist.getId(), imageUrl);
+        updateArtistImageUrl(carrier);
     }
+
+
 
     // 아티스트 프로필(계정) 수정
     @Transactional
-    public void updateArtist(Long artistId, UserDetailsImpl userDetails, ArtistRequestDto requestDto) {
+    public void updateArtist(Long artistId, UserDetailsImpl userDetails, MultipartFile file, ArtistRequestDto requestDto) {
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
         checkUserRole(loginUser.getUserRole());
 
-        // 로그인한 유저와 수정하고자하는 artist 가 동일한 유저인지 확인
-        // -> 로그인한 유저의 ID로 DB에 있는 artist 인지 확인 후, 그 artist 가 login 유저인지
         Artist foundArtist = artistRepository.findByUserId(userDetails.getUser().getId())
                 .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
         if (!foundArtist.getId().equals(artistId)) {
             throw new UnAuthorizedException(UNAUTHORIZED);
         }
+        //활동명 중복확인
+        boolean isExistName = artistRepository.existsByArtistName(requestDto.getArtistName());
+        if (isExistName) {
+            throw new DuplicatedException(ENROLLED_ARTIST_NAME);
+        }
 
         foundArtist.updateArtist(requestDto);
+
+        String imageUrl = null;
+        if (S3FileUploaderUtil.isFileExists(file)) {
+            try{
+                imageUrl = s3FileUploader.saveProfileImage(file, foundArtist.getId(), UserRoleEnum.ARTIST);
+            } catch (Exception e) {
+                throw new S3Exception(UPLOAD_ERROR);
+            }
+        }
+
+        ImageUrlCarrier carrier = new ImageUrlCarrier(foundArtist.getId(), imageUrl);
+        updateArtistImageUrl(carrier);
 
     }
 
@@ -81,14 +120,15 @@ public class ArtistService {
         Artist foundArtist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
 
+        String url = s3FileUploader.getFileUrl(foundArtist.getArtistProfileImageUrl());
 
-        return ArtistProfileResponseDto.of(foundArtist);
+        return ArtistProfileResponseDto.of(foundArtist, url);
     }
 
     // 아티스트 프로필 전체 조회 - 비가입자 가능
     public Page<ArtistProfileResponseDto> getAllArtist(int page) {
 
-        PageRequest pageRequest = PageRequest.of(page, ARTIST_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "subscriberCount"));
+        PageRequest pageRequest = PageRequest.of(page, ARTIST_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Artist> pageArtist = artistRepository.findAll(pageRequest);
 
         return pageArtist.map(ArtistProfileResponseDto::of);
@@ -106,6 +146,7 @@ public class ArtistService {
             throw new UnAuthorizedException(UNAUTHORIZED);
         }
 
+        s3FileUploader.deleteFileInBucket(foundArtist.getArtistProfileImageUrl());
         artistRepository.delete(foundArtist);
     }
 
@@ -121,4 +162,15 @@ public class ArtistService {
             throw new UnAuthorizedException(UNAUTHORIZED);
         }
     }
+
+    private void updateArtistImageUrl(ImageUrlCarrier carrier) {
+        if (!carrier.getImageUrl().isEmpty()) {
+            Artist artist = artistRepository.findById(carrier.getId())
+                    .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
+            artist.updateImageUrl(carrier.getImageUrl());
+            artistRepository.save(artist);
+        }
+    }
+
+
 }

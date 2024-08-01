@@ -3,6 +3,7 @@ package com.example.fantreehouse.domain.product.product.controller;
 import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.product.product.dto.ProductRequestDto;
 import com.example.fantreehouse.domain.product.product.dto.ProductResponseDto;
@@ -14,6 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+import static com.example.fantreehouse.common.enums.ErrorType.MAX_IMAGES_EXCEEDED;
 
 @RestController
 @AllArgsConstructor
@@ -30,9 +36,10 @@ public class ProductController {
      */
     @PostMapping
     private ResponseEntity<ResponseMessageDto> createProduct(
-            @Valid @RequestBody ProductRequestDto productRequestDto,
+            @RequestPart(value = "file") List<MultipartFile> files,
+            @Valid @RequestPart ProductRequestDto productRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        productService.createProduct(productRequestDto, userDetails.getUser());
+        productService.createProduct(files, productRequestDto, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.PRODUCT_CREATE_SUCCESS));
     }
 
@@ -82,10 +89,11 @@ public class ProductController {
      */
     @PatchMapping("/{productId}")
     private ResponseEntity<ResponseMessageDto> updateProduct(
+            @RequestPart(value = "file", required = false) List<MultipartFile> files,
             @PathVariable Long productId,
             @RequestBody ProductRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        productService.updateProduct(productId, requestDto, userDetails.getUser());
+        productService.updateProduct(files, productId, requestDto, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.PRODUCT_UPDATE_SUCCESS));
     }
 

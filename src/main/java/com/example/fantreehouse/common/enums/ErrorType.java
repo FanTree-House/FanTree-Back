@@ -82,7 +82,6 @@ public enum ErrorType implements ErrorCode {
     NOT_FOUND_FEED_LIKE(HttpStatus.NOT_FOUND, "좋아요한 피드가 아닙니다"),
     NOT_FOUND_COMMENT_LIKE(HttpStatus.NOT_FOUND, "좋아요한 댓글이 아닙니다"),
 
-
     //아티스트그룹
     NOT_FOUND_ARTISTGROUP(HttpStatus.NOT_FOUND, "아티스트그룹을 찾지 못했습니다."),
     UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "권한이 없습니다."),
@@ -95,6 +94,14 @@ public enum ErrorType implements ErrorCode {
     // 상품
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
     NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다."),
+
+    //S3
+    NOT_ALLOWED_EXTENSION(HttpStatus.BAD_REQUEST, "업로드할 수 없는 확장자 파일입니다."),
+    UPLOAD_ERROR(HttpStatus.BAD_REQUEST, "업로드중 오류가 발생했습니다."),
+    DELETE_ERROR(HttpStatus.BAD_REQUEST, "파일 삭제중 오류가 발생했습니다."),
+    NOT_IMAGE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "이미지 파일이 아닙니다."),
+    OVER_LOAD(HttpStatus.NOT_ACCEPTABLE, "사진은 10MB를 초과할 수 없습니다."),
+    MAX_IMAGES_EXCEEDED(HttpStatus.NOT_ACCEPTABLE, "사진은 최대 10장 업로드할 수 있습니다."),
 
     ;
 

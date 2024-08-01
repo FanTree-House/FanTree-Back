@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Table(name = "artist")
@@ -24,9 +26,9 @@ public class Artist extends Timestamped {
     private String artistName; //활동명
 
     @Column(nullable = false)
-    private String artistProfilePicture;
+    private String artistProfileImageUrl;
 
-    private Long subscriberCount;
+    private String introduction;
 
     //아티스트 그룹과 다대일 매핑
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,17 +40,20 @@ public class Artist extends Timestamped {
     private User user;
 
     @Builder
-    public Artist(Long id, String artistName, String artistProfilePicture, User user) {
-        this.id = id;
+    public Artist(String artistName, String artistProfileImageUrl, String introduction,
+                  ArtistGroup artistGroup, User user) {
         this.artistName = artistName;
-        this.artistProfilePicture = artistProfilePicture;
+        this.artistProfileImageUrl = artistProfileImageUrl;
+        this.introduction = introduction;
+        this.artistGroup = artistGroup;
         this.user = user;
     }
 
     public static Artist of(ArtistRequestDto requestDto, User loginUser) {
         return Artist.builder()
                 .artistName(requestDto.getArtistName())
-                .artistProfilePicture(requestDto.getArtistProfilePicture()) //추후변경예정
+                .artistProfileImageUrl("default")
+                .introduction(requestDto.getIntroduction())
                 .user(loginUser)
                 .build();
     }
@@ -65,6 +70,10 @@ public class Artist extends Timestamped {
 
     public void updateArtist(ArtistRequestDto requestDto) {
         this.artistName = requestDto.getArtistName();
-        this.artistProfilePicture = requestDto.getArtistProfilePicture();
+        this.introduction = requestDto.getIntroduction();
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.artistProfileImageUrl = imageUrl;
     }
 }

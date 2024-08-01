@@ -3,6 +3,7 @@ package com.example.fantreehouse.domain.artistgroup.controller;
 import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupRequestDto;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupResponseDto;
@@ -12,8 +13,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static com.example.fantreehouse.common.enums.ErrorType.OVER_LOAD;
 
 @RestController
 @RequestMapping("artistgroup")
@@ -35,10 +39,15 @@ public class ArtistGroupController {
      */
     @PostMapping
     public ResponseEntity<ResponseMessageDto> createArtistGroup(
-            @RequestBody ArtistGroupRequestDto request,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-        artistGroupService.createArtistGroup(request, userDetails.getUser());
+            @PathVariable String enterName,
+            @RequestPart MultipartFile file,
+            @RequestPart ArtistGroupRequestDto request,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new S3Exception(OVER_LOAD);
+        }
+        artistGroupService.createArtistGroup(enterName, file, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_GROUP_CREATE_SUCCESS));
     }
 
@@ -92,10 +101,14 @@ public class ArtistGroupController {
     @PatchMapping("/{groupName}")
     public ResponseEntity<ResponseMessageDto> updateArtistGroup(
             @PathVariable String groupName,
-            @RequestBody ArtistGroupRequestDto request,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-        artistGroupService.updateArtistGroup(groupName, request, userDetails.getUser());
+            @RequestPart(required = false) MultipartFile file,
+            @RequestPart ArtistGroupRequestDto request,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        if (file != null && file.getSize() > 10 * 1024 * 1024) {
+            throw new S3Exception(OVER_LOAD);
+        }
+        artistGroupService.updateArtistGroup(groupName, file, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_GROUP_UPDATE_SUCCESS));
     }
 
@@ -108,6 +121,7 @@ public class ArtistGroupController {
      */
     @DeleteMapping("/{groupName}/artists/{artistId}")
     public ResponseEntity<ResponseMessageDto> removeArtistFromGroup(
+            @PathVariable String enterName,
             @PathVariable String groupName,
             @PathVariable Long artistId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {

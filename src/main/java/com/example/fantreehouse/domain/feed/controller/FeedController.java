@@ -3,6 +3,7 @@ package com.example.fantreehouse.domain.feed.controller;
 import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.feed.dto.request.CreateFeedRequestDto;
 import com.example.fantreehouse.domain.feed.dto.request.UpdateFeedRequestDto;
@@ -10,6 +11,8 @@ import com.example.fantreehouse.domain.feed.dto.response.CreateFeedResponseDto;
 import com.example.fantreehouse.domain.feed.dto.response.FeedResponseDto;
 import com.example.fantreehouse.domain.feed.dto.response.UpdateFeedResponseDto;
 import com.example.fantreehouse.domain.feed.service.FeedService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +23,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.List;
+
+import static com.example.fantreehouse.common.enums.ErrorType.MAX_IMAGES_EXCEEDED;
 
 @Slf4j
 @RestController
@@ -29,24 +34,26 @@ import java.io.IOException;
 public class FeedController {
 
     private final FeedService feedService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * Feed 생성
      *
-     * @param groupName
-//     * @param file
+     * @param groupName  //     * @param file
      * @param requestDto
      * @return
-     * @throws IOException
      */
-//    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PostMapping
     public ResponseEntity<ResponseDataDto<CreateFeedResponseDto>> createFeed(
             @PathVariable final String groupName,
+            @RequestPart(value = "file", required = false) List<MultipartFile> files,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestBody final CreateFeedRequestDto requestDto
+            @Valid @RequestPart final CreateFeedRequestDto requestDto
     ) {
-        CreateFeedResponseDto responseDto = feedService.createFeed(groupName, userDetails, requestDto);
+        if (files != null && files.size() > 10) {
+            throw new S3Exception(MAX_IMAGES_EXCEEDED);
+        }
+        CreateFeedResponseDto responseDto = feedService.createFeed(groupName, userDetails, files, requestDto);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_CREATED, responseDto));
     }
 
@@ -57,45 +64,49 @@ public class FeedController {
      * @param artistFeedId
      * @param requestDto
      * @return
-     * @throws IOException
      */
     @PatchMapping("/feed/{artistFeedId}")
     public ResponseEntity<ResponseDataDto<UpdateFeedResponseDto>> updateFeed(
             @PathVariable final String groupName,
+            @RequestPart(value = "file", required = false) List<MultipartFile> files,
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestBody final UpdateFeedRequestDto requestDto
+            @Valid @RequestPart final UpdateFeedRequestDto requestDto
     ) {
-        UpdateFeedResponseDto responseDto = feedService.updateFeed(groupName, artistFeedId, userDetails, requestDto);
-
+        if (files != null && files.size() > 10) {
+            throw new S3Exception(MAX_IMAGES_EXCEEDED);
+        }
+        UpdateFeedResponseDto responseDto = feedService.updateFeed(groupName, artistFeedId, userDetails, files, requestDto);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_UPDATED, responseDto));
     }
 
     /**
      * Feed 단건 조회
+     *
      * @param groupName
      * @param artistFeedId
      * @return
      */
     @GetMapping("/feed/{artistFeedId}")
-    public ResponseEntity<ResponseDataDto<FeedResponseDto>> getFeed (
+    public ResponseEntity<ResponseDataDto<FeedResponseDto>> getFeed(
             @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        FeedResponseDto responseDto = feedService.getFeed (groupName, artistFeedId, userDetails);
+        FeedResponseDto responseDto = feedService.getFeed(groupName, artistFeedId, userDetails);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDto));
     }
 
     /**
      * Feed 전체 조회
+     *
      * @param groupName
      * @param userDetails
      * @param page
      * @return
      */
     @GetMapping("/feeds")
-    public ResponseEntity<ResponseDataDto<Page<FeedResponseDto>>> getAllFeed (
+    public ResponseEntity<ResponseDataDto<Page<FeedResponseDto>>> getAllFeed(
             @PathVariable final String groupName,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam int page
@@ -106,11 +117,12 @@ public class FeedController {
 
     /**
      * Feed 삭제
+     *
      * @param artistFeedId
      * @return
      */
     @DeleteMapping("/feed/{artistFeedId}")
-    public ResponseEntity<ResponseMessageDto> deleteFeed (
+    public ResponseEntity<ResponseMessageDto> deleteFeed(
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl UserDetails
     ) {
