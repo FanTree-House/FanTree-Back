@@ -26,4 +26,13 @@ public class FeedResponseDto {
         );
 
     }
+
+    public static FeedResponseDto of(Feed feed, int feedLikeCount) {
+        return new FeedResponseDto(
+                feed.getContents(),
+                feed.getImageUrls(),
+                feedLikeCount
+        );
+
+    }
 }

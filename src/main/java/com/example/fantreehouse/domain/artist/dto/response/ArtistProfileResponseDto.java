@@ -9,14 +9,14 @@ public class ArtistProfileResponseDto {
 
     private String artistName; //활동명
     private String getArtistProfileImageUrl;
-    private ArtistGroup artistGroup;
+    private String artistGroupName;
     private String introduction;
 
     public ArtistProfileResponseDto(String artistName, String getArtistProfileImageUrl,
-                                    ArtistGroup artistGroup, String introduction) {
+                                    String artistGroupName, String introduction) {
         this.artistName = artistName;
         this.getArtistProfileImageUrl = getArtistProfileImageUrl;
-        this.artistGroup = artistGroup;
+        this.artistGroupName = artistGroupName;
         this.introduction = introduction;
     }
 
@@ -24,7 +24,16 @@ public class ArtistProfileResponseDto {
         return new ArtistProfileResponseDto(
                 artist.getArtistName(),
                 artist.getArtistProfileImageUrl(),
-                artist.getArtistGroup(),
+                artist.getArtistGroup().getGroupName(),
+                artist.getIntroduction()
+        );
+    }
+
+    public static ArtistProfileResponseDto of(Artist artist, String url) {
+        return new ArtistProfileResponseDto(
+                artist.getArtistName(),
+                url,
+                artist.getArtistGroup().getGroupName(),
                 artist.getIntroduction()
         );
     }

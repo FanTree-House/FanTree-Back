@@ -1,5 +1,6 @@
 package com.example.fantreehouse.domain.s3.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.example.fantreehouse.common.config.S3Config;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -246,6 +248,12 @@ public class S3FileUploader {
         }
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
+
+    //단건 조회
+    public String getFileUrl(String imageUrl) {
+        return amazonS3Client.getUrl(bucket, imageUrl).toString();
+    }
+
 
     //Dir 단건 삭제
     public void deleteFileInBucket(String fileDir) {

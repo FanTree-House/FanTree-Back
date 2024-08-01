@@ -103,6 +103,7 @@ public class FeedService {
 
     /**
      * Feed 수정
+     *
      * @param groupName
      * @param artistFeedId
      * @param userDetails
@@ -170,11 +171,13 @@ public class FeedService {
         int feedLikeCount = feedLikeList.size();
 
         List<String> imageUrls = new ArrayList<>();
-
+        for (String imageUrl : foundFeed.getImageUrls()) {
+            String url = s3FileUploader.getFileUrl(imageUrl);//이미지 url 가져옴
+            imageUrls.add(url);
+        }
 
         return FeedResponseDto.of(foundFeed, feedLikeCount, imageUrls);
     }
-
 
 
     //Feed 다건 조회(페이지) - 로그인 회원 누구나
@@ -194,8 +197,7 @@ public class FeedService {
                     List<FeedLike> feedLikeList = feedLikeRepository.findAllFeedLikeByFeedId(feed.getId());
                     int feedLikeCount = feedLikeList.size();
 
-                    List<String> imageUrls = new ArrayList<>();
-                    return FeedResponseDto.of(feed, feedLikeCount, imageUrls);
+                    return FeedResponseDto.of(feed, feedLikeCount);
                 })
                 .toList();
 
@@ -231,7 +233,6 @@ public class FeedService {
         feedRepository.delete(foundFeed);
 
     }
-
 
 
     //유저 status 확인 (활동 여부)

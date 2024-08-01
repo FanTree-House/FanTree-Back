@@ -26,6 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.common.enums.PageSize.ARTIST_PAGE_SIZE;
 
@@ -117,14 +120,15 @@ public class ArtistService {
         Artist foundArtist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
 
+        String url = s3FileUploader.getFileUrl(foundArtist.getArtistProfileImageUrl());
 
-        return ArtistProfileResponseDto.of(foundArtist);
+        return ArtistProfileResponseDto.of(foundArtist, url);
     }
 
     // 아티스트 프로필 전체 조회 - 비가입자 가능
     public Page<ArtistProfileResponseDto> getAllArtist(int page) {
 
-        PageRequest pageRequest = PageRequest.of(page, ARTIST_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "subscriberCount"));
+        PageRequest pageRequest = PageRequest.of(page, ARTIST_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Artist> pageArtist = artistRepository.findAll(pageRequest);
 
         return pageArtist.map(ArtistProfileResponseDto::of);
