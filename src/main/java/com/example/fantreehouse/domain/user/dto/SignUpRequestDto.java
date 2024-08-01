@@ -28,6 +28,8 @@ public class SignUpRequestDto {
 
   private String profileImageUrl;
 
+  private String checkPassword;
+
   private boolean admin = false;
   private String adminToken = "";
 
