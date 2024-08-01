@@ -30,6 +30,7 @@ public class ArtistGroup extends Timestamped {
     private String artistProfilePicture;
     private String groupInfo;
 
+    private String enterName;
 
     //엔터테이너먼트와 다대일 매핑
     @ManyToOne(fetch = FetchType.LAZY)
@@ -63,11 +64,12 @@ public class ArtistGroup extends Timestamped {
     }
 
 
-    public ArtistGroup(String groupName, String artistProfilePicture, String groupInfo, Entertainment entertainment) {
+    public ArtistGroup(String groupName, String artistProfilePicture, String groupInfo, Entertainment entertainment, String enterName) {
         this.groupName = groupName;
         this.artistProfilePicture = artistProfilePicture;
         this.groupInfo = groupInfo;
         this.entertainment = entertainment;
+        this.enterName = enterName;
     }
 
     public ArtistGroup(ArtistGroup artistGroup) {
