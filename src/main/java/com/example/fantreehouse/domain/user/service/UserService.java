@@ -6,7 +6,6 @@ import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
-import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
 import com.example.fantreehouse.domain.user.dto.ProfileRequestDto;
@@ -22,8 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +43,8 @@ public class UserService {
     //회원가입
     public SignUpResponseDto signUp(SignUpRequestDto requestDto) {
         String id = requestDto.getId();
-        String password = passwordEncoder.encode(requestDto.getPassword());
+        String password = requestDto.getPassword();
+        String checkPassowrd = passwordEncoder.encode(requestDto.getCheckPassword());
         String name = requestDto.getName();
         String email = requestDto.getEmail();
         String nickname = requestDto.getNickname();
@@ -57,6 +55,12 @@ public class UserService {
 
         //닉네임 중복확인
         duplicatedNickName(nickname);
+
+        //비밀번호 재입력 및 확인
+        checkPassword(password, checkPassowrd);
+
+        String encodePassword = passwordEncoder.encode(password);
+
 
         // 블랙리스트 검증
         if (userRepository.findByEmailAndStatus(email, UserStatusEnum.BLACK_LIST).isPresent()) {
@@ -100,7 +104,7 @@ public class UserService {
             name,
             nickname,
             email,
-            password,
+            encodePassword,
             profile,
             role
         );
@@ -170,13 +174,13 @@ public class UserService {
     );
   }
 
-  private void duplicatedId(String id){
+  public void duplicatedId(String id){
     if (userRepository.findByLoginId(id).isPresent()){
       throw new DuplicatedException(ErrorType.DUPLICATE_ID);
     }
   }
 
-  private void duplicatedNickName(String nickname){
+  public void duplicatedNickName(String nickname){
     if (userRepository.findByNickname(nickname).isPresent()){
       throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
     }
@@ -187,4 +191,12 @@ public class UserService {
       throw new CustomException(ErrorType.BLACKLIST_EMAIL);
     }
   }
+
+  //비밀번호 일치 확인
+  private void checkPassword(String password, String checkPassword){
+      if(!passwordEncoder.matches(password, checkPassword)){
+        throw new MismatchException(ErrorType.MISMATCH_PASSWORD);
+      }
+  }
+
 }

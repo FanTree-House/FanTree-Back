@@ -26,6 +26,8 @@ public class SignUpRequestDto {
   @Size(min = 8, max = 15)
   private String password;
 
+  private String checkPassword;
+
   private String profileImage;
 
   private boolean admin = false;

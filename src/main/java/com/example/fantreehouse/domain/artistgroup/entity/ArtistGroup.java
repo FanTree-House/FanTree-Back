@@ -8,6 +8,7 @@ import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -57,12 +58,6 @@ public class ArtistGroup extends Timestamped {
     @OneToMany(mappedBy = "artistGroup")
     private List<Feed> feedList = new ArrayList<>();
 
-    public ArtistGroup(String groupName, String artistProfilePicture, Entertainment entertainment) {
-        this.groupName = groupName;
-        this.artistProfilePicture = artistProfilePicture;
-        this.entertainment = entertainment;
-    }
-
 
     public ArtistGroup(String groupName, String artistProfilePicture, String groupInfo, Entertainment entertainment, String enterName) {
         this.groupName = groupName;
@@ -70,11 +65,6 @@ public class ArtistGroup extends Timestamped {
         this.groupInfo = groupInfo;
         this.entertainment = entertainment;
         this.enterName = enterName;
-    }
-
-    public ArtistGroup(ArtistGroup artistGroup) {
-        this.groupName = artistGroup.getGroupName();
-        this.artistProfilePicture = artistGroup.getArtistProfilePicture();
     }
 
     // 아티스트 추가 메서드

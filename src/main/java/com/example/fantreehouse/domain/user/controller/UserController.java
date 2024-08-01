@@ -6,6 +6,8 @@ import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
+import com.example.fantreehouse.domain.user.dto.DuplicateIdRequestDto;
+import com.example.fantreehouse.domain.user.dto.DuplicatedNicknameRequestDto;
 import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
 import com.example.fantreehouse.domain.user.dto.ProfileRequestDto;
 import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
@@ -36,28 +38,27 @@ public class UserController {
   private final JwtTokenHelper jwtTokenHelper;
 
 
-    @PostMapping(value = {"","/invite/entertainment", "/invite/artist", "/admin"})
-    public ResponseEntity<ResponseMessageDto> signUp(
-        @Valid @RequestBody SignUpRequestDto requestDto) {
-        userService.signUp(requestDto);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
-    }
+  @PostMapping(value = {"","/invite/entertainment", "/invite/artist", "/admin"})
+  public ResponseEntity<ResponseMessageDto> signUp(
+      @Valid @RequestBody SignUpRequestDto requestDto) {
+      userService.signUp(requestDto);
+      return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
+  }
 
-    @PutMapping("/withDraw")
-    public ResponseEntity<ResponseMessageDto> withDraw(
-        @AuthenticationPrincipal UserDetailsImpl userDetails,
-        @Valid @RequestBody WithdrawRequestDto requestDto) {
-        userService.withDraw(userDetails.getUser().getId(),requestDto.getPassword());
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.WITHDRAW_SUCCESS));
-    }
+  @PutMapping("/withDraw")
+  public ResponseEntity<ResponseMessageDto> withDraw(
+      @AuthenticationPrincipal UserDetailsImpl userDetails,
+      @Valid @RequestBody WithdrawRequestDto requestDto) {
+      userService.withDraw(userDetails.getUser().getId(),requestDto.getPassword());
+      return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.WITHDRAW_SUCCESS));
+  }
 
-    @PostMapping("/logout")
-    public ResponseEntity<ResponseMessageDto> logout(
-        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        userService.logout(userDetails.getUser().getId());
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.LOGOUT_SUCCESS));
-    }
-
+  @PostMapping("/logout")
+  public ResponseEntity<ResponseMessageDto> logout(
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+      userService.logout(userDetails.getUser().getId());
+      return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.LOGOUT_SUCCESS));
+  }
 
   @GetMapping("/refresh")
   public ResponseEntity<ResponseDataDto> refresh(
@@ -97,8 +98,21 @@ public class UserController {
       @RequestHeader(JwtTokenHelper.AUTHORIZATION_HEADER) String accessToken,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-    log.info(accessToken);
+    log.debug(accessToken);
     return ResponseEntity.ok()
         .body(userService.getProfile(userDetails.getUser().getId()));
+  }
+
+  @PostMapping("/checkId")
+  public ResponseEntity<ResponseMessageDto> duplicateId(@Valid @RequestBody DuplicateIdRequestDto requestDto){
+    userService.duplicatedId(requestDto.getId());
+    return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.UNIQUE_ID));
+  }
+
+  @PostMapping("/checkNickname")
+  public ResponseEntity<ResponseMessageDto> duplicateNickname(@Valid @RequestBody
+      DuplicatedNicknameRequestDto requestDto){
+    userService.duplicatedNickName(requestDto.getNickname());
+    return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.UNIQUE_NICKNAME));
   }
 }
