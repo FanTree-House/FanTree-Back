@@ -3,7 +3,7 @@ on:
     branches: [ main ]
 
 env:
-  DOCKER_IMAGE_TAG_NAME: FanTree
+  DOCKER_IMAGE_TAG_NAME: fantree
 
 jobs:
   build-and-docker-push:
