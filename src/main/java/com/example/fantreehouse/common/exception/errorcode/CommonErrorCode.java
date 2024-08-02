@@ -17,7 +17,6 @@ public enum CommonErrorCode implements ErrorCode {
             "내부 서버 오류"),
     TOKEN_ERROR(HttpStatus.UNAUTHORIZED,
             "토큰 에러!");
-
     private final HttpStatus httpStatus;
     private final String message;
 }

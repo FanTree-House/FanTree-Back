@@ -1,0 +1,182 @@
+### 아티스트 회원가입
+POST http://localhost:8080/users/invite/artist
+Content-Type: application/json
+
+{
+  "id": "artist1",
+  "name": "artist1",
+  "nickname": "artist1",
+  "email": "artist1@gmail.com",
+  "password": "artist123!@#",
+  "profileImage": "",
+  "artist": true,
+  "artistToken": "acRos3knitterUp2eTt1ng5"
+}
+
+
+### 아티스트 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "artist1",
+  "password": "test1234"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 아티스트 계정 생성
+POST http://localhost:8080/artist
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "artistName": "artist1",
+  "artistProfilePicture": "artist123!@#"
+}
+
+### 엔터 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "smenter1",
+  "name": "SMENTERTAINMENT",
+  "nickname": "winter1",
+  "email": "smentertainment1@email.com",
+  "password": "smenter123",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "entertainment": true,
+  "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
+}
+
+
+### 엔터 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "smenter1",
+  "password": "smenter123"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+
+### 엔터 계정 생성
+POST http://localhost:8080/enter
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "enterName": "hybe",
+  "enterNumber": 12334678,
+  "enterLogo": "image"
+}
+
+
+###변수
+@enterName=sm
+
+### 아티스트 그룹 생성
+POST http://localhost:8080/entertainments/{{enterName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "groupName": "seventeen",
+  "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
+  "artistIds": [1]
+}
+
+### 아티스트 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "artist1",
+  "password": "artist123!@#"
+}
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+###변수
+@groupName =aespa
+@artistFeedId=1
+@artistFeedId2=2
+
+### Feed1 생성
+POST http://localhost:8080/{{groupName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+
+{
+  "groupName": "aespa",
+  "artistName": "artist2",
+  "contents": "뿌까머리 레전드",
+  "postPicture": "https://ifh.cc/g/2XsD0m.jpg"
+}
+
+### Feed2 생성
+POST http://localhost:8080/{{groupName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "groupName": "seventeen",
+  "artistName": "artist1",
+  "contents": "두번째 게시글",
+  "postPicture": "asdfgh"
+
+}
+
+### Feed1 수정
+PATCH http://localhost:8080/{{groupName}}/feed/3
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "groupName": "aespa",
+  "artistName": "artist1",
+  "contents": "먀?",
+  "postPicture": "https://ifh.cc/g/wxzHVs.jpg"
+}
+
+### Feed2 수정
+PATCH http://localhost:8080/{{groupName}}/feed/{{artistFeedId2}}
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "groupName": "seventeen",
+  "artistName": "artist1",
+  "contents": "수정한 두 번째 게시글",
+  "postPicture": "asd23"
+}
+
+### Feed 단건 조회 (Feed1)
+GET http://localhost:8080/{{groupName}}/feed/{{artistFeedId}}
+Authorization: {{Authorization}}
+
+### Feed 단건 조회 (Feed2)
+GET http://localhost:8080/{{groupName}}/feed/{{artistFeedId2}}
+Authorization: {{Authorization}}
+
+### Feed 전체 조회
+GET http://localhost:8080/{{groupName}}/feeds?page=0
+Authorization: {{Authorization}}

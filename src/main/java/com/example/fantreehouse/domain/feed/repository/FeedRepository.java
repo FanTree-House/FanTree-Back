@@ -1,4 +1,20 @@
 package com.example.fantreehouse.domain.feed.repository;
 
-public class FeedRepository {
+import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
+import com.example.fantreehouse.domain.feed.entity.Feed;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.Optional;
+
+public interface FeedRepository extends JpaRepository<Feed, Long> {
+
+    Page<Feed> findByArtistGroup(ArtistGroup artistGroup, PageRequest pageRequest);
+
+//    @EntityGraph(attributePaths = {"imageUrls"}, type = EntityGraph.EntityGraphType.FETCH)
+    @Query("SELECT f FROM Feed f LEFT JOIN FETCH f.imageUrls WHERE f.id = :id")
+    Optional<Feed> findById(Long id);
 }

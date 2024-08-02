@@ -1,0 +1,122 @@
+### 변수 정의
+@enterName = sm
+@groupName = aespa
+@artistId = 4
+
+### 엔터 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "smenter1",
+  "name": "SMENTERTAINMENT",
+  "nickname": "winter1",
+  "email": "smentertainment1@email.com",
+  "password": "smenter123",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "entertainment": true,
+  "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
+}
+
+
+### 엔터 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "smenter1",
+  "password": "smenter123"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 엔터 계정 생성
+POST http://localhost:8080/enter
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "enterName": "sm",
+  "enterNumber": 12334678,
+  "enterLogo": "image"
+}
+
+### 엔터 계정 조회
+GET http://localhost:8080/enter/{{enterName}}
+Authorization: {{Authorization}}
+
+### 엔터 계정 수정 (엔터 네임)
+PATCH http://localhost:8080/enter/{{enterName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "enterName": "SM"
+}
+
+### 엔터 계정 수정 (엔터 넘버)
+PATCH http://localhost:8080/enter/{{enterName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "enterNumber": 321234
+}
+
+### 엔터 계정 수정 (엔터 로고)
+PATCH http://localhost:8080/enter/{{enterName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "enterLogo": "image123"
+}
+
+### 엔터 계정 삭제
+DELETE http://localhost:8080/enter/{{enterName}}
+Authorization: {{Authorization}}
+
+
+### 아티스트 그룹 생성
+POST http://localhost:8080/artistgroup
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "enterName": "sm",
+  "groupName": "yaong",
+  "artistProfilePicture": "https://ifh.cc/g/PS14Sm.jpg",
+  "groupInfo" : "야옹",
+  "artistIds": []
+}
+
+### 특정 아티스트 그룹 조회
+GET http://localhost:8080/artistgroup/{{groupName}}
+
+###아티스트 그룹 전체 조회
+GET http://localhost:8080/artistgroup
+
+### 아티스트 그룹 수정
+PATCH http://localhost:8080/artistgroup/{{groupName}}
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "groupName": "aespa",
+  "artistProfilePicture": "https://ifh.cc/g/OpDNvR.jpg",
+  "groupInfo" : "아주 멋져..?",
+  "artistIds": [1, 2]
+}
+
+### 특정 아티스트 탈퇴
+DELETE http://localhost:8080/artistgroup/{{groupName}}/artists/{{artistId}}
+Authorization: {{Authorization}}
+
+### 아티스트 그룹 삭제
+DELETE http://localhost:8080/artistgroup/{{groupName}}
+Authorization: {{Authorization}}

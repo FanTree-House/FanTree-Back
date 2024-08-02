@@ -1,0 +1,107 @@
+## 변수
+@groupName=seventeen
+@feedId=1
+@artistFeedCommentId=1
+
+### 아티스트 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "artist1",
+  "password": "artist123!@#"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 아티스트 Feed에 댓글1 생성 (아티스트 Feed 작성자 본인)
+POST http://localhost:8080/{{groupName}}/feed/{{feedId}}/comment
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "contents": "여러분 안녕하세요"
+}
+
+### 아티스트 Feed에 댓글2 생성 (아티스트 Feed 작성자 본인)
+POST http://localhost:8080/{{groupName}}/feed/{{feedId}}/comment
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "contents": "여러분 안녕히계세요"
+}
+
+### 일반 유저 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "user1",
+  "name": "user",
+  "nickname": "user",
+  "email": "user1@email.com",
+  "password": "user123123",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
+}
+
+### 일반 유저 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "user1",
+  "password": "user123123"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 구독하기
+POST http://localhost:8080/artistGroup/subscript/{{groupName}}
+Content-Type: application/x-www-form-urlencoded
+Authorization: {{Authorization}}
+
+### 아티스트 Feed에 댓글1 생성 (일반 구독유저)
+POST http://localhost:8080/{{groupName}}/feed/{{feedId}}/comment
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "contents": "아티스트님 안녕하세요"
+}
+
+### 아티스트 Feed에 댓글2 생성 (일반 구독유저)
+POST http://localhost:8080/{{groupName}}/feed/{{feedId}}/comment
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "contents": "컴백 축하합니다"
+}
+
+### 아티스트 feed 댓글 수정 (작성자 본인 - 아티스트)
+PUT http://localhost:8080/{{groupName}}/feed/{{feedId}}/comment/{{artistFeedCommentId}}
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "contents": "수정해 보겠습니다"
+}
+
+### 아티스트 feed 댓글 삭제
+DELETE http://localhost:8080/{{groupName}}/feed/{{feedId}}/comment/{{artistFeedCommentId}}
+Authorization: {{Authorization}}
+
+### 아티스트 feed 댓글 전체 조회 (로그인 사용자 누구나)
+GET http://localhost:8080/{{groupName}}/feed/{{feedId}}/comments?page=0
+Authorization: {{Authorization}}

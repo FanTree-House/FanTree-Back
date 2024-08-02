@@ -1,0 +1,27 @@
+### 커뮤니티 보드 피드 댓글 생성
+POST http://localhost:8080/artist/2NE1/feeds/1/comments
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMTc0NzMyLCJpYXQiOjE3MjIxNzI5MzJ9.HEnUkoeVAFMATMjqDNsJg9I66WcO7JBdqiGMVBNv-CU
+Content-Type: application/json
+
+{
+  "contents" : "댓글테스트3"
+}
+
+### 커뮤니티 보드 피드 댓글 전체 조회
+GET http://localhost:8080/artist/2NE1/feeds/3/comments
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDY2ODIxLCJpYXQiOjE3MjIwNjUwMjF9.V8MXjhJt3jC-2kSai4k9uSc73xbgSEcORthDMYw62V0
+Content-Type: application/json
+
+### 커뮤니티 보드 피드 댓글 수정
+PATCH http://localhost:8080/artist/2NE1/feeds/1/comments/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDY4MDYzLCJpYXQiOjE3MjIwNjYyNjN9.qsNuXpZm-iKKMEXlSkeks95AfOuTmx5ZJEstciMqKtA
+Content-Type: application/json
+
+{
+  "contents" : "댓글수정 테스트1"
+}
+
+### 커뮤니티 보드 피드 댓글 삭제
+DELETE http://localhost:8080/artist/2NE1/feeds/1/comments/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDY4MDYzLCJpYXQiOjE3MjIwNjYyNjN9.qsNuXpZm-iKKMEXlSkeks95AfOuTmx5ZJEstciMqKtA
+Content-Type: application/json

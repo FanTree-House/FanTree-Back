@@ -1,0 +1,158 @@
+### 일반 유저 회원가입
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "id": "user1",
+  "name": "user",
+  "nickname": "user1",
+  "email": "rladnwlsok@gmail.com",
+  "password": "user1234",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
+}
+
+### 관리자 회원가입
+POST http://localhost:8080/users/invite/admin
+Content-Type: application/json
+
+{
+  "id": "admin1",
+  "name": "admin1",
+  "nickname": "admin1",
+  "email": "admin1@email.com",
+  "password": "test1234",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "admin": true,
+  "adminToken": "1np0t2ncesuuuud3rTaMeng5"
+}
+
+### 아티스트 회원가입
+POST http://localhost:8080/users/invite/artist
+Content-Type: application/json
+
+{
+  "id": "artist1",
+  "name": "artist1",
+  "nickname": "artist1",
+  "email": "artist1@gmail.com",
+  "password": "artist123!@#",
+  "profileImage": "",
+  "artist": true,
+  "artistToken": "acRos3knitterUp2eTt1ng5"
+}
+
+### 엔터 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "rladnwls",
+  "name": "SMENTERTAINMENT",
+  "nickname": "rladnwls",
+  "email": "rladnwlsok@gmail.com",
+  "password": "rladnwls",
+  "profileImage": "https://ifh.cc/g/tgPwvm.png",
+  "entertainment": true,
+  "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
+}
+
+### 아티스트 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "artist2",
+  "name": "artist2",
+  "nickname": "artist2",
+  "email": "rladnwlsok@gmail.com",
+  "password": "test1234",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "artist": true,
+  "artistToken": "acRos3knitterUp2eTt1ng5"
+}
+
+### 일반 유저 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "user1",
+  "password": "user1234"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 관리자 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "admin1",
+  "password": "admin123123"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 엔터 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "rladnwls",
+  "password": "rladnwls"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### 아티스트 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "artist1",
+  "password": "test1234"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+
+### 이메일인증 받기
+POST http://localhost:8080/mailsend
+Content-Type: application/json
+
+{
+  "loginId": "artist2",
+  "email": "rladnwlsok@gmail.com"
+}
+
+
+
+### 인증번호 검증
+PUT http://localhost:8080/mailableCheck
+Content-Type: application/json
+
+{
+  "loginId": "artist2",
+  "email": "rladnwlsok@gmail.com",
+  "authNum": "436066"
+}
