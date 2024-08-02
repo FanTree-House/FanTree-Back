@@ -87,7 +87,7 @@ public class FeedService {
         if (areFilesExist(files)) {
             try {
                 for (MultipartFile file : files) {
-                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, requestDto.getArtistName(), newFeed.getId());
+                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, loginArtist.getArtistName(), newFeed.getId());
                     imageUrls.add(imageUrl);
                 }
             } catch (Exception e) {
@@ -167,16 +167,21 @@ public class FeedService {
         Artist loginArtist = checkLoginUserRole(loginUser.getId());
         checkArtistGroup(loginArtist, groupName);
 
+        //좋아요 개수 세기
         List<FeedLike> feedLikeList = feedLikeRepository.findAllFeedLikeByFeedId(artistFeedId);
         int feedLikeCount = feedLikeList.size();
 
+        return FeedResponseDto.of(foundFeed, feedLikeCount);
+    }
+
+    //image
+    private List<String> addImageUrls(Feed foundFeed) {
         List<String> imageUrls = new ArrayList<>();
         for (String imageUrl : foundFeed.getImageUrls()) {
             String url = s3FileUploader.getFileUrl(imageUrl);//이미지 url 가져옴
             imageUrls.add(url);
         }
-
-        return FeedResponseDto.of(foundFeed, feedLikeCount, imageUrls);
+        return imageUrls;
     }
 
 
