@@ -1,5 +1,5 @@
 ### 변수 정의
-@enterName = SM
+@enterName = sm
 @groupName = aespa
 @artistId = 4
 
@@ -41,7 +41,7 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "enterName": "hybe",
+  "enterName": "sm",
   "enterNumber": 12334678,
   "enterLogo": "image"
 }
@@ -88,10 +88,10 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "enterName": "hybe",
-  "groupName": "aespa",
-  "artistProfilePicture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoUYZj6uQB5p6HzmZzOpZ8kk1bKsmePhmCRQ&s",
-  "groupInfo" : "아주 멋져",
+  "enterName": "sm",
+  "groupName": "yaong",
+  "artistProfilePicture": "https://ifh.cc/g/PS14Sm.jpg",
+  "groupInfo" : "야옹",
   "artistIds": []
 }
 
@@ -108,9 +108,9 @@ Content-Type: application/json
 
 {
   "groupName": "aespa",
-  "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
+  "artistProfilePicture": "https://ifh.cc/g/OpDNvR.jpg",
   "groupInfo" : "아주 멋져..?",
-  "artistIds": []
+  "artistIds": [1, 2]
 }
 
 ### 특정 아티스트 탈퇴

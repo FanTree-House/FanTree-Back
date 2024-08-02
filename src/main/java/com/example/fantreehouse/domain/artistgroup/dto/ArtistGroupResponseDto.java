@@ -23,7 +23,4 @@ public class ArtistGroupResponseDto {
         this.artistDtos = artistDtos;
         this.enterName = enterName;
     }
-
-
-
 }

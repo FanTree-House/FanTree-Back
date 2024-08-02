@@ -3,11 +3,11 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "id": "user12",
+  "id": "user1",
   "name": "user",
-  "nickname": "user12",
-  "email": "user1@email.com",
-  "password": "test1234",
+  "nickname": "user1",
+  "email": "rladnwlsok@gmail.com",
+  "password": "user1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
 }
 
@@ -46,12 +46,12 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "smenter1",
+  "id": "rladnwls",
   "name": "SMENTERTAINMENT",
-  "nickname": "winter1",
-  "email": "smentertainment1@email.com",
-  "password": "test1234",
-  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "nickname": "rladnwls",
+  "email": "rladnwlsok@gmail.com",
+  "password": "rladnwls",
+  "profileImage": "https://ifh.cc/g/tgPwvm.png",
   "entertainment": true,
   "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
 }
@@ -61,16 +61,11 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "etest2",
-  "name": "Etest2",
-  "nickname": "Etest2",
-  "email": "Etest@email.com",
+  "id": "artist2",
+  "name": "artist2",
+  "nickname": "artist2",
+  "email": "rladnwlsok@gmail.com",
   "password": "test1234",
-  "id": "winter1",
-  "name": "winter1",
-  "nickname": "winter",
-  "email": "winter1@email.com",
-  "password": "winter123",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
   "artist": true,
   "artistToken": "acRos3knitterUp2eTt1ng5"
@@ -82,7 +77,7 @@ Content-Type: application/json
 
 {
   "id": "user1",
-  "password": "test1234"
+  "password": "user1234"
 }
 
 > {%
@@ -113,8 +108,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "smenter1",
-  "password": "test1234"
+  "id": "rladnwls",
+  "password": "rladnwls"
 }
 
 > {%
@@ -130,7 +125,7 @@ Content-Type: application/json
 
 {
   "id": "artist1",
-  "password": "artist123!@#"
+  "password": "test1234"
 }
 
 > {%
@@ -139,3 +134,25 @@ Content-Type: application/json
     client.global.set("Authorization", response.headers.valueOf("Authorization"));
     client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
 %}
+
+
+### 이메일인증 받기
+POST http://localhost:8080/mailsend
+Content-Type: application/json
+
+{
+  "loginId": "artist2",
+  "email": "rladnwlsok@gmail.com"
+}
+
+
+
+### 인증번호 검증
+PUT http://localhost:8080/mailableCheck
+Content-Type: application/json
+
+{
+  "loginId": "artist2",
+  "email": "rladnwlsok@gmail.com",
+  "authNum": "436066"
+}

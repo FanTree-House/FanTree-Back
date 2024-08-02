@@ -134,10 +134,7 @@ public class FeedService {
     }
 
     //Feed 다건 조회(페이지) - 로그인 회원 누구나
-    public Page<FeedResponseDto> getAllFeed(String groupName, UserDetailsImpl userDetails, Integer page) {
-
-        User loginUser = userDetails.getUser();
-        checkUserStatus(loginUser.getStatus());
+    public Page<FeedResponseDto> getAllFeed(String groupName, Integer page) {
 
         ArtistGroup artistGroup = artistGroupRepository.findByGroupName(groupName)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTISTGROUP));

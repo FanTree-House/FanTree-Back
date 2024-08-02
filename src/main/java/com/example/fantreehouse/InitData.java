@@ -47,8 +47,6 @@ public class InitData {
   private final ArtistGroupRepository artistGroupRepository;
   private final ArtistRepository artistRepository;
 
-
-
   @Transactional
   @PostConstruct
   public void init(){
@@ -77,24 +75,5 @@ public class InitData {
             , new User()
         )
     );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }
-
-
-
-
 }
