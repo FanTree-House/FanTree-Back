@@ -9,22 +9,21 @@ import com.example.fantreehouse.domain.communityLike.repository.CommunityLikeRep
 import com.example.fantreehouse.domain.communitycomment.repository.CommunityCommentRepository;
 import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
 import com.example.fantreehouse.domain.enterfeed.repository.EnterFeedRepository;
-import com.example.fantreehouse.domain.entertainment.dto.EntertainmentRequestDto;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRepository;
 import com.example.fantreehouse.domain.feed.repository.FeedRepository;
 import com.example.fantreehouse.domain.feedlike.repository.FeedLikeRepository;
-import com.example.fantreehouse.domain.like.repository.ArtistLikeRepository;
 import com.example.fantreehouse.domain.product.product.repository.ProductRepository;
 import com.example.fantreehouse.domain.subscription.repository.SubscriptionRepository;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +32,6 @@ public class InitData {
   private final UserRepository userRepository;
   private final ProductRepository productRepository;
   private final PasswordEncoder passwordEncoder;
-  private final ArtistLikeRepository artistLikeRepository;
   private final SubscriptionRepository subscriptionRepository;
   private final FeedLikeRepository feedLikeRepository;
   private final FeedRepository feedRepository;
@@ -46,6 +44,7 @@ public class InitData {
   private final CommentRepository commentRepository;
   private final ArtistGroupRepository artistGroupRepository;
   private final ArtistRepository artistRepository;
+
 
   @Transactional
   @PostConstruct

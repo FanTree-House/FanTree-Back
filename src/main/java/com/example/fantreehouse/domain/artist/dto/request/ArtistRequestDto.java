@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class ArtistRequestDto {
@@ -13,7 +14,7 @@ public class ArtistRequestDto {
     @NotBlank(message = "활동명을 입력해주세요.")
     private String artistName; //활동명
 
-    @NotBlank(message = "프로필사진을 업로드해주세요.")
-    private String artistProfilePicture;
+    @Size(min = 1, max = 100, message = "한 줄 소개는 최대 20글자 입니다.")
+    private String introduction;
 
 }

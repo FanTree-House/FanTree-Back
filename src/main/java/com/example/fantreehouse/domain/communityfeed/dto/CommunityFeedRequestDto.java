@@ -10,6 +10,5 @@ public class CommunityFeedRequestDto {
 
     @Size(min = 1, message = "작성할 내용을 입력해주세요")
     private String contents;
-    private String post_picture;
 
 }

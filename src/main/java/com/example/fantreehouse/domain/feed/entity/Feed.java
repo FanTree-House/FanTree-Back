@@ -31,7 +31,8 @@ public class Feed extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
-    private String postPicture;
+    @ElementCollection
+    private List<String> imageUrls = new ArrayList<>();
 
     private int feedLikeCount;
 
@@ -46,59 +47,39 @@ public class Feed extends Timestamped {
 
     // 아티스트 그룹이랑 다대일
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="artist_group_id")
+    @JoinColumn(name = "artist_group_id")
     private ArtistGroup artistGroup;
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FeedLike> feedLikeList = new ArrayList<>();
 
     @Builder
-    public Feed(String artistName, String contents, String postPicture, User user, ArtistGroup artistGroup) {
+    public Feed(String artistName, String contents, List<String> imageUrls, User user, ArtistGroup artistGroup) {
         this.artistName = artistName;
         this.contents = contents;
-        this.postPicture = postPicture;
+        this.imageUrls = imageUrls;
         this.feedLikeCount = 0;
         this.user = user;
         this.artistGroup = artistGroup;
     }
 
-    //filePath 설정 후 사용할 것
-//    public static Feed of(CreateFeedRequestDto requestDto, User user, ArtistGroup artistGroup, String filePath) {
-//        return Feed.builder()
-//                .artistName(requestDto.getArtistName())
-//                .contents(requestDto.getContents())
-//                .post_picture(filePath)
-//                .user(user)
-//                .artistGroup(artistGroup)
-//                .build();
-//    }
+    public void updateImageUrls(List<String> imageUrls) {
+        this.imageUrls.clear();
+        this.imageUrls.addAll(imageUrls);
 
-    //file 업로드 기능 전까지 임시 사용
-    public static Feed of(CreateFeedRequestDto requestDto, User user, ArtistGroup artistGroup) {
+    }
+
+    public static Feed of(CreateFeedRequestDto requestDto, User user, ArtistGroup artistGroup ) {
         return Feed.builder()
                 .artistName(requestDto.getArtistName())
                 .contents(requestDto.getContents())
                 .user(user)
                 .artistGroup(artistGroup)
+                .imageUrls(new ArrayList<>())
                 .build();
     }
 
-    public static void feedLikeCount() {
-
-    }
-
-    //filePath 설정 후 사용
-//    public Feed updateFeed(UpdateFeedRequestDto requestDto, String filePath) {
-//        return Feed.builder()
-//                .contents(requestDto.getContents())
-//                .postPicture(filePath)
-//                .build();
-//
-//    }
-
-    //file 업로드 기능 전까지 임시 사용
     public void updateFeed(UpdateFeedRequestDto requestDto) {
         this.contents = requestDto.getContents();
-        this.postPicture = requestDto.getPostPicture();
     }
 }

@@ -6,9 +6,12 @@ import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
-import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
+import com.example.fantreehouse.domain.s3.service.S3FileUploader;
+import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
 import com.example.fantreehouse.domain.user.dto.ProfileRequestDto;
+import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
 import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
 import com.example.fantreehouse.domain.user.dto.SignUpResponseDto;
 import com.example.fantreehouse.domain.user.entity.User;
@@ -16,22 +19,26 @@ import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
+
+import static com.example.fantreehouse.common.enums.ErrorType.ARTIST_NOT_FOUND;
+import static com.example.fantreehouse.common.enums.ErrorType.UPLOAD_ERROR;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-  private final RedisUtil redisUtil;
-  private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
-  private final ArtistGroupRepository artistGroupRepository;
+    private final RedisUtil redisUtil;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final ArtistGroupRepository artistGroupRepository;
+    private final S3FileUploader s3FileUploader;
 
     @Value("${auth.admin_token}")
     private String ADMIN_TOKEN;
@@ -41,14 +48,14 @@ public class UserService {
     private String ENTERTAINMENT_TOKEN;
 
     //회원가입
-    public SignUpResponseDto signUp(SignUpRequestDto requestDto) {
+    public SignUpResponseDto signUp(MultipartFile file, SignUpRequestDto requestDto) {
         String id = requestDto.getId();
         String password = requestDto.getPassword();
         String checkPassowrd = passwordEncoder.encode(requestDto.getCheckPassword());
         String name = requestDto.getName();
         String email = requestDto.getEmail();
         String nickname = requestDto.getNickname();
-        String profile = requestDto.getProfileImage();
+        String profile = requestDto.getProfileImageUrl();
 
         //ID 중복확인
         duplicatedId(id);
@@ -60,8 +67,6 @@ public class UserService {
         checkPassword(password, checkPassowrd);
 
         String encodePassword = passwordEncoder.encode(password);
-
-
         // 블랙리스트 검증
         if (userRepository.findByEmailAndStatus(email, UserStatusEnum.BLACK_LIST).isPresent()) {
             throw new CustomException(ErrorType.BLACKLIST_EMAIL);
@@ -83,18 +88,14 @@ public class UserService {
                 throw new MismatchException(ErrorType.MISMATCH_ADMINTOKEN);
             }
             role = UserRoleEnum.ADMIN;
-        }
-
-        else if(requestDto.isArtist()){
-            if(!ARTIST_TOKEN.equals(requestDto.getArtistToken())){
+        } else if (requestDto.isArtist()) {
+            if (!ARTIST_TOKEN.equals(requestDto.getArtistToken())) {
                 throw new MismatchException(ErrorType.MISMATCH_ARTISTTOKEN);
             }
             role = UserRoleEnum.ARTIST;
-        }
-
-        else if(requestDto.isEntertainment()){
-            if(!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())){
-              throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
+        } else if (requestDto.isEntertainment()) {
+            if (!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())) {
+                throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
             }
             role = UserRoleEnum.ENTERTAINMENT;
         }
@@ -105,10 +106,21 @@ public class UserService {
             nickname,
             email,
             encodePassword,
-            profile,
             role
         );
         userRepository.save(user);
+
+        String imageUrl;
+        try {
+            imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), UserRoleEnum.ARTIST);
+        } catch (Exception e) {
+            throw new S3Exception(UPLOAD_ERROR);
+        }
+
+        ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), imageUrl);
+        updateUserImageUrl(carrier);
+
+
         redisUtil.deleteData(id);
         return new SignUpResponseDto(user);
     }
@@ -145,11 +157,11 @@ public class UserService {
     }
   }
 
-  //유저 프로필 수정
-  @Transactional
-  public ProfileResponseDto updateProfile(Long userId, ProfileRequestDto requestDto) {
-    User user = findById(userId);
-    String newEncodePw = null;
+    //유저 프로필 수정
+    @Transactional
+    public ProfileResponseDto updateProfile(MultipartFile file, Long userId, ProfileRequestDto requestDto) {
+        User user = findById(userId);
+        String newEncodePw = null;
 
     if (requestDto.getPassword() != null) {
       if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
@@ -157,9 +169,20 @@ public class UserService {
       }
     }
 
-    user.update(Optional.ofNullable(requestDto.getEmail()),
-        Optional.ofNullable(newEncodePw));
-    return new ProfileResponseDto(user);
+        user.update(Optional.ofNullable(requestDto.getEmail()),
+                Optional.ofNullable(newEncodePw));
+
+        String imageUrl;
+        try {
+            imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), UserRoleEnum.ARTIST);
+        } catch (Exception e) {
+            throw new S3Exception(UPLOAD_ERROR);
+        }
+
+        ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), imageUrl);
+        updateUserImageUrl(carrier);
+
+        return new ProfileResponseDto(user);
     }
 
   //유저 프로필 조회
@@ -199,4 +222,13 @@ public class UserService {
       }
   }
 
+
+    private void updateUserImageUrl(ImageUrlCarrier carrier) {
+        if (!carrier.getImageUrl().isEmpty()) {
+            User user = userRepository.findById(carrier.getId())
+                    .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
+            user.updateImageUrl(carrier.getImageUrl());
+            userRepository.save(user);
+        }
+    }
 }

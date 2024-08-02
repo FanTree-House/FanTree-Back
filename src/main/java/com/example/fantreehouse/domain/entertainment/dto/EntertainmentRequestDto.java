@@ -18,7 +18,4 @@ public class EntertainmentRequestDto {
     @NotNull(message = "사업자 번호를 입력해주세요.")
     private Long enterNumber;
 
-    @NotBlank(message = "소속사 로고를 업로드해주세요.")
-    private String enterLogo;
-
 }

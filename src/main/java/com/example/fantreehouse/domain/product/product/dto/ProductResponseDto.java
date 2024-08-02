@@ -3,13 +3,15 @@ package com.example.fantreehouse.domain.product.product.dto;
 import com.example.fantreehouse.domain.product.product.entity.Product;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class ProductResponseDto {
     private String productName;
     private Integer stock;
     private String type;
     private String artist;
-    private String productPicture;
+    private List<String> productPictureUrl;
     private Integer price;
 
     public ProductResponseDto(Product product) {
@@ -17,7 +19,7 @@ public class ProductResponseDto {
         this.stock = product.getStock();
         this.type = product.getType();
         this.artist = product.getArtist();
-        this.productPicture = product.getProductPicture();
+        this.productPictureUrl = product.getProductPictureUrl();
         this.price = product.getPrice();
     }
 }

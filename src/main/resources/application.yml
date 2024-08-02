@@ -4,7 +4,8 @@ spring:
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+    application:
+      name: FanTreeHouse
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,6 +14,14 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+      enabled: true
+  spring:
+    profiles:
+      include: jwt, aws #jwt.yml 불러오기
 #  security:
 #    oauth2:
 #      client:
@@ -42,5 +51,15 @@ auth:
   admin_token: ${ADMIN_TOKEN}
   artist_token: ${ARTIST_TOKEN}
   entertainment_token: ${ENTERTAINMENT_TOKEN}
+
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_S3_BUCKET}
+    stack.auto: false
+    region.static: ap-northeast-2
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
 
 
