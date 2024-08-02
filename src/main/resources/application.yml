@@ -45,7 +45,7 @@ jwt:
     key: ${JWT_SECRET_KEY}
 
 server:
-  port: ${SERVER_PORT}
+  port: 8080
 
 auth:
   admin_token: ${ADMIN_TOKEN}
