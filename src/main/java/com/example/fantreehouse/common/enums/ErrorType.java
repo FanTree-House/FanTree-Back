@@ -45,6 +45,7 @@ public enum ErrorType implements ErrorCode {
 
     //Feed
     FEED_NOT_FOUND(HttpStatus.NOT_FOUND,"찾는 피드가 없습니다."),
+    SUBSCRIPT_FEED_NOT_FOUND(HttpStatus.NOT_FOUND,"구독한 그룹에 피드가 없습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"접근 권한이 없습니다."),
 
     // Entertainment
