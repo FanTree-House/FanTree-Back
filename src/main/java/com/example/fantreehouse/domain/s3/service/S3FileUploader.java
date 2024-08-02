@@ -52,12 +52,7 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        validateImageTypeWithContentType(contentType);
+        validateImageTypeWithContentType(file);
         validateImageType(uploadFileName);
 
         String originName = uploadFileName.replace(" ", "");
@@ -74,8 +69,7 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        UUID uuid = UUID.randomUUID();
-        String fileName = fileDir + originName + "_" + uuid;
+        String fileName = makeFileName(originName, fileDir);
 
         return uploadFileToS3(file, fileName);
 
@@ -91,21 +85,14 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        validateImageTypeWithContentType(contentType);
+        validateImageTypeWithContentType(file);
         validateImageType(uploadFileName);
 
         String originName = uploadFileName.replace(" ", "");
 
         //저장 경로 설정
         String fileDir = createArtistGroupDir(artistGroupId);
-
-        UUID uuid = UUID.randomUUID(); // 중복되지 않는 문자열 생성
-        String fileName = fileDir + originName + "_" + uuid; // 업로드할 이미지 이름;
+        String fileName = makeFileName(originName, fileDir);
 
         return uploadFileToS3(file, fileName);
     }
@@ -120,55 +107,16 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        validateImageTypeWithContentType(contentType);
+        validateImageTypeWithContentType(file);
         validateImageType(uploadFileName);
 
         String originName = uploadFileName.replace(" ", "");
 
         //저장 경로 설정
         String fileDir = createArtistFeedDir(artistName, feedId);
-
-        UUID uuid = UUID.randomUUID(); // 중복되지 않는 문자열 생성
-        String fileName = fileDir + originName + "_" + uuid; // 업로드할 이미지 이름;
-
+        String fileName = makeFileName(originName, fileDir);
 
         return uploadFileToS3(file, fileName);
-    }
-
-    public String saveEnterFeedImage(MultipartFile file, String enterName, String feedCategory, Long enterFeedId) {
-        if (!S3FileUploaderUtil.isFileExists(file)) {
-            return NO_IMAGE;
-        }
-
-        String uploadFileName = file.getOriginalFilename();
-        if (uploadFileName == null || !uploadFileName.contains(".")) {
-            throw new S3Exception(UPLOAD_ERROR);
-        }
-
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        S3FileUploaderUtil.validateImageTypeWithContentType(contentType);
-        S3FileUploaderUtil.validateImageType(uploadFileName);
-
-        String originName = uploadFileName.replace(" ", "");
-
-        //저장 경로 설정
-        String fileDir = S3FileUploaderUtil.createEnterFeedDir(
-                enterName, feedCategory, enterFeedId);
-
-        UUID uuid = UUID.randomUUID(); // 중복되지 않는 문자열 생성
-        String fileName = fileDir + originName + "_" + uuid; // 업로드할 이미지 이름;
-
-        return uploadFileToS3(file, fileName);
-
     }
 
     public String saveCommunityImage(MultipartFile file, String groupName, Long communityFeedId) {
@@ -181,21 +129,14 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        validateImageTypeWithContentType(contentType);
+        validateImageTypeWithContentType(file);
         validateImageType(uploadFileName);
 
         String originName = uploadFileName.replace(" ", "");
 
         //저장 경로 설정
         String fileDir = createCommunityDir(groupName, communityFeedId);
-
-        UUID uuid = UUID.randomUUID();
-        String fileName = fileDir + originName + "_" + uuid;
+        String fileName = makeFileName(originName, fileDir);
 
         return uploadFileToS3(file, fileName);
 
@@ -212,24 +153,19 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        validateImageTypeWithContentType(contentType);
+        validateImageTypeWithContentType(file);
         validateImageType(uploadFileName);
 
         String originName = uploadFileName.replace(" ", "");
 
         //저장 경로 설정
         String fileDir = createProductDir(artistName, productType, productId);
-
-        UUID uuid = UUID.randomUUID(); // 중복되지 않는 문자열 생성
-        String fileName = fileDir + originName + "_" + uuid; // 업로드할 이미지 이름;
+        String fileName = makeFileName(originName, fileDir);
 
         return uploadFileToS3(file, fileName);
     }
+
+
 
     private String uploadFileToS3(MultipartFile file, String fileName) {
 
@@ -249,11 +185,16 @@ public class S3FileUploader {
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
+    //파일이름 생성
+    private String makeFileName(String originName, String fileDir) {
+        UUID uuid = UUID.randomUUID(); // 중복되지 않는 문자열 생성
+        return fileDir + originName + "_" + uuid; // 업로드할 이미지 이름;
+    }
+
     //단건 조회
     public String getFileUrl(String imageUrl) {
         return amazonS3Client.getUrl(bucket, imageUrl).toString();
     }
-
 
     //Dir 단건 삭제
     public void deleteFileInBucket(String fileDir) {

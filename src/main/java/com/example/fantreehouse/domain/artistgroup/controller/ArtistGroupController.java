@@ -37,7 +37,7 @@ public class ArtistGroupController {
      * @param userDetails 로그인한 사용자 정보
      * @return 응답 메시지 DTO
      */
-    @PostMapping
+    @PostMapping("/{enterName}")
     public ResponseEntity<ResponseMessageDto> createArtistGroup(
             @PathVariable String enterName,
             @RequestPart MultipartFile file,
