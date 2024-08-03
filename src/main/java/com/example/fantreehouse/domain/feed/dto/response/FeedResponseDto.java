@@ -21,14 +21,14 @@ public class FeedResponseDto {
         this.writeDate = writeDate;
     }
 
-    public static FeedResponseDto of(Feed feed, int feedLikeCount, List<String> imageUrls) {
-        return new FeedResponseDto(
-                feed.getContents(),
-                imageUrls,
-                feedLikeCount,
-                feed.getCreatedAt()
-        );
-    }
+//    public static FeedResponseDto of(Feed feed, int feedLikeCount, List<String> imageUrls) {
+//        return new FeedResponseDto(
+//                feed.getContents(),
+//                imageUrls,
+//                feedLikeCount,
+//                feed.getCreatedAt()
+//        );
+//    }
 
     public static FeedResponseDto of(Feed feed, int feedLikeCount) {
         return new FeedResponseDto(
