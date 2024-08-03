@@ -47,7 +47,7 @@ public class FeedLikeController {
      * @param userDetails
      * @return
      */
-    @GetMapping
+    @GetMapping("/like")
     public ResponseEntity<ResponseDataDto<List<FeedLikeUserResponseDto>>> getUserAllFeedLikeUser (
             @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,

@@ -1,6 +1,5 @@
 package com.example.fantreehouse.domain.feed.service;
 
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
