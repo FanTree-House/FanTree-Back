@@ -50,7 +50,6 @@ public class CommentLikeService {
         }
 
         commentLikeServiceSupport.addOrCancelFeedLike(loginUser, artistFeedCommentId, foundComment);
-
     }
 
     //유저 status 확인 (활동 여부)

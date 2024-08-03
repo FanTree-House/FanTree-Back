@@ -70,7 +70,7 @@ public class ArtistController {
     }
 
     /**
-     * 아티스트 단건 조회
+     * 아티스트 단건 조회 / 비가입자 가능
      *
      * @param artistId
      * @return
