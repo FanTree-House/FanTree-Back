@@ -34,12 +34,12 @@ import static com.example.fantreehouse.common.enums.ErrorType.MAX_IMAGES_EXCEEDE
 public class FeedController {
 
     private final FeedService feedService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * Feed 생성
      *
-     * @param groupName  //     * @param file
+     * @param groupName
+     * @param files
      * @param requestDto
      * @return
      */
@@ -101,7 +101,6 @@ public class FeedController {
      * Feed 전체 조회
      *
      * @param groupName
-     * @param userDetails
      * @param page
      * @return
      */

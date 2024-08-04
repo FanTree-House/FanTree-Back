@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +38,7 @@ import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
 public class S3FileUploader {
 
     private final AmazonS3Client amazonS3Client;
+    private final String mainUrl = "https://fantree.s3.ap-northeast-2.amazonaws.com/";
 
     @Value("${cloud.aws.s3.bucket}")
     private final String bucket = "fantree";
@@ -166,7 +169,6 @@ public class S3FileUploader {
     }
 
 
-
     private String uploadFileToS3(MultipartFile file, String fileName) {
 
         ObjectMetadata metadata = new ObjectMetadata(); //메타데이터
@@ -175,6 +177,8 @@ public class S3FileUploader {
         try (InputStream inputStream = file.getInputStream()) {
             amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
+
+            //기존 이미지 삭제 로직(위치는 추후 조정)
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -185,12 +189,6 @@ public class S3FileUploader {
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
-    //파일이름 생성
-    private String makeFileName(String originName, String fileDir) {
-        UUID uuid = UUID.randomUUID(); // 중복되지 않는 문자열 생성
-        return fileDir + originName + "_" + uuid; // 업로드할 이미지 이름;
-    }
-
     //단건 조회
     public String getFileUrl(String imageUrl) {
         return amazonS3Client.getUrl(bucket, imageUrl).toString();
@@ -198,8 +196,10 @@ public class S3FileUploader {
 
     //Dir 단건 삭제
     public void deleteFileInBucket(String fileDir) {
+
+        String key = getImageKey(fileDir);
         try {
-            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileDir));
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
         } catch (Exception e) {
             throw new S3Exception(DELETE_ERROR);
         }
@@ -209,12 +209,25 @@ public class S3FileUploader {
     public void deleteFilesInBucket(List<String> filedDirs) {
 
         for (String fileDir : filedDirs) {
+            String key = getImageKey(fileDir);
             try {
-                amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileDir));
+                amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
 
             } catch (Exception e) {
                 throw new S3Exception(DELETE_ERROR);
             }
         }
+    }
+
+    //파일이름 생성
+    private String makeFileName(String originName, String fileDir) {
+        UUID uuid = UUID.randomUUID();
+        return fileDir + originName + "_" + uuid;
+    }
+
+    //Url 잘라내기(파일명 추출)
+    private String getImageKey(String fileDir) {
+        String key = fileDir.replace(mainUrl, "");
+        return URLDecoder.decode(key, StandardCharsets.UTF_8);
     }
 }
