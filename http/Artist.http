@@ -6,7 +6,7 @@ Content-Type: application/json
   "id": "test1234",
   "name": "artist",
   "nickname": "artist1",
-  "email": "test@email.com",
+  "email": "7642510@naver.com",
   "password": "test1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
   "admin": false,
@@ -46,6 +46,7 @@ Content-Type: application/json
     client.global.set("Authorization", response.headers.valueOf("Authorization"));
     client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
 %}
+
 ### 아티스트 단건 조회
 GET http://localhost:8080/artist/{{artistId}}
 Authorization: {{Authorization}}

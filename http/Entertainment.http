@@ -1,11 +1,43 @@
 ### 변수 정의
-@enterName = hybe
-#@groupName = aespa
-#@artistId = 4
+@enterName = SM
+@groupName = aespa
+@artistId = 4
+
+### 엔터 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "smenter1",
+  "name": "SMENTERTAINMENT",
+  "nickname": "winter1",
+  "email": "smentertainment1@email.com",
+  "password": "smenter123",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
+  "entertainment": true,
+  "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
+}
+
+
+### 엔터 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "smenter1",
+  "password": "smenter123"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbnRlcjEiLCJhdXRoIjoiRU5URVJUQUlOTUVOVCIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyNTEwNjUyLCJpYXQiOjE3MjI1MDg4NTJ9.yyOg-pYmQtUbdrK-CD4iU0Yl8jJqPTgWIqfHxh8sheg
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
@@ -52,37 +84,39 @@ Authorization: {{Authorization}}
 
 ### 아티스트 그룹 생성
 POST http://localhost:8080/entertainments/{{enterName}}
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzbWVudGVyMSIsImF1dGgiOiJFTlRFUlRBSU5NRU5UIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjIzMjA0MjYsImlhdCI6MTcyMjMxODYyNn0.ecn2DMfo-v3gdA3Fj8j7gJhzkQVH_u8NWA7NBQZ3H8w
+Authorization:  {{Authorization}}
 Content-Type: application/json
 
 {
-  "groupName": "에스파",
-  "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "groupInfo" : "두 줄 소개",
+  "enterName": "hybe",
+  "groupName": "aespa",
+  "artistProfilePicture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoUYZj6uQB5p6HzmZzOpZ8kk1bKsmePhmCRQ&s",
+  "groupInfo" : "아주 멋져",
   "artistIds": []
 }
 
-### 특정 아티스트 그룹 조회 (멤버포함)
-GET http://localhost:8080/entertainments/hybe/seventeen
+### 특정 아티스트 그룹 조회
+GET http://localhost:8080/artistgroup/{{groupName}}
 
 ###아티스트 그룹 전체 조회
-GET http://localhost:8080/entertainments/{{enterName}}/groupName
+GET http://localhost:8080/artistgroup
 
 ### 아티스트 그룹 수정
-PATCH http://localhost:8080/entertainments/{{enterName}}/에스파형님들
+PATCH http://localhost:8080/artistgroup/{{groupName}}
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
   "groupName": "aespa",
   "artistProfilePicture": "https://github.com/FanTree-House/FanTree-Back/tree/dev",
-  "artistIds": [3,4]
+  "groupInfo" : "아주 멋져..?",
+  "artistIds": []
 }
 
 ### 특정 아티스트 탈퇴
-DELETE http://localhost:8080/entertainments/{{enterName}}/{{groupName}}/artists/{{artistId}}
+DELETE http://localhost:8080/artistgroup/{{groupName}}/artists/{{artistId}}
 Authorization: {{Authorization}}
 
 ### 아티스트 그룹 삭제
-DELETE http://localhost:8080/entertainments/{{enterName}}/{{groupName}}
+DELETE http://localhost:8080/artistgroup/{{groupName}}
 Authorization: {{Authorization}}

@@ -13,7 +13,6 @@ import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
-import com.example.fantreehouse.domain.user.dto.AdminRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Builder;
@@ -49,7 +48,7 @@ public class User extends Timestamped {
 
     private String password;
 
-    private String profilePicture;
+    private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
     private UserStatusEnum status;
@@ -107,13 +106,13 @@ public class User extends Timestamped {
 
     @Builder
     public User(String loginId, String name, String nickname,
-        String email, String password, String profilePicture, UserRoleEnum userRole) {
+        String email, String password, UserRoleEnum userRole) {
         this.loginId = loginId;
         this.name = name;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
-        this.profilePicture = profilePicture;
+        this.profileImageUrl = "default";
         this.status = UserStatusEnum.ACTIVE_USER;
         this.userRole = userRole;
     }
@@ -138,7 +137,7 @@ public class User extends Timestamped {
         this.password = newEncodePw.orElse(this.password);
     }
 
-    public User(String loginId, String password, String name, String nickname, String email, UserRoleEnum userRole, UserStatusEnum status, Long kakaoId) {
+    public User(String loginId, String name, String nickname, String email, String password, UserRoleEnum userRole, UserStatusEnum status, Long kakaoId) {
         this.loginId = loginId;
         this.name = name;
         this.nickname = nickname;
@@ -153,7 +152,6 @@ public class User extends Timestamped {
         this.kakaoId=kakaoId;
     }
 
-
     public void transBlacklist() {
         this.status = UserStatusEnum.BLACK_LIST;
     }
@@ -164,5 +162,9 @@ public class User extends Timestamped {
 
     public void transUser() {
         this.status = UserStatusEnum.ACTIVE_USER;
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.profileImageUrl = (imageUrl);
     }
 }

@@ -8,6 +8,7 @@ import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,9 +28,11 @@ public class ArtistGroup extends Timestamped {
     @Column(nullable = false, unique = true)
     private String groupName;
 
-    private String artistProfilePicture;
+    private String artistGroupProfileImageUrl;
+
     private String groupInfo;
 
+    private String enterName;
 
     //엔터테이너먼트와 다대일 매핑
     @ManyToOne(fetch = FetchType.LAZY)
@@ -56,23 +59,25 @@ public class ArtistGroup extends Timestamped {
     @OneToMany(mappedBy = "artistGroup")
     private List<Feed> feedList = new ArrayList<>();
 
-    public ArtistGroup(String groupName, String artistProfilePicture, Entertainment entertainment) {
+
+    public ArtistGroup(String groupName, String artistGroupProfileImageUrl, String groupInfo, Entertainment entertainment, String enterName) {
         this.groupName = groupName;
-        this.artistProfilePicture = artistProfilePicture;
+        this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;
+        this.groupInfo = groupInfo;
         this.entertainment = entertainment;
+        this.enterName = enterName;
     }
 
-
-    public ArtistGroup(String groupName, String artistProfilePicture, String groupInfo, Entertainment entertainment) {
+    public ArtistGroup(String groupName, String groupInfo, String enterName, Entertainment entertainment) {
         this.groupName = groupName;
-        this.artistProfilePicture = artistProfilePicture;
         this.groupInfo = groupInfo;
+        this.enterName = enterName;
         this.entertainment = entertainment;
     }
 
     public ArtistGroup(ArtistGroup artistGroup) {
         this.groupName = artistGroup.getGroupName();
-        this.artistProfilePicture = artistGroup.getArtistProfilePicture();
+        this.artistGroupProfileImageUrl = artistGroup.getArtistGroupProfileImageUrl();
     }
 
     // 아티스트 추가 메서드
@@ -101,7 +106,7 @@ public class ArtistGroup extends Timestamped {
 
     // 아티스트 프로필 사진 설정 메서드
     public void setArtistProfilePicture(String artistProfilePicture) {
-        this.artistProfilePicture = artistProfilePicture;
+        this.artistGroupProfileImageUrl = artistProfilePicture;
     }
 
     // 아티스트 제거 메서드
@@ -119,4 +124,7 @@ public class ArtistGroup extends Timestamped {
     }
 
 
+    public void updateImageUrl(String imageUrl) {
+        this.artistGroupProfileImageUrl = imageUrl;
+    }
 }

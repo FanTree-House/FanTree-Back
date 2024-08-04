@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +23,7 @@ public class MailController {
     return ResponseEntity.ok().body("메일을 확인해주세요.");
   }
 
-  @PutMapping("/mailableCheck")
+  @PostMapping("/mailableCheck")
   public ResponseEntity AuthCheck(@RequestBody @Valid EmailCheckRequestDto requestDto) {
 
     String loginId = requestDto.getLoginId();

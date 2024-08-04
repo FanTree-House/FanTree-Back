@@ -46,7 +46,20 @@ public class Entertainment extends Timestamped {
     public Entertainment(EntertainmentRequestDto enterRequestDto, User user) {
         this.enterName = enterRequestDto.getEnterName();
         this.enterNumber = enterRequestDto.getEnterNumber();
-        this.enterLogo = enterRequestDto.getEnterLogo();
+        this.enterLogo = "default";
+        this.user = user;
+    }
+
+    public Entertainment(String enterName, Long enterNumber, String enterLogo, User user) {
+        this.enterName = enterName;
+        this.enterNumber = enterNumber;
+        this.enterLogo = enterLogo;
+        this.user = user;
+    }
+
+    public Entertainment(String enterName, Long enterNumber, User user) {
+        this.enterName = enterName;
+        this.enterNumber = enterNumber;
         this.user = user;
     }
 
