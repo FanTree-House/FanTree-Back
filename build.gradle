@@ -13,6 +13,7 @@ java {
     }
 }
 
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -37,6 +38,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 
     //JWT
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'

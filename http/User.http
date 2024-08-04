@@ -46,7 +46,7 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "enter1",
+  "id": "smenter1",
   "name": "SMENTERTAINMENT",
   "nickname": "enter1",
   "email": "7642510@naver.com",
@@ -61,16 +61,11 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "etest2",
-  "name": "Etest2",
-  "nickname": "Etest2",
-  "email": "Etest@email.com",
+  "id": "artist2",
+  "name": "artist2",
+  "nickname": "artist2",
+  "email": "rladnwlsok@gmail.com",
   "password": "test1234",
-  "id": "winter1",
-  "name": "winter1",
-  "nickname": "winter",
-  "email": "winter1@email.com",
-  "password": "winter123",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
   "artist": true,
   "artistToken": "acRos3knitterUp2eTt1ng5"
@@ -130,7 +125,7 @@ Content-Type: application/json
 
 {
   "id": "artist1",
-  "password": "artist123!@#"
+  "password": "test1234"
 }
 
 > {%
@@ -139,3 +134,25 @@ Content-Type: application/json
     client.global.set("Authorization", response.headers.valueOf("Authorization"));
     client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
 %}
+
+
+### 이메일인증 받기
+POST http://localhost:8080/mailsend
+Content-Type: application/json
+
+{
+  "loginId": "test123",
+  "email": "kkx152@gmail.com"
+}
+
+
+
+### 인증번호 검증
+POST http://localhost:8080/mailableCheck
+Content-Type: application/json
+
+{
+  "loginId": "test123",
+  "email": "kkx152@gmail.com",
+  "authNum": "159675"
+}

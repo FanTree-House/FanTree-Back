@@ -20,7 +20,7 @@ Content-Type: application/json
 
 {
   "id": "artist1",
-  "password": "artist123!@#"
+  "password": "test1234"
 }
 
 > {%
@@ -86,7 +86,7 @@ Content-Type: application/json
 
 
 ###변수
-@enterName=hybe
+@enterName=sm
 
 ### 아티스트 그룹 생성
 POST http://localhost:8080/entertainments/{{enterName}}
@@ -115,7 +115,7 @@ Content-Type: application/json
 %}
 
 ###변수
-@groupName =seventeen
+@groupName =aespa
 @artistFeedId=1
 @artistFeedId2=2
 
@@ -126,11 +126,10 @@ Content-Type: application/json
 
 
 {
-  "groupName": "seventeen",
-  "artistName": "artist1",
-  "contents": "첫 게시글",
-  "postPicture": "asd23"
-
+  "groupName": "aespa",
+  "artistName": "artist2",
+  "contents": "뿌까머리 레전드",
+  "postPicture": "https://ifh.cc/g/2XsD0m.jpg"
 }
 
 ### Feed2 생성
@@ -147,16 +146,15 @@ Content-Type: application/json
 }
 
 ### Feed1 수정
-PATCH http://localhost:8080/{{groupName}}/feed/{{artistFeedId}}
+PATCH http://localhost:8080/{{groupName}}/feed/3
 Content-Type: application/json
 Authorization: {{Authorization}}
 
 {
-  "groupName": "seventeen",
+  "groupName": "aespa",
   "artistName": "artist1",
-  "contents": "수정한 첫 게시글",
-  "postPicture": "asd23"
-
+  "contents": "먀?",
+  "postPicture": "https://ifh.cc/g/wxzHVs.jpg"
 }
 
 ### Feed2 수정

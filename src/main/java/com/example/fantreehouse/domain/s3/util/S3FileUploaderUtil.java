@@ -38,7 +38,13 @@ public class S3FileUploaderUtil {
         return files.stream().allMatch(file -> file != null && !file.isEmpty());
     }
 
-    public static void validateImageTypeWithContentType(String contentType) {
+    //getContentType() 이용한 확장자 확인
+    public static void validateImageTypeWithContentType(MultipartFile file) {
+        String contentType = file.getContentType();
+        if (contentType == null) {
+            throw new S3Exception(NOT_IMAGE);
+        }
+
         if (!contentType.startsWith("image")) {
             throw new S3Exception(NOT_IMAGE);
         }
@@ -59,7 +65,7 @@ public class S3FileUploaderUtil {
             throw new S3Exception(NOT_ALLOWED_EXTENSION);
         }
     }
-    //getContentType() 이용한 확장자 확인
+
 
     public static String createUserProfileDir(Long userId) {
         return URL_PREFIX + "/"
@@ -83,7 +89,6 @@ public class S3FileUploaderUtil {
         return URL_PREFIX + "/"
                 + ARTIST_GROUP_DIR + "/"
                 + groupId + "/";
-
     }
 
     public static String createArtistFeedDir(String artistName, Long artistFeedId) {
@@ -91,7 +96,6 @@ public class S3FileUploaderUtil {
                 + ARTIST_FEED_DIR + "/"
                 + artistName + "/"
                 + artistFeedId + "/";
-
     }
 
     public static String createEnterFeedDir(String enterName, String feedCategory, Long enterFeedId) {
@@ -101,7 +105,6 @@ public class S3FileUploaderUtil {
                 + enterName + "/"
                 + feedCategory + "/"
                 + enterFeedId + "/";
-
     }
 
     public static String createCommunityDir(String groupName, Long communityFeedId) {
@@ -109,7 +112,6 @@ public class S3FileUploaderUtil {
                 + COMMUNITY_DIR + "/"
                 + groupName + "/"
                 + communityFeedId + "/";
-
     }
 
     public static String createProductDir(String artistName, String productType, Long productId) {
@@ -118,6 +120,5 @@ public class S3FileUploaderUtil {
                 + artistName + "/"
                 + productType + "/"
                 + productId + "/";
-
     }
 }

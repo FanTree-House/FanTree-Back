@@ -108,10 +108,9 @@ public class FeedController {
     @GetMapping("/feeds")
     public ResponseEntity<ResponseDataDto<Page<FeedResponseDto>>> getAllFeed(
             @PathVariable final String groupName,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam int page
     ) {
-        Page<FeedResponseDto> pagedFeed = feedService.getAllFeed(groupName, userDetails, page);
+        Page<FeedResponseDto> pagedFeed = feedService.getAllFeed(groupName, page);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, pagedFeed));
     }
 

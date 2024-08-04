@@ -27,8 +27,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MTIzNCIsImF1dGgiOiJBUlRJU1QiLCJzdGF0dXMiOiJBQ1RJVkVfVVNFUiIsImV4cCI6MTcyMjMzNjEzNSwiaWF0IjoxNzIyMzM0MzM1fQ.uBn571EoAxK0leT2NuGsGT6lhUcUM-z2P_Pr5Zxzg_U
 
 {
-  "artistName": "artist1",
-  "artistProfilePicture": "artist123!@#"
+  "artistName": "artist2",
+  "artistProfilePicture": "https://ifh.cc/g/HbraDx.gif"
 }
 
 ### 아티스트 로그인
@@ -36,7 +36,7 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "test1234",
+  "id": "artist2",
   "password": "test1234"
 }
 
