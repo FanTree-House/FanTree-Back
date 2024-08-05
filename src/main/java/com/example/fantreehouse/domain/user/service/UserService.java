@@ -176,7 +176,7 @@ public class UserService {
 
         String imageUrl;
         try {
-            imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), UserRoleEnum.ARTIST);
+            imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
         } catch (Exception e) {
             throw new S3Exception(UPLOAD_ERROR);
         }

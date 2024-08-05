@@ -47,7 +47,7 @@ public class S3FileUploaderUtil {
 
         if (!contentType.startsWith("image")) {
             throw new S3Exception(NOT_IMAGE);
-        }
+        } //contentType = image/jpeg 처럼 되어있음
     }
 
     public static void validateImageType(String fileName) {
