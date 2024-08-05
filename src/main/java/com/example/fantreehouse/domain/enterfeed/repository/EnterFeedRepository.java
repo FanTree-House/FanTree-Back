@@ -11,5 +11,5 @@ public interface EnterFeedRepository extends JpaRepository<EnterFeed, Long> {
 
     Optional<EnterFeed> findByIdAndArtistGroupGroupNameAndCategory(Long id, String groupName, FeedCategory category);
 
-    List<EnterFeed> findAllByArtistGroupGroupNameAndCategory(String groupName, FeedCategory category);
+    List<EnterFeed> findAllByEntertainmentEnterNameAndCategory(String enterName, FeedCategory category);
 }

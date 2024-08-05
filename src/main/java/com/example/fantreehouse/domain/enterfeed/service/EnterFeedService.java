@@ -28,6 +28,7 @@ public class EnterFeedService {
 
     private final EnterFeedRepository enterFeedRepository;
     private final ArtistGroupRepository artistGroupRepository;
+    private final EntertainmentRepository entertainmentRepository;
 
     /**
      * [createFeed] 엔터피드를 생성합니다.
@@ -36,21 +37,18 @@ public class EnterFeedService {
      * @param user 요청을 수행하는 사용자
      */
     @Transactional
-    public void createFeed(String groupName, EnterFeedRequestDto request, User user) {
+    public void createFeed(String  enterName, EnterFeedRequestDto request, User user) {
         verifyEntertainmentAuthority(user);
-
-        ArtistGroup artistGroup = artistGroupRepository.findByGroupName(groupName)
+        Entertainment entertainment = entertainmentRepository.findByEnterName(enterName)
                 .orElseThrow(() -> new CustomException(ErrorType.ARTIST_GROUP_NOT_FOUND));
 
-        Entertainment entertainment = artistGroup.getEntertainment();
-
+//        entertainment = artistGroup.getEntertainment();
         EnterFeed enterFeed = new EnterFeed(
                 entertainment,
-                artistGroup,
                 user,
                 request.getTitle(),
                 request.getContents(),
-                request.getPostPicture(),
+                entertainment.getEnterName(),
                 request.getCategory(),
                 request.getDate()
         );
@@ -76,11 +74,11 @@ public class EnterFeedService {
      * @param category 피드 카테고리
      * @return List<EnterFeedResponseDto> 조회된 피드 리스트
      */
-    public List<EnterFeedResponseDto> getAllFeeds(String groupName, FeedCategory category) {
-        List<EnterFeed> enterFeeds = getAllEnterFeeds(groupName, category);
+    public List<EnterFeedResponseDto> getAllFeeds(String enterName, FeedCategory category) {
+        List<EnterFeed> enterFeeds = getAllEnterFeeds(enterName, category);
         return enterFeeds.stream()
                 .map(this::convertToResponseDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -99,7 +97,6 @@ public class EnterFeedService {
         enterFeed.updateContents(
                 request.getTitle(),
                 request.getContents(),
-                request.getPostPicture(),
                 request.getCategory(),
                 request.getDate()
         );
@@ -161,8 +158,8 @@ public class EnterFeedService {
      * @param category 피드 카테고리
      * @return List<EnterFeed> 조회된 피드 리스트
      */
-    private List<EnterFeed> getAllEnterFeeds(String groupName, FeedCategory category) {
-        return enterFeedRepository.findAllByArtistGroupGroupNameAndCategory(groupName, category);
+    private List<EnterFeed> getAllEnterFeeds(String enterName, FeedCategory category) {
+        return enterFeedRepository.findAllByEntertainmentEnterNameAndCategory(enterName, category);
     }
 
     /**
@@ -173,9 +170,9 @@ public class EnterFeedService {
     private EnterFeedResponseDto convertToResponseDto(EnterFeed enterFeed) {
         return new EnterFeedResponseDto(
                 enterFeed.getId(),
+                enterFeed.getEnterName(),
                 enterFeed.getTitle(),
                 enterFeed.getContents(),
-                enterFeed.getPostPicture(),
                 enterFeed.getCategory(),
                 enterFeed.getDate()
         );

@@ -34,7 +34,6 @@ import static com.example.fantreehouse.common.enums.ErrorType.MAX_IMAGES_EXCEEDE
 public class FeedController {
 
     private final FeedService feedService;
-
     /**
      * Feed 생성
      *

@@ -187,7 +187,7 @@ public class UserService {
             try {
                 s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
             } catch (NotFoundException e) {
-                user.updateImageUrl("");//실체 없는 url 테이블에서 삭제
+                user.updateImageUrl("");
                 userRepository.save(user);
             } catch (Exception e) {
                 throw new S3Exception(DELETE_ERROR);
@@ -195,7 +195,7 @@ public class UserService {
 
             String newImageUrl = "";
             try {
-                newImageUrl = s3FileUploader.saveProfileImage(file, user.getId(), UserRoleEnum.USER);
+                newImageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
             } catch (Exception e) {
                 s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
                 throw new S3Exception(UPLOAD_ERROR);

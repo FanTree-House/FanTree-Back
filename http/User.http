@@ -4,10 +4,10 @@ Content-Type: application/json
 
 {
   "id": "user1",
-  "name": "user",
-  "nickname": "user1",
-  "email": "rladnwlsok@gmail.com",
-  "password": "user1234",
+  "name": "user1",
+  "nickname": "user11",
+  "email": "7642510@naver.com",
+  "password": "test1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
 }
 
@@ -31,13 +31,12 @@ POST http://localhost:8080/users/invite/artist
 Content-Type: application/json
 
 {
-  "id": "artist5",
-  "name": "artist5",
-  "nickname": "artist5",
-  "email": "rladnwlsok@gmail.com",
+  "id": "test2",
+  "name": "artist2",
+  "nickname": "artist2",
+  "email": "artist2@gmail.com",
   "password": "test1234",
-  "checkPassword" : "test1234",
-  "profileImage": "1231241.jpg",
+  "profileImage": "",
   "artist": true,
   "artistToken": "acRos3knitterUp2eTt1ng5"
 }
@@ -47,12 +46,12 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
+  "id": "test12",
   "name": "SMENTERTAINMENT",
-  "nickname": "rladnwls",
-  "email": "rladnwlsok@gmail.com",
-  "password": "rladnwls",
-  "profileImage": "https://ifh.cc/g/tgPwvm.png",
+  "nickname": "enter1",
+  "email": "7642510@naver.com",
+  "password": "test1234",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
   "entertainment": true,
   "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
 }
@@ -78,7 +77,7 @@ Content-Type: application/json
 
 {
   "id": "user1",
-  "password": "user1234"
+  "password": "test1234"
 }
 
 > {%
@@ -109,8 +108,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
-  "password": "rladnwls"
+  "id": "enter1",
+  "password": "test1234"
 }
 
 > {%
@@ -121,7 +120,7 @@ Content-Type: application/json
 %}
 
 ### 아티스트 로그인
-POST http://localhost:8080/users/logina
+POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
@@ -142,8 +141,8 @@ POST http://localhost:8080/mailsend
 Content-Type: application/json
 
 {
-  "loginId": "artist5",
-  "email": "rladnwlsok@gmail.com"
+  "loginId": "test123",
+  "email": "7642510@naver.com"
 }
 
 
@@ -153,7 +152,7 @@ POST http://localhost:8080/mailableCheck
 Content-Type: application/json
 
 {
-  "loginId": "artist5",
-  "email": "rladnwlsok@gmail.com",
-  "authNum": "453021"
+  "loginId": "test123",
+  "email": "kkx152@gmail.com",
+  "authNum": "159675"
 }
