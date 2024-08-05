@@ -7,11 +7,12 @@ import lombok.Getter;
 public class CommunityCommentResponseDto {
 
     private String contents;
+    private String nickname;
 
 
     public CommunityCommentResponseDto(CommunityComment comment) {
         this.contents = comment.getContents();
-
+        this.nickname = comment.getNickname();
     }
 }
 

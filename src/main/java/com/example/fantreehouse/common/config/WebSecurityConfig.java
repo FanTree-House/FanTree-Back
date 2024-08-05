@@ -5,6 +5,7 @@ import com.example.fantreehouse.auth.JwtAuthorizationFilter;
 import com.example.fantreehouse.auth.JwtTokenHelper;
 import com.example.fantreehouse.common.security.UserDetailsServiceImpl;
 import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -62,7 +63,8 @@ public class WebSecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     // CSRF 설정
     http.csrf((csrf) -> csrf.disable());
-
+    // CORS 설정
+    http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
     // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
     http.sessionManagement((sessionManagement) ->
         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -72,7 +74,11 @@ public class WebSecurityConfig {
         authorizeHttpRequests
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
             .permitAll() // resources 접근 허용 설정
-            .requestMatchers("/users/login", "/users", "/users/refresh", "/error", "/enter")
+            .requestMatchers("/users/login", "/users", "/users/refresh", "/error",
+                "/enter","/users/invite/artist",
+                "/users/invite/entertainment","/users/admin",
+                "/mailsend", "/mailableCheck",
+                "/users/checkId", "/users/checkNickname")
             .permitAll() // 메인 페이지 요청 허가
             .requestMatchers(HttpMethod.GET).permitAll() // get요청  접근 허가
             .anyRequest().authenticated() // 그 외 모든 요청 인증처리
@@ -85,12 +91,14 @@ public class WebSecurityConfig {
     return http.build();
   }
 
+
+
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080")); // 프론트엔드 주소
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    configuration.setAllowedHeaders(Arrays.asList("*"));
+    configuration.setAllowedOriginPatterns(List.of("*")); // 프론트엔드 주소
+    configuration.addAllowedHeader("*");
+    configuration.addAllowedMethod("*");
     configuration.setAllowCredentials(true);
     configuration.setMaxAge(3600L);
 

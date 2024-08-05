@@ -9,13 +9,13 @@ public class ProfileResponseDto {
   private String name;
   private String email;
   private String nickname;
-
-//  private String profileImageUrl;
+  private String profileImageUrl;
 
   public ProfileResponseDto(User user) {
     this.loginId = user.getLoginId();
     this.name = user.getName();
     this.email = user.getEmail();
     this.nickname = user.getNickname();
+    this.profileImageUrl = user.getProfileImageUrl();
   }
 }

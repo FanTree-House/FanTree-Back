@@ -1,0 +1,14 @@
+### 커뮤니티 피드 좋아요
+POST http://localhost:8080/artist/2NE1/feeds/2/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDEiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMTc2OTI0LCJpYXQiOjE3MjIxNzUxMjR9.Lz1Y6Gy7V9ggcqKCwW95bmiDIQ3iT-YvFg-G2Oj1Yvo
+### 커뮤니티 피드 좋아요 취소
+DELETE http://localhost:8080/artist/2NE1/feeds/2/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMTc3NDAyLCJpYXQiOjE3MjIxNzU2MDJ9.PUFrCIvCU8-ZIaVwC3Yp6A9VdcUaxnRCMdsKMQAQhK4
+
+### 커뮤니티 피드 댓글 좋아요
+POST http://localhost:8080/artist/2NE1/feeds/1/comments/1/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMTc3MTMzLCJpYXQiOjE3MjIxNzUzMzN9.j5nJMCQKxchYZbIMIMLF69hHpAkdrBiasskMTvfIuGs
+
+### 커뮤니티 피드 댓글 좋아요취소
+DELETE http://localhost:8080/artist/2NE1/feeds/1/comments/1/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMTc3MTMzLCJpYXQiOjE3MjIxNzUzMzN9.j5nJMCQKxchYZbIMIMLF69hHpAkdrBiasskMTvfIuGs

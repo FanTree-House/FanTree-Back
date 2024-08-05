@@ -2,23 +2,27 @@ package com.example.fantreehouse.domain.communityfeed.controller;
 
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
+import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
-import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.service.CommunityFeedService;
+import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static com.example.fantreehouse.common.enums.ErrorType.MAX_IMAGES_EXCEEDED;
+
 @RestController
-@RequestMapping("/fantree/artist/feeds")
+@RequestMapping("/artist/{groupName}/feeds")
 @RequiredArgsConstructor
 
 public class CommunityFeedController {
@@ -29,73 +33,97 @@ public class CommunityFeedController {
      * 커뮤니티 피드 생성
      * @param requestDto
      * @param userDetails
-     * @param artistGroup
+     * @param groupName
      * @return
      */
     @PostMapping
-    public ResponseEntity<ResponseMessageDto> createFeed(@Valid CommunityFeedRequestDto requestDto,
-                                                         @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                         ArtistGroup artistGroup) {
-        feedService.createFeed(requestDto, userDetails.getUser(), artistGroup);
+    public ResponseEntity<?> createFeed(
+        @RequestPart CommunityFeedRequestDto requestDto,
+        @RequestPart(value = "file", required = false) List<MultipartFile> files,
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable String groupName
+    ) {
+        if (files != null && files.size() > 10) {
+            throw new S3Exception(MAX_IMAGES_EXCEEDED);
+        }
+        feedService.createFeed(requestDto,files, userDetails.getUser().getId(), groupName);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CREATE_SUCCESS_FEED));
     }
 
     /**
-     * 커뮤니티 피드 전체조회
+     * 피드 전체 조회
      * @param userDetails
+     * @param groupName
      * @return
      */
     @GetMapping
-    public ResponseEntity<?> findAllFeed(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                         ArtistGroup artistGroup) {
-        List<CommunityFeedResponseDto> responseDto = feedService.findAllFeed(userDetails.getUser(),artistGroup);
+    public ResponseEntity<?> findAllFeed(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable String groupName) {
+
+        List<CommunityFeedResponseDto> responseDto = feedService
+            .findAllFeed(userDetails.getUser().getId(), groupName);
         return ResponseEntity.ok(responseDto);
     }
 
     /**
-     * 커뮤니티 피드 선택 조회
+     * 피드 선택 조회
      * @param userDetails
-     * @param community_feed_id
-     * @param artistGroup
+     * @param feedId
+     * @param groupName
      * @return
      */
-    @GetMapping("/{community_feed_id}")
-     public ResponseEntity<?> findFeed(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                        @PathVariable Long community_feed_id,
-                                       ArtistGroup artistGroup) {
-        CommunityFeed feed = feedService.findFeed(community_feed_id ,userDetails.getUser(),artistGroup);
+    @GetMapping("/{feedId}")
+     public ResponseEntity<?> findFeed(
+         @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long feedId,
+        @PathVariable  String groupName) {
+
+        CommunityFeed feed = feedService.findFeed(feedId ,userDetails.getUser().getId(),groupName);
         CommunityFeedResponseDto responseDto = new CommunityFeedResponseDto(feed);
         return ResponseEntity.ok(responseDto);
     }
 
     /**
-     * 커뮤니티 피드 수정
+     * 피드 수정
      * @param requestDto
      * @param userDetails
-     * @param community_feed_id
-     * @param artistGroup
+     * @param feedId
+     * @param groupName
      * @return
      */
-    @PatchMapping("/{community_feed_id}")
-    public ResponseEntity<ResponseMessageDto> updateFeed(@Valid CommunityFeedUpdateRequestDto requestDto,
-                                                            @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                            @PathVariable Long community_feed_id, ArtistGroup artistGroup) {
-        feedService.updateFeed(requestDto, community_feed_id, userDetails.getUser(), artistGroup);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_UPDATE_SUCCESS));
+    @PatchMapping("/{feedId}")
+    public ResponseEntity<ResponseMessageDto> updateFeed(
+        @Valid @RequestBody CommunityFeedUpdateRequestDto requestDto,
+        @RequestPart(value = "file", required = false) List<MultipartFile> files,
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long feedId,
+        @PathVariable String groupName
+    ) {
+        if (files != null && files.size() > 10) {
+            throw new S3Exception(MAX_IMAGES_EXCEEDED);
+        }
+        feedService.updateFeed(requestDto, files, feedId, userDetails.getUser().getId(), groupName);
+        return ResponseEntity
+            .ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_UPDATE_SUCCESS));
     }
 
     /***
      * 커뮤니티 피드 삭제
-     * @param community_feed_id
+     * @param feedId
      * @param userDetails
-     * @param artistGroup
+     * @param groupName
      * @return
      */
-    @DeleteMapping("/{community_feed_id}")
-    public ResponseEntity<ResponseMessageDto> DeleteFeed(@PathVariable Long community_feed_id,
-                                                         @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                         ArtistGroup artistGroup) {
-        feedService.deleteFeed(community_feed_id, userDetails.getUser(), artistGroup);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_DELETE_SUCCESS));
+    @DeleteMapping("/{feedId}")
+    public ResponseEntity<ResponseMessageDto> deleteFeed(
+        @PathVariable Long feedId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable  String groupName,
+        UserRoleEnum userRoleEnum) {
+
+        feedService.deleteFeed(feedId, userDetails.getUser().getId(), groupName, userRoleEnum);
+        return ResponseEntity
+            .ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_DELETE_SUCCESS));
     }
 }

@@ -15,6 +15,4 @@ public class ProfileRequestDto {
   @Email
   private String email;
 
-//  private String profileImage;
-
 }

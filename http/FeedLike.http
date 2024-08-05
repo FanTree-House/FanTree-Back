@@ -1,0 +1,72 @@
+##변수
+@groupName=seventeen
+@artistFeedId=1
+
+### 일반 유저 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "user1",
+  "name": "user",
+  "nickname": "user",
+  "email": "user1@email.com",
+  "password": "user123123",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
+}
+
+### 일반 유저1 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "user1",
+  "password": "user123123"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### Feed 좋아요 등록
+POST http://localhost:8080/{{groupName}}/feed/{{artistFeedId}}
+Content-Type: application/x-www-form-urlencoded
+Authorization: {{Authorization}}
+
+### 일반 유저2 회원가입
+POST http://localhost:8080/users/invite/entertainment
+Content-Type: application/json
+
+{
+  "id": "user2",
+  "name": "user2",
+  "nickname": "user2",
+  "email": "user2@email.com",
+  "password": "user123123",
+  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
+}
+
+### 일반 유저2 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "id": "user2",
+  "password": "user123123"
+}
+
+> {%
+    client.log(response.headers.valueOf("Authorization"));
+    client.log(response.headers.valueOf("refreshToken"));
+    client.global.set("Authorization", response.headers.valueOf("Authorization"));
+    client.global.set("refreshToken", response.headers.valueOf("refreshToken"));
+%}
+
+### Feed 좋아요 등록 / 다시 누르면 취소
+POST http://localhost:8080/{{groupName}}/feed/{{artistFeedId}}
+Content-Type: application/x-www-form-urlencoded
+Authorization: {{Authorization}}
+

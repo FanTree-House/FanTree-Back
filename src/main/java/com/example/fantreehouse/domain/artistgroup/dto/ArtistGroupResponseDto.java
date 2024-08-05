@@ -10,15 +10,18 @@ import java.util.List;
 public class ArtistGroupResponseDto {
     private Long id;
     private String groupName;
-    private String artistProfilePicture;
-    private EntertainmentResponseDto entertainment;
-    private List<ArtistResponseDto> artists;
+    private String artistGroupProfileImageUrl;
+    private EntertainmentResponseDto entertainmentDto;
+    private List<ArtistResponseDto> artistDtos;
+    private String enterName;
 
-    public ArtistGroupResponseDto(Long id, String groupName, String artistProfilePicture, EntertainmentResponseDto entertainment, List<ArtistResponseDto> artists) {
+    public ArtistGroupResponseDto(Long id, String groupName, String artistGroupProfileImageUrl, EntertainmentResponseDto entertainmentDto,
+                                  List<ArtistResponseDto> artistDtos, String enterName) {
         this.id = id;
         this.groupName = groupName;
-        this.artistProfilePicture = artistProfilePicture;
-        this.entertainment = entertainment;
-        this.artists = artists;
+        this.artistGroupProfileImageUrl = artistGroupProfileImageUrl;
+        this.entertainmentDto = entertainmentDto;
+        this.artistDtos = artistDtos;
+        this.enterName = enterName;
     }
 }
