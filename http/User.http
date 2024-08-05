@@ -46,7 +46,7 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "smenter1",
+  "id": "test12",
   "name": "SMENTERTAINMENT",
   "nickname": "enter1",
   "email": "7642510@naver.com",
@@ -142,7 +142,7 @@ Content-Type: application/json
 
 {
   "loginId": "test123",
-  "email": "kkx152@gmail.com"
+  "email": "7642510@naver.com"
 }
 
 

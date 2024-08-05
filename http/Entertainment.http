@@ -24,8 +24,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "smenter1",
-  "password": "smenter123"
+  "id": "test1234",
+  "password": "test1234"
 }
 
 > {%
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
-Authorization: {{Authorization}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MTIzNCIsImF1dGgiOiJFTlRFUlRBSU5NRU5UIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjI4NDUzMDQsImlhdCI6MTcyMjg0MzUwNH0.j0E4ZNODckaHN8lR40j_gJpo4R3TzIE1KkwflHcQRfM
 Content-Type: application/json
 
 {

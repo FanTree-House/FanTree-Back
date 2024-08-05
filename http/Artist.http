@@ -3,7 +3,7 @@ POST http://localhost:8080/users/invite/artist
 Content-Type: application/json
 
 {
-  "id": "test1234",
+  "id": "test1",
   "name": "artist",
   "nickname": "artist1",
   "email": "7642510@naver.com",
@@ -36,7 +36,7 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "artist2",
+  "id": "test1",
   "password": "test1234"
 }
 
