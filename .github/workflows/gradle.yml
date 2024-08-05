@@ -83,4 +83,3 @@ jobs:
                 -e accessKey=${{secrets.AWS_ACCESS_KEY}} \
                 -e secretKey=${{secrets.AWS_SECRET_KEY}} \
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
-            sudo ls -al /apps/
