@@ -1,9 +1,10 @@
 spring:
   data:
     redis:
-      password: ${REDIS_PASSWORD}
+
       host: localhost
       port: 6379
+      password: ${REDIS_PASSWORD}
   datasource:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
@@ -16,10 +17,10 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
         show_sql: true
         format_sql: true
         use_sql_comments: true
-        dialect: org.hibernate.dialect.MySQLDialect
   servlet:
     multipart:
       max-file-size: 10MB
@@ -51,4 +52,5 @@ cloud:
     credentials:
       accessKey: ${AWS_ACCESS_KEY}
       secretKey: ${AWS_SECRET_KEY}
+
 
