@@ -3,7 +3,7 @@ spring:
     redis:
       host: localhost
       port: 6379
-      password:
+      password: skybmw1004
   datasource:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
@@ -16,6 +16,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
         show_sql: true
         format_sql: true
         use_sql_comments: true

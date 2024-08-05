@@ -87,7 +87,7 @@ public class ArtistService {
                 throw new S3Exception(UPLOAD_ERROR);
             }
         }
-
+        // 기존 프로필 사진이 있으면 -> 삭제를 시키고 -> 새로운 파일 S3 저장을 하게끔 -> MySQL DB URL이 바뀌지 않아요
         ImageUrlCarrier carrier = new ImageUrlCarrier(foundArtist.getId(), imageUrl);
         updateArtistImageUrl(carrier);
     }
