@@ -8,6 +8,7 @@ import com.example.fantreehouse.domain.enterfeed.dto.EnterFeedRequestDto;
 import com.example.fantreehouse.domain.enterfeed.dto.EnterFeedResponseDto;
 import com.example.fantreehouse.domain.enterfeed.entity.FeedCategory;
 import com.example.fantreehouse.domain.enterfeed.service.EnterFeedService;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,7 +24,6 @@ import java.util.List;
 public class EnterFeedController {
 
     private final EnterFeedService enterFeedService;
-
     @PostMapping("/{enterName}/notice")
     public ResponseEntity<ResponseMessageDto> createNotice(
             @PathVariable (value = "enterName") String enterName,

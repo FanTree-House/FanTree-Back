@@ -11,4 +11,5 @@ public interface EntertainmentRepository extends JpaRepository<Entertainment, Lo
     Optional<Entertainment> findByEnterNumber(Long enterNumber);
 
     Optional<Entertainment> findByEnterName(String enterName);
+
 }

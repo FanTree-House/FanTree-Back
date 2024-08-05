@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
 import java.time.LocalDate;
 
 @Getter
@@ -51,13 +50,15 @@ public class EnterFeed extends Timestamped {
 
     private LocalDate date;
 
-    public EnterFeed(Entertainment entertainment,User user, String title, String contents, FeedCategory category) {
+    public EnterFeed(Entertainment entertainment, User user, String title, String contents, String enterName, FeedCategory category,
+                     LocalDate date) {
         this.entertainment = entertainment;
         this.enterName = entertainment.getEnterName();
         this.user = user;
         this.title = title;
         this.contents = contents;
         this.category = category;
+        this.date = date;
     }
 
     public void updateContents(String title, String contents,  FeedCategory category, LocalDate  date) {

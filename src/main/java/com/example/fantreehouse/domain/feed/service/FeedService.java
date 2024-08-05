@@ -1,6 +1,7 @@
 package com.example.fantreehouse.domain.feed.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
@@ -18,8 +19,8 @@ import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feed.repository.FeedRepository;
 import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.feedlike.repository.FeedLikeRepository;
-import com.example.fantreehouse.domain.s3.service.S3FileUploader;
 import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
+import com.example.fantreehouse.domain.s3.service.S3FileUploader;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
@@ -49,6 +50,8 @@ public class FeedService {
     private final ArtistGroupRepository artistGroupRepository;
     private final FeedLikeRepository feedLikeRepository;
     private final S3FileUploader s3FileUploader;
+    private final AmazonS3Client amazonS3Client;
+
 
     /**
      * Feed 생성
@@ -114,7 +117,10 @@ public class FeedService {
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
 
-        Feed foundFeed = findFeed(artistFeedId);
+        //요청하는 feed 찾기
+        Feed foundFeed = feedRepository.findById(artistFeedId)
+                .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
+
         Artist loginArtist = checkLoginUserRole(loginUser.getId());
 
         checkArtistGroup(loginArtist, groupName);
@@ -154,15 +160,20 @@ public class FeedService {
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
 
-        Feed foundFeed = findFeed(artistFeedId);
-        Artist loginArtist = checkLoginUserRole(loginUser.getId());
-        checkArtistGroup(loginArtist, groupName);
+        //요청하는 feed 찾기
+        Feed foundFeed = feedRepository.findById(artistFeedId)
+                .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
 
-        //좋아요 개수 세기
         List<FeedLike> feedLikeList = feedLikeRepository.findAllFeedLikeByFeedId(artistFeedId);
         int feedLikeCount = feedLikeList.size();
 
-        return FeedResponseDto.of(foundFeed, feedLikeCount);
+        List<String> imageUrls = new ArrayList<>();
+        for (String imageUrl : foundFeed.getImageUrls()) {
+            String url = s3FileUploader.getFileUrl(imageUrl);//이미지 url 가져옴
+            imageUrls.add(url);
+        }
+
+        return FeedResponseDto.of(foundFeed, feedLikeCount, imageUrls, foundFeed.getId(), foundFeed.getArtistName());
     }
 
 
@@ -199,8 +210,10 @@ public class FeedService {
                 loginUserRole.equals(UserRoleEnum.ENTERTAINMENT))) {
             throw new UnAuthorizedException(UNAUTHORIZED);
         }
+        //요청하는 feed 찾기
+        Feed foundFeed = feedRepository.findById(artistFeedId)
+                .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
 
-        Feed foundFeed = findFeed(artistFeedId);
         Long loginUserId = loginUser.getId();
         Long feedWriterId = foundFeed.getUser().getId();
 
@@ -212,6 +225,7 @@ public class FeedService {
 
         s3FileUploader.deleteFilesInBucket(foundFeed.getImageUrls());
         feedRepository.delete(foundFeed);
+
     }
 
 

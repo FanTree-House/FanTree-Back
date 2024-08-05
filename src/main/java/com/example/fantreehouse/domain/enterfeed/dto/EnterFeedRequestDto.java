@@ -2,6 +2,7 @@ package com.example.fantreehouse.domain.enterfeed.dto;
 
 import com.example.fantreehouse.domain.enterfeed.entity.FeedCategory;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import jdk.jfr.Category;
@@ -22,6 +23,7 @@ public class EnterFeedRequestDto {
     private String contents;
     @Setter
     private FeedCategory category;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
     public EnterFeedRequestDto(String title, String contents, LocalDate date, FeedCategory category) {

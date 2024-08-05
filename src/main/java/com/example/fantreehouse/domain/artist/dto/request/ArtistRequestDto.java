@@ -2,6 +2,7 @@ package com.example.fantreehouse.domain.artist.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -17,12 +18,13 @@ public class ArtistRequestDto {
     private String artistName; //활동명
     @Size(min = 1, max = 100, message = "한 줄 소개는 최대 20글자 입니다.")
     private String introduction;
-    @NotBlank(message = "프로필사진을 업로드해주세요.")
+    @NotNull(message = "프로필사진을 업로드해주세요.")
     private MultipartFile file;
 
     @JsonCreator //object mapper에서 생성자를 찾는 어노테이션 생성자를 못찾을떄 , 비선호어노테이션
-    public ArtistRequestDto(String artistName, MultipartFile file) {
+    public ArtistRequestDto(String artistName,String introduction, MultipartFile file) {
         this.artistName = artistName;
+        this.introduction = introduction;
         this.file = file;
     }
 }

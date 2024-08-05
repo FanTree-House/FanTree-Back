@@ -1,6 +1,0 @@
-#spring:
-#  data:
-#    redis:
-#      password: ${REDIS_PASSWORD}
-#      host: localhost
-#      port: 6379

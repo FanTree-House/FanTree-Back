@@ -37,7 +37,7 @@ public class EnterFeedService {
      * @param user 요청을 수행하는 사용자
      */
     @Transactional
-    public void createFeed(String enterName, EnterFeedRequestDto request, User user) {
+    public void createFeed(String  enterName, EnterFeedRequestDto request, User user) {
         verifyEntertainmentAuthority(user);
         Entertainment entertainment = entertainmentRepository.findByEnterName(enterName)
                 .orElseThrow(() -> new CustomException(ErrorType.ARTIST_GROUP_NOT_FOUND));
@@ -48,7 +48,9 @@ public class EnterFeedService {
                 user,
                 request.getTitle(),
                 request.getContents(),
-                request.getCategory()
+                entertainment.getEnterName(),
+                request.getCategory(),
+                request.getDate()
         );
 
         enterFeedRepository.save(enterFeed);
@@ -168,6 +170,7 @@ public class EnterFeedService {
     private EnterFeedResponseDto convertToResponseDto(EnterFeed enterFeed) {
         return new EnterFeedResponseDto(
                 enterFeed.getId(),
+                enterFeed.getEnterName(),
                 enterFeed.getTitle(),
                 enterFeed.getContents(),
                 enterFeed.getCategory(),
