@@ -1,7 +1,7 @@
 ### 구독하기 (Subscript)
 
-POST http://localhost:8080/artistGroup/subscript/Mouse
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIxOTcyMDA5LCJpYXQiOjE3MjE5NzAyMDl9.74yvhM-twZYBceFqjnCfvez1XqXisZlIiVD9mZ6IYcQ
+POST http://localhost:8080/artistGroup/subscript/seventeen
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsImF1dGgiOiJVU0VSIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjIzMzU2ODUsImlhdCI6MTcyMjMzMzg4NX0.3AoSHv2rUE-gPSGok-AHWOdTcX3B9SBFqdT3zzp19G0
 Content-Type: application/json
 
 

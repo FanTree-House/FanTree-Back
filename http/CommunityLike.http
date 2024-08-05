@@ -1,6 +1,6 @@
 ### 커뮤니티 피드 좋아요
-POST http://localhost:8080/artist/2NE1/feeds/2/like
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDEiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMTc2OTI0LCJpYXQiOjE3MjIxNzUxMjR9.Lz1Y6Gy7V9ggcqKCwW95bmiDIQ3iT-YvFg-G2Oj1Yvo
+POST http://localhost:8080/artist/seventeen/feeds/1/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsImF1dGgiOiJVU0VSIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjIzMzU2ODUsImlhdCI6MTcyMjMzMzg4NX0.3AoSHv2rUE-gPSGok-AHWOdTcX3B9SBFqdT3zzp19G0
 ### 커뮤니티 피드 좋아요 취소
 DELETE http://localhost:8080/artist/2NE1/feeds/2/like
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMTc3NDAyLCJpYXQiOjE3MjIxNzU2MDJ9.PUFrCIvCU8-ZIaVwC3Yp6A9VdcUaxnRCMdsKMQAQhK4

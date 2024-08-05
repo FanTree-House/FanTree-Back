@@ -8,7 +8,10 @@ import com.example.fantreehouse.domain.enterfeed.dto.EnterFeedRequestDto;
 import com.example.fantreehouse.domain.enterfeed.dto.EnterFeedResponseDto;
 import com.example.fantreehouse.domain.enterfeed.entity.FeedCategory;
 import com.example.fantreehouse.domain.enterfeed.service.EnterFeedService;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,42 +20,37 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/feed")
+@RequiredArgsConstructor
 public class EnterFeedController {
 
     private final EnterFeedService enterFeedService;
-
-    @Autowired
-    public EnterFeedController(EnterFeedService enterFeedService) {
-        this.enterFeedService = enterFeedService;
-    }
-
-    @PostMapping("/{groupName}/notice")
+    @PostMapping("/{enterName}/notice")
     public ResponseEntity<ResponseMessageDto> createNotice(
-            @PathVariable String groupName,
+            @PathVariable (value = "enterName") String enterName,
             @RequestBody EnterFeedRequestDto request,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         request.setCategory(FeedCategory.NOTICE);
-        enterFeedService.createFeed(groupName, request, userDetails.getUser());
+        enterFeedService.createFeed(enterName, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.NOTICE_CREATE_SUCCESS));
     }
 
-    @GetMapping("/{groupName}/notice/{feedId}")
+    @GetMapping("/{enterName}/notice/{feedId}")
     public ResponseEntity<ResponseDataDto<EnterFeedResponseDto>> getNotice(
-            @PathVariable String groupName,
+            @PathVariable String enterName,
             @PathVariable Long feedId) {
 
         EnterFeedResponseDto notice = enterFeedService.getFeed(
-            groupName, feedId, FeedCategory.NOTICE);
+                enterName, feedId, FeedCategory.NOTICE);
         return ResponseEntity.ok
             (new ResponseDataDto<>(ResponseStatus.NOTICE_RETRIEVE_SUCCESS, notice));
     }
 
-    @GetMapping("/{groupName}/notice")
+    @GetMapping("/{enterName}/notice")
     public ResponseEntity<ResponseDataDto<List<EnterFeedResponseDto>>> getAllNotices(
-        @PathVariable String groupName) {
+        @PathVariable String enterName) {
         List<EnterFeedResponseDto> notices = enterFeedService
-            .getAllFeeds(groupName, FeedCategory.NOTICE);
+            .getAllFeeds(enterName, FeedCategory.NOTICE);
         return ResponseEntity.ok
             (new ResponseDataDto<>(ResponseStatus.NOTICE_RETRIEVE_SUCCESS, notices));
     }
@@ -79,14 +77,14 @@ public class EnterFeedController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.NOTICE_DELETE_SUCCESS));
     }
 
-    @PostMapping("/{groupName}/schedule")
+    @PostMapping("/{enterName}/schedule")
     public ResponseEntity<ResponseMessageDto> createSchedule(
-            @PathVariable String groupName,
+            @PathVariable String enterName,
             @RequestBody EnterFeedRequestDto request,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         request.setCategory(FeedCategory.SCHEDULE);
-        enterFeedService.createFeed(groupName, request, userDetails.getUser());
+        enterFeedService.createFeed(enterName, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SCHEDULE_CREATE_SUCCESS));
     }
 

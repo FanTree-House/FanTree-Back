@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "enter_feed")
+
 public class EnterFeed extends Timestamped {
 
     @Id
@@ -41,7 +42,7 @@ public class EnterFeed extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
-    private String postPicture;
+    private String enterName;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -49,21 +50,20 @@ public class EnterFeed extends Timestamped {
 
     private LocalDate date;
 
-    public EnterFeed(Entertainment entertainment, ArtistGroup artistGroup, User user, String title, String contents, String postPicture, FeedCategory category, LocalDate  date) {
+    public EnterFeed(Entertainment entertainment, User user, String title, String contents, String enterName, FeedCategory category,
+                     LocalDate date) {
         this.entertainment = entertainment;
-        this.artistGroup = artistGroup;
+        this.enterName = entertainment.getEnterName();
         this.user = user;
         this.title = title;
         this.contents = contents;
-        this.postPicture = postPicture;
         this.category = category;
         this.date = date;
     }
 
-    public void updateContents(String title, String contents, String postPicture, FeedCategory category, LocalDate  date) {
+    public void updateContents(String title, String contents,  FeedCategory category, LocalDate  date) {
         this.title = title;
         this.contents = contents;
-        this.postPicture = postPicture;
         this.category = category;
         this.date = date;
     }

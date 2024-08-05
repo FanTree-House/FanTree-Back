@@ -38,11 +38,10 @@ public class ArtistController {
     public ResponseEntity<ResponseMessageDto> createArtist(
             @RequestPart(value = "file") MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestPart final ArtistRequestDto requestDto
+            @Valid @ModelAttribute ArtistRequestDto requestDto
     ) {
         if (file.getSize() > 10 * 1024 * 1024) {
-            throw new S3Exception(OVER_LOAD);
-        }
+            throw new S3Exception(OVER_LOAD);}
         artistService.createArtist(userDetails, file, requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_CREATED));
     }
@@ -112,6 +111,7 @@ public class ArtistController {
         artistService.deleteFeed(artistId, userDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_DELETED));
     }
+
 
 
 }
