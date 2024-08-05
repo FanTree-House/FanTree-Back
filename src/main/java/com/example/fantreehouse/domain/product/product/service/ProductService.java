@@ -23,8 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.fantreehouse.common.enums.ErrorType.FEED_NOT_FOUND;
-import static com.example.fantreehouse.common.enums.ErrorType.UPLOAD_ERROR;
+import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
 
 @Service
@@ -52,7 +51,7 @@ public class ProductService {
         productRepository.save(product);
 
         List<String> imageUrls = new ArrayList<>();
-        if (areFilesExist(files)) { //이미지가 존재할 때만
+        if (areFilesExist(files)) {
             try {
                 for (MultipartFile file : files) {
                     String imageUrl = s3FileUploader.saveProductImage(file, productRequestDto.getArtist(),
@@ -60,12 +59,13 @@ public class ProductService {
                     imageUrls.add(imageUrl);
                 }
             } catch (Exception e) {
+                s3FileUploader.deleteFilesInBucket(imageUrls);
                 throw new S3Exception(UPLOAD_ERROR);
             }
+            ImageUrlCarrier carrier = new ImageUrlCarrier(product.getId(), imageUrls);
+            updateProductImageUrls(carrier);
         }
 
-        ImageUrlCarrier carrier = new ImageUrlCarrier(product.getId(), imageUrls);
-        updateProductImageUrls(carrier);
     }
 
     /**
@@ -143,23 +143,36 @@ public class ProductService {
         } else if (null != requestDto.getPrice()) {
             product.updatePrice(requestDto.getPrice());
         }
+        productRepository.save(product);
 
-        List<String> imageUrls = new ArrayList<>();
         if (areFilesExist(files)) {
+
+            for (String imageUrl : product.getProductPictureUrl()) {
+                try {
+                    s3FileUploader.deleteFileInBucket(imageUrl);
+                } catch (NotFoundException e) {
+                    product.getProductPictureUrl().remove(imageUrl);
+                    product.updateImageUrls(product.getProductPictureUrl());//실체 없는 url 테이블에서 삭제
+                    productRepository.save(product);
+                } catch (Exception e) {
+                    throw new S3Exception(DELETE_ERROR);
+                }
+            }
+
+            List<String> newImageUrls = new ArrayList<>();
             try {
                 for (MultipartFile file : files) {
                     String imageUrl = s3FileUploader.saveProductImage(file, requestDto.getArtist(),
                             product.getType(), product.getId());
+                    newImageUrls.add(imageUrl);
                 }
             } catch (Exception e) {
+                s3FileUploader.deleteFilesInBucket(newImageUrls);
                 throw new S3Exception(UPLOAD_ERROR);
             }
+            ImageUrlCarrier carrier = new ImageUrlCarrier(product.getId(), newImageUrls);
+            updateProductImageUrls(carrier);
         }
-
-        ImageUrlCarrier carrier = new ImageUrlCarrier(product.getId(), imageUrls);
-        updateProductImageUrls(carrier);
-
-        productRepository.save(product);
     }
 
     /**
@@ -177,7 +190,18 @@ public class ProductService {
         Product product = productRepository.findById(productId).orElseThrow(() ->
                 new CustomException(ErrorType.NOT_FOUND_PRODUCT));
 
-        s3FileUploader.deleteFilesInBucket(product.getProductPictureUrl());
+        for (String imageUrl : product.getProductPictureUrl()) {
+            try {
+                s3FileUploader.deleteFileInBucket(imageUrl);
+            } catch (NotFoundException e) {
+                product.getProductPictureUrl().remove(imageUrl);
+                product.updateImageUrls(product.getProductPictureUrl());//실체 없는 url 테이블에서 삭제
+                productRepository.save(product);
+            } catch (Exception e) {
+                throw new S3Exception(DELETE_ERROR);
+            }
+        }
+
         productRepository.delete(product);
     }
 

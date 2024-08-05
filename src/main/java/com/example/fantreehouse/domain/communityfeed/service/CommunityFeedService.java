@@ -49,10 +49,10 @@ public class CommunityFeedService {
 
     @Transactional //피드생성
     public CommunityFeedResponseDto createFeed(
-        CommunityFeedRequestDto requestDto,
-        List<MultipartFile> files,
-        Long userId,
-        String groupName) {
+            CommunityFeedRequestDto requestDto,
+            List<MultipartFile> files,
+            Long userId,
+            String groupName) {
         User user = findUser(userId);
         ArtistGroup artistGroup = findArtistGroup(groupName);
         checkUserStatus(user.getStatus(), user.getUserRole());
@@ -71,6 +71,7 @@ public class CommunityFeedService {
                     imageUrls.add(imageUrl);
                 }
             } catch (Exception e) {
+                s3FileUploader.deleteFilesInBucket(imageUrls);
                 throw new S3Exception(UPLOAD_ERROR);
             }
         }
@@ -79,15 +80,6 @@ public class CommunityFeedService {
         updateCommunityFeedImageUrls(carrier);
 
         return new CommunityFeedResponseDto(feed);
-    }
-
-    private void updateCommunityFeedImageUrls(ImageUrlCarrier carrier) {
-        if (!carrier.getImageUrls().isEmpty()) {
-            CommunityFeed feed = feedRepository.findById(carrier.getId())
-                    .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
-            feed.updateImageUrls(carrier.getImageUrls());
-            feedRepository.save(feed);
-        }
     }
 
     //    피드 전체 조회
@@ -132,19 +124,43 @@ public class CommunityFeedService {
         }
         feed.updateFeed(requestDto);
 
-        List<String> imageUrls = new ArrayList<>();
         if (areFilesExist(files)) {
+            List<String> foundFeedImageUrls = feed.getImageUrls();
+            for (String imageUrl : foundFeedImageUrls) {
+                try {
+                    s3FileUploader.deleteFileInBucket(imageUrl);
+                } catch (NotFoundException e) {
+                    foundFeedImageUrls.remove(imageUrl);
+                    feed.updateImageUrls(foundFeedImageUrls);
+                    feedRepository.save(feed);
+                } catch (Exception e) {
+                    throw new S3Exception(DELETE_ERROR);
+                }
+            }
+
+            List<String> imageUrls = new ArrayList<>();
             try {
                 for (MultipartFile file : files) {
                     String imageUrl = s3FileUploader.saveCommunityImage(file, groupName, feed.getId());
                     imageUrls.add(imageUrl);
                 }
             } catch (Exception e) {
+                s3FileUploader.deleteFilesInBucket(imageUrls);
                 throw new S3Exception(UPLOAD_ERROR);
             }
+            ImageUrlCarrier carrier = new ImageUrlCarrier(feed.getId(), imageUrls);
+            updateCommunityFeedImageUrls(carrier);
         }
-        ImageUrlCarrier carrier = new ImageUrlCarrier(feed.getId(), imageUrls);
-        updateCommunityFeedImageUrls(carrier);
+    }
+
+    private void updateCommunityFeedImageUrls(ImageUrlCarrier carrier) {
+        if (!carrier.getImageUrls().isEmpty()) {
+            CommunityFeed feed = feedRepository.findById(carrier.getId())
+                    .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
+            feed.updateImageUrls(carrier.getImageUrls());
+            feedRepository.save(feed);
+
+        }
     }
 
     // 피드 삭제 - 작성자와 UserRole이 엔터와 어드민이면 삭제가능
@@ -158,8 +174,20 @@ public class CommunityFeedService {
                 userRoleEnum.equals(UserRoleEnum.ENTERTAINMENT))) {
             throw new CustomException(ErrorType.UNAUTHORIZED_FEED_DELETE);
         }
-        s3FileUploader.deleteFilesInBucket(feed.getImageUrls());
-        feedRepository.delete(feed);
+
+        List<String> foundFeedImageUrls = feed.getImageUrls();
+        for (String imageUrl : foundFeedImageUrls) {
+            try {
+                s3FileUploader.deleteFileInBucket(imageUrl);
+            } catch (NotFoundException e) {
+                foundFeedImageUrls.remove(imageUrl);
+                feed.updateImageUrls(foundFeedImageUrls);//실체 없는 url 테이블에서 삭제
+                feedRepository.save(feed);
+            } catch (Exception e) {
+                throw new S3Exception(DELETE_ERROR);
+            }
+            feedRepository.delete(feed);
+        }
     }
 
 
@@ -195,10 +223,10 @@ public class CommunityFeedService {
     }
 
     //구독자 체크
-    private void checksubscriptionList(Long userId){
+    private void checksubscriptionList(Long userId) {
         List<Subscription> subscriptionList = subscriptionRepository
-            .findAllByUserId(userId).orElseThrow(()
-                -> new CustomException(ErrorType.USER_NOT_FOUND));
+                .findAllByUserId(userId).orElseThrow(()
+                        -> new CustomException(ErrorType.USER_NOT_FOUND));
         for (Subscription subscription : subscriptionList) {
             if (!subscription.getUser().getId().equals(userId)) {
                 throw new CustomException(ErrorType.UNAUTHORIZED_FEED_ACCESS);

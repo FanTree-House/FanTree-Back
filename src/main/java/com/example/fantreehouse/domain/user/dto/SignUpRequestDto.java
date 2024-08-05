@@ -38,9 +38,4 @@ public class SignUpRequestDto {
 
   private boolean entertainment = false;
   private String entertainmentToken = "";
-
-  public void updateImageUrl(String imageUrl) {
-    this.profileImageUrl = (imageUrl);
-  }
-
 }

@@ -24,8 +24,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.common.enums.PageSize.ARTIST_PAGE_SIZE;
+import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
+import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
 
 @Slf4j
 @Service
@@ -50,17 +55,14 @@ public class ArtistService {
             throw new DuplicatedException(ENROLLED_USER_AS_ARTIST);
         }
 
-        checkDuplicateName(requestDto.getArtistName());
-
-        // artist 등록
         Artist newArtist = Artist.of(requestDto, loginUser);
         artistRepository.save(newArtist);
 
-        //이미지 반드시 존재(필수) - if 필요 없음
-        String imageUrl;
-        try{
+        String imageUrl = "";
+        try {
             imageUrl = s3FileUploader.saveProfileImage(file, newArtist.getId(), UserRoleEnum.ARTIST);
         } catch (Exception e) {
+            s3FileUploader.deleteFileInBucket(imageUrl);
             throw new S3Exception(UPLOAD_ERROR);
         }
 
@@ -76,26 +78,37 @@ public class ArtistService {
         checkUserRole(loginUser.getUserRole());
 
         Artist foundArtist = checkHimself(userDetails.getUser().getId(), artistId);
-        checkDuplicateName(requestDto.getArtistName());
+        checkDuplicateName(requestDto.getArtistName(), foundArtist);
         foundArtist.updateArtist(requestDto);
 
-        String imageUrl = null;
-        if (S3FileUploaderUtil.isFileExists(file)) {
-            try{
-                imageUrl = s3FileUploader.saveProfileImage(file, foundArtist.getId(), UserRoleEnum.ARTIST);
+        if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
+
+            try {
+                s3FileUploader.deleteFileInBucket(foundArtist.getArtistProfileImageUrl());
+            } catch (NotFoundException e) {
+                foundArtist.updateImageUrl("");//실체 없는 url 테이블에서 삭제
+                artistRepository.save(foundArtist);
             } catch (Exception e) {
+                throw new S3Exception(DELETE_ERROR);
+            }
+
+            String newImageUrl = "";
+            try {
+                newImageUrl = s3FileUploader.saveProfileImage(file, foundArtist.getId(), UserRoleEnum.ARTIST);
+            } catch (Exception e) {
+                s3FileUploader.deleteFileInBucket(newImageUrl);
                 throw new S3Exception(UPLOAD_ERROR);
             }
-        }
 
-        ImageUrlCarrier carrier = new ImageUrlCarrier(foundArtist.getId(), imageUrl);
-        updateArtistImageUrl(carrier);
+            ImageUrlCarrier carrier = new ImageUrlCarrier(foundArtist.getId(), newImageUrl);
+            updateArtistImageUrl(carrier);
+        }
     }
+
 
     //아티스트 프로필(계정) 조회 - 비가입자 가능
     public ArtistProfileResponseDto getArtist(Long artistId) {
 
-        // 찾는 아티스트가 DB에 있는지 확인
         Artist foundArtist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
 
@@ -120,7 +133,14 @@ public class ArtistService {
         checkUserStatus(loginUser.getStatus());
         Artist foundArtist = checkHimself(userDetails.getUser().getId(), artistId);
 
-        s3FileUploader.deleteFileInBucket(foundArtist.getArtistProfileImageUrl());
+        try {
+            s3FileUploader.deleteFileInBucket(foundArtist.getArtistProfileImageUrl());
+        } catch (NotFoundException e) {
+            foundArtist.updateImageUrl("");
+            artistRepository.save(foundArtist);
+        } catch (Exception e) {
+            throw new S3Exception(DELETE_ERROR);
+        }
         artistRepository.delete(foundArtist);
     }
 
@@ -142,10 +162,13 @@ public class ArtistService {
     }
 
     // 활동명 중복 등록 확인
-    private void checkDuplicateName(String artistName) {
-        boolean isExistName = artistRepository.existsByArtistName(artistName);
-        if (isExistName) {
-            throw new DuplicatedException(ENROLLED_ARTIST_NAME);
+    private void checkDuplicateName(String artistName, Artist artist) {
+
+        if (!artistName.equals(artist.getArtistName())) {
+            boolean isExistName = artistRepository.existsByArtistName(artistName);
+            if (isExistName) {
+                throw new DuplicatedException(ENROLLED_ARTIST_NAME);
+            }
         }
     }
 
@@ -165,6 +188,5 @@ public class ArtistService {
             artistRepository.save(artist);
         }
     }
-
 
 }

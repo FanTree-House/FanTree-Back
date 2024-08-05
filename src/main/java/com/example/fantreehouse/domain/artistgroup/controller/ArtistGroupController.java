@@ -39,7 +39,6 @@ public class ArtistGroupController {
      */
     @PostMapping("/{groupName}")
     public ResponseEntity<ResponseMessageDto> createArtistGroup(
-            @PathVariable String enterName,
             @RequestPart MultipartFile file,
             @RequestPart ArtistGroupRequestDto request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -47,7 +46,7 @@ public class ArtistGroupController {
         if (file.getSize() > 10 * 1024 * 1024) {
             throw new S3Exception(OVER_LOAD);
         }
-        artistGroupService.createArtistGroup(enterName, file, request, userDetails.getUser());
+        artistGroupService.createArtistGroup(file, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_GROUP_CREATE_SUCCESS));
     }
 

@@ -68,10 +68,9 @@ public class ArtistGroup extends Timestamped {
         this.enterName = enterName;
     }
 
-    public ArtistGroup(String groupName, String groupInfo, String enterName, Entertainment entertainment) {
+    public ArtistGroup(String groupName, String groupInfo, Entertainment entertainment) {
         this.groupName = groupName;
         this.groupInfo = groupInfo;
-        this.enterName = enterName;
         this.entertainment = entertainment;
     }
 
