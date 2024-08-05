@@ -172,7 +172,7 @@ public class EnterFeedService {
                 enterFeed.getTitle(),
                 enterFeed.getContents(),
                 enterFeed.getCategory(),
-                enterFeed.getDate()
+                enterFeed.getScheduleDate()
         );
     }
 }

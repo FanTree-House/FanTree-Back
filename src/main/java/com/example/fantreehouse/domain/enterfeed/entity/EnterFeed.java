@@ -48,23 +48,23 @@ public class EnterFeed extends Timestamped {
     @Column(nullable = false)
     private FeedCategory category;
 
-    private LocalDate date;
+    private LocalDate scheduleDate;
 
     public EnterFeed(Entertainment entertainment, User user, String title, String contents, FeedCategory category,
-                     LocalDate date) {
+             LocalDate scheduleDate) {
         this.entertainment = entertainment;
         this.enterName = entertainment.getEnterName();
         this.user = user;
         this.title = title;
         this.contents = contents;
         this.category = category;
-        this.date = date;
+        this.scheduleDate = scheduleDate;
     }
 
-    public void updateContents(String title, String contents,  FeedCategory category, LocalDate  date) {
+    public void updateContents(String title, String contents,  FeedCategory category, LocalDate scheduleDate) {
         this.title = title;
         this.contents = contents;
         this.category = category;
-        this.date = date;
+        this.scheduleDate = scheduleDate;
     }
 }
