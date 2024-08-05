@@ -31,12 +31,13 @@ POST http://localhost:8080/users/invite/artist
 Content-Type: application/json
 
 {
-  "id": "artist1",
-  "name": "artist1",
-  "nickname": "artist1",
-  "email": "artist1@gmail.com",
-  "password": "artist123!@#",
-  "profileImage": "",
+  "id": "artist5",
+  "name": "artist5",
+  "nickname": "artist5",
+  "email": "rladnwlsok@gmail.com",
+  "password": "test1234",
+  "checkPassword" : "test1234",
+  "profileImage": "1231241.jpg",
   "artist": true,
   "artistToken": "acRos3knitterUp2eTt1ng5"
 }
@@ -120,7 +121,7 @@ Content-Type: application/json
 %}
 
 ### 아티스트 로그인
-POST http://localhost:8080/users/login
+POST http://localhost:8080/users/logina
 Content-Type: application/json
 
 {
@@ -141,18 +142,18 @@ POST http://localhost:8080/mailsend
 Content-Type: application/json
 
 {
-  "loginId": "artist2",
+  "loginId": "artist5",
   "email": "rladnwlsok@gmail.com"
 }
 
 
 
 ### 인증번호 검증
-PUT http://localhost:8080/mailableCheck
+POST http://localhost:8080/mailableCheck
 Content-Type: application/json
 
 {
-  "loginId": "artist2",
+  "loginId": "artist5",
   "email": "rladnwlsok@gmail.com",
-  "authNum": "436066"
+  "authNum": "453021"
 }
