@@ -1,4 +1,9 @@
 spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
   datasource:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
