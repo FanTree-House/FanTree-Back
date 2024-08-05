@@ -50,7 +50,7 @@ public class EnterFeed extends Timestamped {
 
     private LocalDate date;
 
-    public EnterFeed(Entertainment entertainment, User user, String title, String contents, String enterName, FeedCategory category,
+    public EnterFeed(Entertainment entertainment, User user, String title, String contents, FeedCategory category,
                      LocalDate date) {
         this.entertainment = entertainment;
         this.enterName = entertainment.getEnterName();

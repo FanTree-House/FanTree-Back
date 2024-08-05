@@ -1,11 +1,6 @@
 package com.example.fantreehouse.domain.artist.dto;
 
-import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.user.entity.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Getter;
 
 @Getter
@@ -17,7 +12,7 @@ public class ArtistResponseDto {
     private String artistProfileImageUrl;
     private User user;
 
-    public ArtistResponseDto(Long id, String artistName, String introduction, String artistProfileImageUrl, User user) {
+    public ArtistResponseDto(Long id, String artistName) {
         this.id = id;
         this.artistName = artistName;
         this.introduction = introduction;

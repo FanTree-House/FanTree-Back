@@ -48,7 +48,6 @@ public class EnterFeedService {
                 user,
                 request.getTitle(),
                 request.getContents(),
-                entertainment.getEnterName(),
                 request.getCategory(),
                 request.getDate()
         );
@@ -170,7 +169,6 @@ public class EnterFeedService {
     private EnterFeedResponseDto convertToResponseDto(EnterFeed enterFeed) {
         return new EnterFeedResponseDto(
                 enterFeed.getId(),
-                enterFeed.getEnterName(),
                 enterFeed.getTitle(),
                 enterFeed.getContents(),
                 enterFeed.getCategory(),
