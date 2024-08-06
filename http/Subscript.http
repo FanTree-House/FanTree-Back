@@ -1,7 +1,7 @@
 ### 구독하기 (Subscript)
 
-POST http://localhost:8080/artistGroup/subscript/Mouse
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIxOTcyMDA5LCJpYXQiOjE3MjE5NzAyMDl9.74yvhM-twZYBceFqjnCfvez1XqXisZlIiVD9mZ6IYcQ
+POST http://localhost:8080/artistGroup/subscript/aespa
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 

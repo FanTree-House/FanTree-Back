@@ -55,7 +55,6 @@ public class UserService {
         String name = requestDto.getName();
         String email = requestDto.getEmail();
         String nickname = requestDto.getNickname();
-        String profile = requestDto.getProfileImageUrl();
 
         //ID 중복확인
         duplicatedId(id);

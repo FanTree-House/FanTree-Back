@@ -3,6 +3,7 @@ package com.example.fantreehouse.domain.subscription.service;
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
+import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.feed.dto.response.FeedResponseDto;
@@ -113,6 +114,11 @@ public class SubscriptionService {
         return subsGroupFeedDtos;
     }
 
+    // 현재 그룹을 구독 중 인지 아닌지
+    public boolean getIsSubscribe(User user, String groupName) {
+        return artistGroupRepository.findByGroupNameAndId(groupName, user.getId()).isPresent();
+    }
+
     public User findUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(()
                 -> new CustomException(ErrorType.USER_NOT_FOUND));
@@ -122,6 +128,5 @@ public class SubscriptionService {
         return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
     }
-
 
 }

@@ -55,7 +55,7 @@ public class CommunityCommentService {
 
         List<CommunityFeed> feedList = feedRepository.findAllByUserId(userId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_FEED));
-        List<CommunityComment> commentList = commentRepository.findByCommunityFeed_Id(feedId);
+        List<CommunityComment> commentList = commentRepository.findByCommunityFeedId(feedId);
 
         if (commentList.isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_COMMENT);

@@ -4,11 +4,11 @@ Content-Type: application/json
 
 {
   "id": "user1",
-  "name": "user",
+  "name": "user1",
   "nickname": "user1",
   "email": "rladnwlsok@gmail.com",
-  "password": "user1234",
-  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
+  "password": "test1234",
+  "checkPasswrod": "test1234"
 }
 
 ### 관리자 회원가입
@@ -31,13 +31,12 @@ POST http://localhost:8080/users/invite/artist
 Content-Type: application/json
 
 {
-  "id": "artist5",
-  "name": "artist5",
-  "nickname": "artist5",
+  "id": "artist2",
+  "name": "winter",
+  "nickname": "winter",
   "email": "rladnwlsok@gmail.com",
   "password": "test1234",
-  "checkPassword" : "test1234",
-  "profileImage": "1231241.jpg",
+  "checkPassword": "test1234",
   "artist": true,
   "artistToken": "acRos3knitterUp2eTt1ng5"
 }
@@ -47,12 +46,12 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
+  "id": "enter1",
   "name": "SMENTERTAINMENT",
-  "nickname": "rladnwls",
+  "nickname": "enter1",
   "email": "rladnwlsok@gmail.com",
-  "password": "rladnwls",
-  "profileImage": "https://ifh.cc/g/tgPwvm.png",
+  "password": "test1234",
+  "checkPassword" : "test1234",
   "entertainment": true,
   "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
 }
@@ -78,7 +77,7 @@ Content-Type: application/json
 
 {
   "id": "user1",
-  "password": "user1234"
+  "password": "test1234"
 }
 
 > {%
@@ -109,8 +108,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
-  "password": "rladnwls"
+  "id": "SMenterManger",
+  "password": "12345678"
 }
 
 > {%
@@ -121,7 +120,7 @@ Content-Type: application/json
 %}
 
 ### 아티스트 로그인
-POST http://localhost:8080/users/logina
+POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
@@ -142,7 +141,7 @@ POST http://localhost:8080/mailsend
 Content-Type: application/json
 
 {
-  "loginId": "artist5",
+  "loginId": "enter1",
   "email": "rladnwlsok@gmail.com"
 }
 
@@ -153,7 +152,7 @@ POST http://localhost:8080/mailableCheck
 Content-Type: application/json
 
 {
-  "loginId": "artist5",
+  "loginId": "enter1",
   "email": "rladnwlsok@gmail.com",
-  "authNum": "453021"
+  "authNum": "261474"
 }
