@@ -297,7 +297,7 @@ public class ArtistGroupService {
     private ArtistGroupResponseDto convertToResponseDto(ArtistGroup artistGroup) {
         EntertainmentResponseDto entertainmentDto = new EntertainmentResponseDto(artistGroup.getEntertainment());
         List<ArtistResponseDto> artistDtos = artistGroup.getArtists().stream()
-                .map(artist -> new ArtistResponseDto(artist.getId(), artist.getArtistName()))
+                .map(artist -> new ArtistResponseDto(artist.getId(), artist.getArtistName(), artist.getIntroduction(), artist.getArtistProfileImageUrl(), artist.getUser()))
                 .collect(Collectors.toList());
         return new ArtistGroupResponseDto(artistGroup.getId(), artistGroup.getGroupName(), artistGroup.getArtistGroupProfileImageUrl(), entertainmentDto, artistDtos, artistGroup.getEnterName());
     }
