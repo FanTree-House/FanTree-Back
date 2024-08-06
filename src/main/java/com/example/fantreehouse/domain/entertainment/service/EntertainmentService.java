@@ -183,7 +183,6 @@ public class EntertainmentService {
                     .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
             entertainment.updateEnterLogo(carrier.getImageUrl());
             enterRepository.save(entertainment);
-
         }
     }
 }
