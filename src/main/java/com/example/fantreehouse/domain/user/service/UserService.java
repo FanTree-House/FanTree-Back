@@ -27,8 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
-import static com.example.fantreehouse.common.enums.ErrorType.ARTIST_NOT_FOUND;
-import static com.example.fantreehouse.common.enums.ErrorType.UPLOAD_ERROR;
+import static com.example.fantreehouse.common.enums.ErrorType.*;
+import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
 
 @Service
 @RequiredArgsConstructor
@@ -110,16 +110,16 @@ public class UserService {
         );
         userRepository.save(user);
 
-        String imageUrl;
+        String imageUrl = "";
         try {
             imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
         } catch (Exception e) {
+            s3FileUploader.deleteFileInBucket(imageUrl);
             throw new S3Exception(UPLOAD_ERROR);
         }
 
         ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), imageUrl);
         updateUserImageUrl(carrier);
-
 
         redisUtil.deleteData(id);
         return new SignUpResponseDto(user);
@@ -137,7 +137,15 @@ public class UserService {
             throw new NotFoundException(ErrorType.WITHDRAW_USER);
         }
 
-        s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
+        String imageUrl = user.getProfileImageUrl();
+        try {
+            s3FileUploader.deleteFileInBucket(imageUrl);
+        } catch (NotFoundException e) {
+            user.updateImageUrl("");//실체 없는 url 테이블에서 삭제
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new S3Exception(DELETE_ERROR);
+        }
         user.withDraw();
     }
 
@@ -174,15 +182,28 @@ public class UserService {
         user.update(Optional.ofNullable(requestDto.getEmail()),
                 Optional.ofNullable(newEncodePw));
 
-        String imageUrl;
-        try {
-            imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
-        } catch (Exception e) {
-            throw new S3Exception(UPLOAD_ERROR);
-        }
+        if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
 
-        ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), imageUrl);
-        updateUserImageUrl(carrier);
+            try {
+                s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
+            } catch (NotFoundException e) {
+                user.updateImageUrl("");
+                userRepository.save(user);
+            } catch (Exception e) {
+                throw new S3Exception(DELETE_ERROR);
+            }
+
+            String newImageUrl = "";
+            try {
+                newImageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
+            } catch (Exception e) {
+                s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
+                throw new S3Exception(UPLOAD_ERROR);
+            }
+
+            ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), newImageUrl);
+            updateUserImageUrl(carrier);
+        }
 
         return new ProfileResponseDto(user);
     }

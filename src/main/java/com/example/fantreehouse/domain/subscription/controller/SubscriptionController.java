@@ -56,7 +56,7 @@ public class SubscriptionController {
     }
 
     //구독한 그룹 피드 모아보기
-    @GetMapping("/abc")//임시 api 주소
+    @GetMapping("/feeds")//임시 api 주소
     public ResponseEntity<ResponseDataDto<List<FeedResponseDto>>> getSubscriptGroupFeeds(@AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         List<FeedResponseDto> subscriptGroupFeeds = subscriptionService.getSubscribedGroupFeeds(userDetails.getUser());

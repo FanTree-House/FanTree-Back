@@ -82,4 +82,5 @@ public class Feed extends Timestamped {
     public void updateFeed(UpdateFeedRequestDto requestDto) {
         this.contents = requestDto.getContents();
     }
+
 }

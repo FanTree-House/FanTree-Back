@@ -1,7 +1,6 @@
 package com.example.fantreehouse.domain.feed.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
@@ -19,8 +18,8 @@ import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feed.repository.FeedRepository;
 import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.feedlike.repository.FeedLikeRepository;
-import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
 import com.example.fantreehouse.domain.s3.service.S3FileUploader;
+import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
@@ -91,12 +90,13 @@ public class FeedService {
                     imageUrls.add(imageUrl);
                 }
             } catch (Exception e) {
+                s3FileUploader.deleteFilesInBucket(imageUrls);
                 throw new S3Exception(UPLOAD_ERROR);
             }
+            ImageUrlCarrier carrier = new ImageUrlCarrier(newFeed.getId(), imageUrls);
+            updateFeedImageUrls(carrier);
         }
 
-        ImageUrlCarrier carrier = new ImageUrlCarrier(newFeed.getId(), imageUrls);
-        updateFeedImageUrls(carrier);
 
         return CreateFeedResponseDto.of(newFeed);
     }
@@ -125,23 +125,35 @@ public class FeedService {
 
         checkArtistGroup(loginArtist, groupName);
         checkWriter(loginUser.getId(), foundFeed.getUser().getId());
-
         foundFeed.updateFeed(requestDto);
 
-        List<String> imageUrls = new ArrayList<>();
         if (areFilesExist(files)) {
+            List<String> foundFeedImageUrls = foundFeed.getImageUrls();
+            for (String imageUrl : foundFeedImageUrls) {
+                try {
+                    s3FileUploader.deleteFileInBucket(imageUrl);
+                } catch (NotFoundException e) {
+                    foundFeedImageUrls.remove(imageUrl);
+                    foundFeed.updateImageUrls(foundFeedImageUrls);
+                    feedRepository.save(foundFeed);
+                } catch (Exception e) {
+                    throw new S3Exception(DELETE_ERROR);
+                }
+            }
+
+            List<String> newImageUrls = new ArrayList<>();
             try {
                 for (MultipartFile file : files) {
                     String imageUrl = s3FileUploader.saveArtistFeedImage(file, loginArtist.getArtistName(), foundFeed.getId());
-                    imageUrls.add(imageUrl);
+                    newImageUrls.add(imageUrl);
                 }
             } catch (Exception e) {
+                s3FileUploader.deleteFilesInBucket(newImageUrls);
                 throw new S3Exception(UPLOAD_ERROR);
             }
+            ImageUrlCarrier carrier = new ImageUrlCarrier(foundFeed.getId(), newImageUrls);
+            updateFeedImageUrls(carrier);
         }
-
-        ImageUrlCarrier carrier = new ImageUrlCarrier(foundFeed.getId(), imageUrls);
-        updateFeedImageUrls(carrier);
 
         return UpdateFeedResponseDto.of(foundFeed);
     }
@@ -223,9 +235,19 @@ public class FeedService {
             throw new UnAuthorizedException(UNAUTHORIZED);
         }
 
-        s3FileUploader.deleteFilesInBucket(foundFeed.getImageUrls());
-        feedRepository.delete(foundFeed);
-
+        List<String> foundFeedImageUrls = foundFeed.getImageUrls();
+        for (String imageUrl : foundFeedImageUrls) {
+            try {
+                s3FileUploader.deleteFileInBucket(imageUrl);
+            } catch (NotFoundException e) {
+                foundFeedImageUrls.remove(imageUrl);
+                foundFeed.updateImageUrls(foundFeedImageUrls);//실체 없는 url 테이블에서 삭제
+                feedRepository.save(foundFeed);
+            } catch (Exception e) {
+                throw new S3Exception(DELETE_ERROR);
+            }
+            feedRepository.delete(foundFeed);
+        }
     }
 
 

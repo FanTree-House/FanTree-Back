@@ -28,8 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.fantreehouse.common.enums.ErrorType.ARTIST_GROUP_NOT_FOUND;
-import static com.example.fantreehouse.common.enums.ErrorType.UPLOAD_ERROR;
+import static com.example.fantreehouse.common.enums.ErrorType.*;
+import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
 
 @Service
 @RequiredArgsConstructor
@@ -52,10 +52,10 @@ public class ArtistGroupService {
         verifyEntertainmentAuthority(user);
 
         Entertainment entertainment = entertainmentRepository.findByEnterName(request.getEnterName())
-                .orElseThrow(() -> new CustomException(ErrorType.ENTERTAINMENT_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ENTERTAINMENT_NOT_FOUND));
 
         if (artistGroupRepository.findByGroupName(request.getGroupName()).isPresent()) {
-            throw new CustomException(ErrorType.DUPLICATE_GROUP_NAME);
+            throw new CustomException(DUPLICATE_GROUP_NAME);
         }
 
         ArtistGroup artistGroup = new ArtistGroup(
@@ -67,16 +67,17 @@ public class ArtistGroupService {
 
         for (Long artistId : request.getArtistIds()) {
             Artist artist = artistRepository.findById(artistId)
-                    .orElseThrow(() -> new CustomException(ErrorType.ARTIST_NOT_FOUND));
+                    .orElseThrow(() -> new CustomException(ARTIST_NOT_FOUND));
             artistGroup.addArtist(artist);
         }
 
         artistGroupRepository.save(artistGroup);
 
-        String imageUrl;
+        String imageUrl = "";
         try {
             imageUrl = s3FileUploader.saveArtistGroupImage(file, artistGroup.getId());
         } catch (Exception e) {
+            s3FileUploader.deleteFileInBucket(imageUrl);
             throw new S3Exception(UPLOAD_ERROR);
         }
 
@@ -157,21 +158,32 @@ public class ArtistGroupService {
         artistGroup.clearArtists();
         for (Long artistId : request.getArtistIds()) {
             Artist artist = artistRepository.findById(artistId)
-                    .orElseThrow(() -> new CustomException(ErrorType.ARTIST_NOT_FOUND));
+                    .orElseThrow(() -> new CustomException(ARTIST_NOT_FOUND));
             artistGroup.addArtist(artist);
         }
 
-        String imageUrl = null;
-        if (S3FileUploaderUtil.isFileExists(file)) {
+        if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
+
             try {
-                imageUrl = s3FileUploader.saveArtistGroupImage(file, artistGroup.getId());
+                s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
+            } catch (NotFoundException e) {
+                artistGroup.updateImageUrl("");
+                artistGroupRepository.save(artistGroup);
             } catch (Exception e) {
+                throw new S3Exception(DELETE_ERROR);
+            }
+
+            String newImageUrl = "";
+            try {
+                newImageUrl = s3FileUploader.saveArtistGroupImage(file, artistGroup.getId());
+            } catch (Exception e) {
+                s3FileUploader.deleteFileInBucket(newImageUrl);
                 throw new S3Exception(UPLOAD_ERROR);
             }
-        }
 
-        ImageUrlCarrier carrier = new ImageUrlCarrier(artistGroup.getId(), imageUrl);
-        updateArtistGroupImageUrl(carrier);
+            ImageUrlCarrier carrier = new ImageUrlCarrier(artistGroup.getId(), newImageUrl);
+            updateArtistGroupImageUrl(carrier);
+        }
 
         return artistGroupRepository.save(artistGroup);
     }
@@ -189,10 +201,10 @@ public class ArtistGroupService {
 
         ArtistGroup artistGroup = getArtistGroup(groupName);
         Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(() -> new CustomException(ErrorType.ARTIST_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ARTIST_NOT_FOUND));
 
         if (artist.getArtistGroup() == null || !artist.getArtistGroup().equals(artistGroup)) {
-            throw new CustomException(ErrorType.ARTIST_NOT_IN_GROUP);
+            throw new CustomException(ARTIST_NOT_IN_GROUP);
         }
 
         // 그룹에서 아티스트 제거
@@ -215,7 +227,15 @@ public class ArtistGroupService {
         verifyEntertainmentOrAdminAuthority(user);
 
         ArtistGroup artistGroup = getArtistGroup(groupName);
-        s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
+
+        try {
+            s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
+        } catch (NotFoundException e) {
+            artistGroup.updateImageUrl("");
+            artistGroupRepository.save(artistGroup);
+        } catch (Exception e) {
+            throw new S3Exception(DELETE_ERROR);
+        }
         artistGroupRepository.delete(artistGroup);
     }
 
@@ -226,7 +246,7 @@ public class ArtistGroupService {
      */
     private void verifyEntertainmentAuthority(User user) {
         if (!UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole())) {
-            throw new CustomException(ErrorType.UNAUTHORIZED_ACCESS);
+            throw new CustomException(UNAUTHORIZED_ACCESS);
         }
     }
 
@@ -237,7 +257,7 @@ public class ArtistGroupService {
      */
     private void verifyEntertainmentOrAdminAuthority(User user) {
         if (!UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole()) && !UserRoleEnum.ADMIN.equals(user.getUserRole())) {
-            throw new CustomException(ErrorType.UNAUTHORIZED_ACCESS);
+            throw new CustomException(UNAUTHORIZED_ACCESS);
         }
     }
 
@@ -257,7 +277,7 @@ public class ArtistGroupService {
      */
     private ArtistGroup getArtistGroup(String groupName) {
         return artistGroupRepository.findByGroupName(groupName)
-                .orElseThrow(() -> new CustomException(ErrorType.ARTIST_GROUP_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ARTIST_GROUP_NOT_FOUND));
     }
 
     /**
