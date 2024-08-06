@@ -8,6 +8,7 @@ import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupRequestDto;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupResponseDto;
 import com.example.fantreehouse.domain.artistgroup.service.ArtistGroupService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import java.util.List;
 import static com.example.fantreehouse.common.enums.ErrorType.OVER_LOAD;
 
 @RestController
-@RequestMapping("artistgroup")
+@RequestMapping("/artistgroup")
 @RequiredArgsConstructor
 public class ArtistGroupController {
 
@@ -37,10 +38,10 @@ public class ArtistGroupController {
      * @param userDetails 로그인한 사용자 정보
      * @return 응답 메시지 DTO
      */
-    @PostMapping("/{groupName}")
+    @PostMapping
     public ResponseEntity<ResponseMessageDto> createArtistGroup(
-            @RequestPart MultipartFile file,
-            @RequestPart ArtistGroupRequestDto request,
+            @RequestPart (value = "file") MultipartFile file,
+            @Valid @RequestPart ArtistGroupRequestDto request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         if (file.getSize() > 10 * 1024 * 1024) {
