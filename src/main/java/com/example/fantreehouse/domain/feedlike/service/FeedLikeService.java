@@ -55,6 +55,11 @@ public class FeedLikeService {
         feedLikeServiceSupport.addOrCancelFeedLike(loginUser, artistFeedId, foundFeed);
     }
 
+    // 좋아요 유무
+    public boolean getIsLiked(String groupName, Long artistFeedId, User user) {
+        return feedLikeRepository.findByFeedIdAndUserId(artistFeedId, user.getId()).isPresent();
+    }
+
     public List<FeedLikeUserResponseDto> getUserAllFeedLikeUser(String groupName, Long artisFeedId, User loginUser) {
 
         checkUserStatus(loginUser.getStatus());
@@ -93,5 +98,4 @@ public class FeedLikeService {
         artistGroupRepository.findByGroupName(groupName)
                 .orElseThrow(() -> new NotFoundException(ARTIST_GROUP_NOT_FOUND));
     }
-
 }
