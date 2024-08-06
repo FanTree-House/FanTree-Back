@@ -34,7 +34,7 @@ public class EntertainmentController {
     @PostMapping
     public ResponseEntity<ResponseMessageDto> createEnter(
             @RequestPart(value = "file") MultipartFile file,
-            @Valid @RequestPart EntertainmentRequestDto enterRequestDto,
+            @Valid @ModelAttribute EntertainmentRequestDto enterRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         if (file.getSize() > 10 * 1024 * 1024) {
