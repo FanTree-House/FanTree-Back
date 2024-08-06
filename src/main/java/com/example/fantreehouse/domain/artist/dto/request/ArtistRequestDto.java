@@ -24,7 +24,7 @@ public class ArtistRequestDto {
     //따라서 Dto도 form-data에서 받아야 함
 
     @JsonCreator //object mapper에서 생성자를 찾는 어노테이션 생성자를 못찾을떄 , 비선호어노테이션
-    public ArtistRequestDto(String artistName,String introduction, MultipartFile file) {
+    public ArtistRequestDto(String artistName,String introduction) {
         this.artistName = artistName;
         this.introduction = introduction;
 //        this.file = file;

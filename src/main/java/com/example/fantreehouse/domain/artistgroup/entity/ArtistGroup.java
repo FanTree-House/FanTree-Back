@@ -40,7 +40,7 @@ public class ArtistGroup extends Timestamped {
     private Entertainment entertainment;
 
     // 아티스트그룹과 아티스트와의 일대다 매핑
-    @OneToMany(mappedBy = "artistGroup")
+    @OneToMany(mappedBy = "artistGroup", cascade = CascadeType.DETACH)
     private List<Artist> artists = new ArrayList<>();
 
     //엔터피드와 다대일 매핑
@@ -68,9 +68,10 @@ public class ArtistGroup extends Timestamped {
         this.enterName = enterName;
     }
 
-    public ArtistGroup(String groupName, String groupInfo, Entertainment entertainment) {
+    public ArtistGroup(String groupName, String groupInfo, String enterName, Entertainment entertainment) {
         this.groupName = groupName;
         this.groupInfo = groupInfo;
+        this.enterName = enterName;
         this.entertainment = entertainment;
     }
 

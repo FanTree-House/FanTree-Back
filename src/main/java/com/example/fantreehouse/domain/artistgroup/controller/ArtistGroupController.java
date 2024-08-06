@@ -41,7 +41,7 @@ public class ArtistGroupController {
     @PostMapping
     public ResponseEntity<ResponseMessageDto> createArtistGroup(
             @RequestPart (value = "file") MultipartFile file,
-            @Valid @RequestPart ArtistGroupRequestDto request,
+            @Valid @ModelAttribute ArtistGroupRequestDto request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         if (file.getSize() > 10 * 1024 * 1024) {
