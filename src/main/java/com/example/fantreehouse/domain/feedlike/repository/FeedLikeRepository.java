@@ -12,5 +12,6 @@ public interface FeedLikeRepository extends JpaRepository<FeedLike, Long>{
 
     List<FeedLike> findAllFeedLikeByFeedId(Long artistFeedId);
 
-    int countByFeedId(Long id);
+    Long countByFeedId(Long id);
+
 }

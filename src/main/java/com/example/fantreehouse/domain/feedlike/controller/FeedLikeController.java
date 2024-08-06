@@ -36,7 +36,7 @@ public class FeedLikeController {
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
-        feedLikeService.addOrCancelLike(groupName, artistFeedId, userDetails);
+        feedLikeService.addOrCancelLike(groupName, artistFeedId, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_LIKE_CHANGED));
     }
 
@@ -53,7 +53,16 @@ public class FeedLikeController {
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
-        List<FeedLikeUserResponseDto> feedLikeUserResponseDtoList = feedLikeService.getUserAllFeedLikeUser(groupName, artistFeedId, userDetails);
+        List<FeedLikeUserResponseDto> feedLikeUserResponseDtoList = feedLikeService.getUserAllFeedLikeUser(groupName, artistFeedId, userDetails.getUser());
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.SUCCESS_GET_FEED_LIKE_USERS,feedLikeUserResponseDtoList));
+    }
+
+    // 피드의 좋아요 수 조회
+    @GetMapping("/likes")
+    public Long getFeedLikes(
+            @PathVariable final String groupName,
+            @PathVariable final Long artistFeedId
+    ) {
+        return feedLikeService.getFeedLikes(groupName, artistFeedId);
     }
 }

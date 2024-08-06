@@ -103,7 +103,7 @@ public class SubscriptionService {
         List<FeedResponseDto> subsGroupFeedDtos = new ArrayList<>();
         for (Feed feed : subGroupFeeds) {
             //좋아요 개수 세기
-            int feedLikeCount = feedLikeRepository.countByFeedId(feed.getId());
+            Long feedLikeCount = feedLikeRepository.countByFeedId(feed.getId());
             FeedResponseDto dto = FeedResponseDto.of(feed, feedLikeCount);
             subsGroupFeedDtos.add(dto);
         }
