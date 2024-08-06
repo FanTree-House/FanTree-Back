@@ -51,7 +51,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       if (userDetails.getUser().getStatus().equals(UserStatusEnum.BLACK_LIST)) {
         throw new DisabledException("로그인이 불가능한 사용자입니다."); // 블랙리스트 예외 처리
       }
-
       return authentication;
 
     } catch (IOException e) {
@@ -76,6 +75,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     String refreshToken = jwtTokenHelper.createRefreshToken();
     response.addHeader(JwtTokenHelper.AUTHORIZATION_HEADER, accessToken);
     response.addHeader(JwtTokenHelper.REFRESH_TOKEN_HEADER, refreshToken);
+    response.addHeader(JwtTokenHelper.ACCESS_CONTROL_EXPOSE_HEADERS_HEADER, "Authorization, Refresh_token" );
     jwtTokenHelper.saveRefreshToken(username, refreshToken);
 
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
