@@ -55,7 +55,7 @@ public class UserService {
         String name = requestDto.getName();
         String email = requestDto.getEmail();
         String nickname = requestDto.getNickname();
-        String profile = requestDto.getProfileImageUrl();
+        MultipartFile profile = requestDto.getFile();
 
         //ID 중복확인
         duplicatedId(id);
@@ -112,7 +112,7 @@ public class UserService {
 
         String imageUrl = "";
         try {
-            imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), UserRoleEnum.USER);
+            imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
         } catch (Exception e) {
             s3FileUploader.deleteFileInBucket(imageUrl);
             throw new S3Exception(UPLOAD_ERROR);
