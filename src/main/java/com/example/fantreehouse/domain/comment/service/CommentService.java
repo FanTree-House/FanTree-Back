@@ -73,35 +73,20 @@ public class CommentService {
         checkUserStatus(loginUser.getStatus());
         existArtistGroup(groupName);
 
-        //feed 나 comment 가 이미 삭제되었는지 확인
-        if (!feedRepository.existsById(feedId)) {
-            throw new NotFoundException(FEED_NOT_FOUND);
-        }
-
-        Comment foundComment = commentRepository.findById(artistFeedCommentId)
-                .orElseThrow(() -> new NotFoundException(NOT_FOUND_COMMENT)
-                );
+        Comment foundComment = checkFeedAndCommentExist(feedId, artistFeedCommentId);
 
         checkWriter(loginUser, foundComment.getUser());
         foundComment.update(requestDto);
     }
 
-    //comment 삭제 //작성자 본인, 아티스트의 경우 엔터와 어드민, 어떤 유저든 어드민 가능
+    //comment 삭제 - 작성자 본인, 아티스트의 경우 엔터와 어드민, 어떤 유저든 어드민 가능
     @Transactional
     public void deleteComment(String groupName, Long feedId, Long artistFeedCommentId, UserDetailsImpl userDetails) {
         User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
         existArtistGroup(groupName);
 
-        //feed 나 comment 가 이미 삭제되었는지 확인
-        if (!feedRepository.existsById(feedId)) {
-            throw new NotFoundException(FEED_NOT_FOUND);
-        }
-
-        Comment foundComment = commentRepository.findById(artistFeedCommentId)
-                .orElseThrow(() -> new NotFoundException(NOT_FOUND_COMMENT)
-                );
-
+        Comment foundComment = checkFeedAndCommentExist(feedId, artistFeedCommentId);
         User commentWriter = foundComment.getUser();
 
         if (loginUser.getId().equals(commentWriter.getId())) {// 작성자 본인(USER 또는 ARTIST)
@@ -143,12 +128,24 @@ public class CommentService {
         }
     }
 
-    // 그룹 생사 확인 <- 그룹이 사라지면 게시글도 모두 사라지기 때문
-    // (그룹이 생성되야 아티스트가 게시글 생성가능_즉, 댓글도 아티스트 그룹이 있어야 한다는 뜻)
     // 아직 존재하는 artistGroup 인지 확인 (ArtistGroup 없음은 곧 artist 게시글을 작성하는 곳이 없음을 의미)
     private void existArtistGroup(String groupName) {
         artistGroupRepository.findByGroupName(groupName)
                 .orElseThrow(() -> new NotFoundException(ARTIST_GROUP_NOT_FOUND));
+    }
+
+    //feed 나 comment 가 이미 삭제되었는지 확인
+    private Comment checkFeedAndCommentExist(Long feedId, Long artistFeedCommentId) {
+
+        if (!feedRepository.existsById(feedId)) {
+            throw new NotFoundException(FEED_NOT_FOUND);
+        }
+
+        Comment foundComment = commentRepository.findById(artistFeedCommentId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_COMMENT)
+                );
+
+        return foundComment;
     }
 
     // login 한 유저의 Role 에 따른 comment 작성 가능여부 확인

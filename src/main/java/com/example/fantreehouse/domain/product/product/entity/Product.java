@@ -67,10 +67,6 @@ public class Product extends Timestamped {
         this.artist = artist;
     }
 
-//    public void updateProductPicture(String productPicture) {
-//        this.productPicture = productPicture;
-//    }
-
     public void updatePrice(Integer price) {
         this.price = price;
     }

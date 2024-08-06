@@ -37,7 +37,7 @@ public class ArtistGroupController {
      * @param userDetails 로그인한 사용자 정보
      * @return 응답 메시지 DTO
      */
-    @PostMapping
+    @PostMapping("/{groupName}")
     public ResponseEntity<ResponseMessageDto> createArtistGroup(
             @RequestPart MultipartFile file,
             @RequestPart ArtistGroupRequestDto request,
@@ -120,7 +120,6 @@ public class ArtistGroupController {
      */
     @DeleteMapping("/{groupName}/artists/{artistId}")
     public ResponseEntity<ResponseMessageDto> removeArtistFromGroup(
-            @PathVariable String enterName,
             @PathVariable String groupName,
             @PathVariable Long artistId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {

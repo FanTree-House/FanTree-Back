@@ -27,8 +27,6 @@ import java.util.Optional;
 
 @Entity
 @Getter
-@Setter
-
 @NoArgsConstructor
 public class User extends Timestamped {
 
@@ -86,6 +84,12 @@ public class User extends Timestamped {
     private Entertainment entertainment;
 
     @OneToOne(mappedBy = "user")
+    public void setEntertainment(Entertainment entertainment) {
+        this.entertainment = entertainment;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "artist_id")
     private Artist artist;
 
     //구독자와 일대다 매핑
@@ -135,36 +139,5 @@ public class User extends Timestamped {
     public void update(Optional<String> email, Optional<String> newEncodePw) {
         this.email = email.orElse(this.email);
         this.password = newEncodePw.orElse(this.password);
-    }
-
-    public User(String loginId, String name, String nickname, String email, String password, UserRoleEnum userRole, UserStatusEnum status, Long kakaoId) {
-        this.loginId = loginId;
-        this.name = name;
-        this.nickname = nickname;
-        this.email = email;
-        this.password = password;
-        this.userRole = userRole;
-        this.status = status;
-        this.kakaoId = kakaoId;
-    }
-
-    public void kakaoIdUpdate(Long kakaoId) {
-        this.kakaoId=kakaoId;
-    }
-
-    public void transBlacklist() {
-        this.status = UserStatusEnum.BLACK_LIST;
-    }
-
-    public void transRole(UserRoleEnum roleEnum) {
-        this.userRole = roleEnum;
-    }
-
-    public void transUser() {
-        this.status = UserStatusEnum.ACTIVE_USER;
-    }
-
-    public void updateImageUrl(String imageUrl) {
-        this.profileImageUrl = (imageUrl);
     }
 }

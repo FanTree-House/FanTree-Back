@@ -7,6 +7,7 @@ import java.util.List;
 
 @Getter
 public class ProductResponseDto {
+    private Long id;
     private String productName;
     private Integer stock;
     private String type;
@@ -15,6 +16,7 @@ public class ProductResponseDto {
     private Integer price;
 
     public ProductResponseDto(Product product) {
+        this.id = product.getId();
         this.productName = product.getProductName();
         this.stock = product.getStock();
         this.type = product.getType();

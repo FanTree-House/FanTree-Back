@@ -87,7 +87,7 @@ public class FeedService {
         if (areFilesExist(files)) {
             try {
                 for (MultipartFile file : files) {
-                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, requestDto.getArtistName(), newFeed.getId());
+                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, loginArtist.getArtistName(), newFeed.getId());
                     imageUrls.add(imageUrl);
                 }
             } catch (Exception e) {
@@ -164,9 +164,6 @@ public class FeedService {
         Feed foundFeed = feedRepository.findById(artistFeedId)
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
 
-        Artist loginArtist = checkLoginUserRole(loginUser.getId());
-        checkArtistGroup(loginArtist, groupName);
-
         List<FeedLike> feedLikeList = feedLikeRepository.findAllFeedLikeByFeedId(artistFeedId);
         int feedLikeCount = feedLikeList.size();
 
@@ -176,7 +173,7 @@ public class FeedService {
             imageUrls.add(url);
         }
 
-        return FeedResponseDto.of(foundFeed, feedLikeCount, imageUrls);
+        return FeedResponseDto.of(foundFeed, feedLikeCount, imageUrls, foundFeed.getId(), foundFeed.getArtistName());
     }
 
 
@@ -244,6 +241,12 @@ public class FeedService {
         if (!userRoleEnum.equals(UserRoleEnum.ARTIST)) {
             throw new UnAuthorizedException(UNAUTHORIZED);
         }
+    }
+
+    //요청하는 feed 찾기
+    private Feed findFeed(Long artistFeedId) {
+        return feedRepository.findById(artistFeedId)
+                .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
     }
 
     private void updateFeedImageUrls(ImageUrlCarrier carrier) {

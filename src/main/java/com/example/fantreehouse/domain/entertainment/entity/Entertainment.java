@@ -60,6 +60,7 @@ public class Entertainment extends Timestamped {
     public Entertainment(String enterName, Long enterNumber, User user) {
         this.enterName = enterName;
         this.enterNumber = enterNumber;
+        this.enterLogo = "default";
         this.user = user;
     }
 
