@@ -111,7 +111,7 @@ public class SubscriptionService {
         return subsGroupFeedDtos;
     }
 
-    // 아티스트 그룹을 구독했는 지
+    // 아티스트 그룹을 구독 유무
     public boolean getIsSubscribe(User user, String groupName) {
         ArtistGroup artistGroup = findArtistGroup(groupName);
         return subscriptionRepository.findByUserIdAndArtistGroupId(user.getId(), artistGroup.getId()).isPresent();
