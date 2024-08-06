@@ -22,7 +22,6 @@ public class S3FileUploaderUtil {
     private static final String ARTIST_PROFILE_DIR = "ArtistProfile";
     private static final String ENTER_LOGO_DIR = "EnterLogo";
     private static final String ARTIST_GROUP_DIR = "ArtistGroupProfile";
-    private static final String ENTER_FEED_DIR = "EnterFeed";
     private static final String ARTIST_FEED_DIR = "ArtistFeed";
     private static final String COMMUNITY_DIR = "Community";
     private static final String PRODUCT_DIR = "Product";
@@ -50,7 +49,7 @@ public class S3FileUploaderUtil {
                 return;
             }
             throw new S3Exception(NOT_IMAGE);
-        } //contentType = image/jpeg 처럼 되어있음
+        }
     }
 
     public static void validateImageType(String fileName) {

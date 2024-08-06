@@ -167,7 +167,7 @@ public class ArtistGroupService {
                 s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
             } catch (NotFoundException e) {
                 artistGroup.updateImageUrl("");
-                artistGroupRepository.save(artistGroup);//실체 없는 url 테이블에서 삭제
+                artistGroupRepository.save(artistGroup);
             } catch (Exception e) {
                 throw new S3Exception(DELETE_ERROR);
             }
