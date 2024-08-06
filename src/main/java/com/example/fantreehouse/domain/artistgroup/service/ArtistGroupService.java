@@ -48,7 +48,7 @@ public class ArtistGroupService {
      * @return 생성된 아티스트 그룹
      */
     @Transactional
-    public ArtistGroup createArtistGroup(String enterName, MultipartFile file, ArtistGroupRequestDto request, User user) {
+    public ArtistGroup createArtistGroup(MultipartFile file, ArtistGroupRequestDto request, User user) {
         verifyEntertainmentAuthority(user);
 
         Entertainment entertainment = entertainmentRepository.findByEnterName(request.getEnterName())
@@ -61,7 +61,7 @@ public class ArtistGroupService {
         ArtistGroup artistGroup = new ArtistGroup(
                 request.getGroupName(),
                 request.getGroupInfo(),
-                enterName,
+                request.getEnterName(),
                 entertainment
         );
 
