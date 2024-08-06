@@ -2,7 +2,6 @@ package com.example.fantreehouse.domain.feedlike.service;
 
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
-import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feed.repository.FeedRepository;
@@ -34,9 +33,8 @@ public class FeedLikeService {
     private final FeedLikeRepository feedLikeRepository;
 
     @Transactional
-    public void addOrCancelLike(String groupName, Long artistFeedId, UserDetailsImpl userDetails) {
+    public void addOrCancelLike(String groupName, Long artistFeedId, User loginUser) {
 
-        User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
         existArtistGroup(groupName);
         Feed foundFeed = feedRepository.findById(artistFeedId)
@@ -57,9 +55,8 @@ public class FeedLikeService {
         feedLikeServiceSupport.addOrCancelFeedLike(loginUser, artistFeedId, foundFeed);
     }
 
-    public List<FeedLikeUserResponseDto> getUserAllFeedLikeUser(String groupName, Long artisFeedId, UserDetailsImpl userDetails) {
+    public List<FeedLikeUserResponseDto> getUserAllFeedLikeUser(String groupName, Long artisFeedId, User loginUser) {
 
-        User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
         existArtistGroup(groupName);
 
@@ -80,6 +77,11 @@ public class FeedLikeService {
         return feedLikeUserResponseDtoList;
     }
 
+    // 피드의 좋아요 수 조회
+    public Long getFeedLikes(String groupName, Long artistFeedId) {
+        return feedLikeRepository.countByFeedId(artistFeedId);
+    }
+
     //유저 status 확인 (활동 여부)
     private void checkUserStatus(UserStatusEnum userStatusEnum) {
         if (!userStatusEnum.equals(UserStatusEnum.ACTIVE_USER)) {
@@ -91,4 +93,5 @@ public class FeedLikeService {
         artistGroupRepository.findByGroupName(groupName)
                 .orElseThrow(() -> new NotFoundException(ARTIST_GROUP_NOT_FOUND));
     }
+
 }

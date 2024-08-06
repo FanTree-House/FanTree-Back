@@ -12,9 +12,9 @@ public class FeedResponseDto {
     private String artistName;
     private String contents;
     private List<String> imageUrls;
-    private int likesCount;
+    private Long likesCount;
 
-    public FeedResponseDto(Long id, String contents, List<String> imageUrls, int likesCount, String artistName) {
+    public FeedResponseDto(Long id, String contents, List<String> imageUrls, Long likesCount, String artistName) {
         this.id = id;
         this.contents = contents;
         this.imageUrls = imageUrls;
@@ -22,7 +22,7 @@ public class FeedResponseDto {
         this.artistName = artistName;
     }
 
-    public static FeedResponseDto of(Feed feed, int feedLikeCount, List<String> imageUrls, Long id, String artistName) {
+    public static FeedResponseDto of(Feed feed, Long feedLikeCount, List<String> imageUrls, Long id, String artistName) {
         return new FeedResponseDto(
                 id,
                 feed.getContents(),
@@ -33,7 +33,7 @@ public class FeedResponseDto {
 
     }
 
-    public static FeedResponseDto of(Feed feed, int feedLikeCount) {
+    public static FeedResponseDto of(Feed feed, Long feedLikeCount) {
         return new FeedResponseDto(
                 feed.getId(),
                 feed.getContents(),
