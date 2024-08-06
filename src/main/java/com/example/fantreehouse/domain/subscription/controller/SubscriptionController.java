@@ -31,7 +31,7 @@ public class SubscriptionController {
     @PostMapping("/{groupName}")
     public ResponseEntity<ResponseMessageDto> createSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                               @PathVariable String groupName) {
-        subscriptionService.createSubscript(userDetails.getUser().getId(), groupName);
+        subscriptionService.createSubscript(userDetails.getUser(), groupName);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_SUCCESS_SUBSCRIPT));
     }
 
@@ -44,7 +44,7 @@ public class SubscriptionController {
     @DeleteMapping("/{groupName}")
     public ResponseEntity<ResponseMessageDto> deleteSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                               @PathVariable String groupName) {
-        subscriptionService.deleteSubscript(userDetails.getUser().getId(), groupName);
+        subscriptionService.deleteSubscript(userDetails.getUser(), groupName);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_DELETE_SUBSCRIPT));
     }
 
