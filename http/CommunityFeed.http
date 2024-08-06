@@ -1,6 +1,6 @@
 ### 커뮤니티 보드 피드 생성
-POST http://localhost:8080/artist/2NE1/feeds
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMTc2ODM0LCJpYXQiOjE3MjIxNzUwMzR9.zom_kDkfi9jlg_7mmZpk4qTm7Z7Hu4lx9H4s5GO48BA
+POST http://localhost:8080/artist/seventeen/feeds
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsImF1dGgiOiJVU0VSIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjIzMzU2ODUsImlhdCI6MTcyMjMzMzg4NX0.3AoSHv2rUE-gPSGok-AHWOdTcX3B9SBFqdT3zzp19G0
 Content-Type: application/json
 
 {

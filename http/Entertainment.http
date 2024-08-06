@@ -1,5 +1,5 @@
 ### 변수 정의
-@enterName = sm
+@enterName = SM
 @groupName = aespa
 @artistId = 4
 
@@ -11,7 +11,7 @@ Content-Type: application/json
   "id": "smenter1",
   "name": "SMENTERTAINMENT",
   "nickname": "winter1",
-  "email": "smentertainment1@email.com",
+  "email": "7642510@naver.com",
   "password": "smenter123",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
   "entertainment": true,
@@ -24,8 +24,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "smenter1",
-  "password": "smenter123"
+  "id": "test1234",
+  "password": "test1234"
 }
 
 > {%
@@ -37,11 +37,11 @@ Content-Type: application/json
 
 ### 엔터 계정 생성
 POST http://localhost:8080/enter
-Authorization: {{Authorization}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MTIzNCIsImF1dGgiOiJFTlRFUlRBSU5NRU5UIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjI4NDUzMDQsImlhdCI6MTcyMjg0MzUwNH0.j0E4ZNODckaHN8lR40j_gJpo4R3TzIE1KkwflHcQRfM
 Content-Type: application/json
 
 {
-  "enterName": "sm",
+  "enterName": "hybe",
   "enterNumber": 12334678,
   "enterLogo": "image"
 }

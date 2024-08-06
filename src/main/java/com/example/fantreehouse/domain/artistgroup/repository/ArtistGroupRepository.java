@@ -12,4 +12,6 @@ public interface ArtistGroupRepository extends JpaRepository<ArtistGroup, Long> 
     Optional<ArtistGroup> findByGroupName(String groupName);
 
     List<ArtistGroup> findByGroupNameContaining (String groupName, Pageable pageable);
+
+    Optional<ArtistGroup> findByGroupNameAndId(String groupName, Long id);
 }

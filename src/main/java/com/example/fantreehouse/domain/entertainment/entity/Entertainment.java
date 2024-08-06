@@ -6,6 +6,7 @@ import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentRequestDto;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,23 +44,25 @@ public class Entertainment extends Timestamped {
     @OneToOne(mappedBy = "entertainment")
     private User user;
 
-    public Entertainment(EntertainmentRequestDto enterRequestDto, User user) {
-        this.enterName = enterRequestDto.getEnterName();
-        this.enterNumber = enterRequestDto.getEnterNumber();
-        this.enterLogo = "default";
-        this.user = user;
-    }
 
-    public Entertainment(String enterName, Long enterNumber, String enterLogo, User user) {
-        this.enterName = enterName;
-        this.enterNumber = enterNumber;
-        this.enterLogo = enterLogo;
-        this.user = user;
-    }
+//    public Entertainment(String enterName, Long enterNumber ,User user) {
+//        this.enterName = enterName;
+//        this.enterNumber = enterNumber;
+//        this.enterLogo = "default";
+//        this.user = user;
+//    }
+//
+//    public Entertainment(String enterName, Long enterNumber, String enterLogo, User user) {
+//        this.enterName = enterName;
+//        this.enterNumber = enterNumber;
+//        this.enterLogo = enterLogo;
+//        this.user = user;
+//    }
 
     public Entertainment(String enterName, Long enterNumber, User user) {
         this.enterName = enterName;
         this.enterNumber = enterNumber;
+        this.enterLogo = "default";
         this.user = user;
     }
 

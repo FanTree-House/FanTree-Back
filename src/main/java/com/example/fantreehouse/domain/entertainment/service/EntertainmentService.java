@@ -4,7 +4,6 @@ import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
-import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentRequestDto;
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentResponseDto;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
@@ -16,13 +15,12 @@ import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.example.fantreehouse.common.enums.ErrorType.ARTIST_NOT_FOUND;
-import static com.example.fantreehouse.common.enums.ErrorType.UPLOAD_ERROR;
+import static com.example.fantreehouse.common.enums.ErrorType.*;
+import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
 
 @Service
 @RequiredArgsConstructor
@@ -47,18 +45,19 @@ public class EntertainmentService {
         checkEntertainmentAuthority(user);
 
         Entertainment enter = new Entertainment(
-            enterRequestDto.getEnterName(),
-            enterRequestDto.getEnterNumber(),
-            user);
+                enterRequestDto.getEnterName(),
+                enterRequestDto.getEnterNumber(),
+                user);
         // [예외2] - Entertainment 소속사 이름, 사업자번호 중복체크
         checkEnterNameOrNumberExisits(enter);
 
         enterRepository.save(enter);
 
-        String imageUrl;
+        String imageUrl = "";
         try {
             imageUrl = s3FileUploader.saveProfileImage(file, enter.getId(), UserRoleEnum.ENTERTAINMENT);
         } catch (Exception e) {
+            s3FileUploader.deleteFileInBucket(imageUrl);
             throw new S3Exception(UPLOAD_ERROR);
         }
 
@@ -111,17 +110,27 @@ public class EntertainmentService {
 
         enterRepository.save(enter);
 
-        String imageUrl = null;
-        if (S3FileUploaderUtil.isFileExists(file)) {
+        if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
             try {
-                imageUrl = s3FileUploader.saveProfileImage(file, enter.getId(), UserRoleEnum.ARTIST);
+                s3FileUploader.deleteFileInBucket(enter.getEnterLogo());
+            } catch (NotFoundException e) {
+                enter.updateEnterLogo("");
+                enterRepository.save(enter);
             } catch (Exception e) {
+                throw new S3Exception(DELETE_ERROR);
+            }
+
+            String newImageUrl = "";
+            try {
+                newImageUrl = s3FileUploader.saveProfileImage(file, enter.getId(), UserRoleEnum.ENTERTAINMENT);
+            } catch (Exception e) {
+                s3FileUploader.deleteFileInBucket(newImageUrl);
                 throw new S3Exception(UPLOAD_ERROR);
             }
-        }
 
-        ImageUrlCarrier carrier = new ImageUrlCarrier(enter.getId(), imageUrl);
-        updateEnterLogoUrl(carrier);
+            ImageUrlCarrier carrier = new ImageUrlCarrier(enter.getId(), newImageUrl);
+            updateEnterLogoUrl(carrier);
+        }
     }
 
 
@@ -141,7 +150,14 @@ public class EntertainmentService {
         // [예외 2] - 존재하지 않는 엔터테이먼트 계정
         Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
 
-        s3FileUploader.deleteFileInBucket(enter.getEnterLogo());
+        try {
+            s3FileUploader.deleteFileInBucket(enter.getEnterLogo());
+        } catch (NotFoundException e) {
+            enter.updateEnterLogo("");//실체 없는 url 테이블에서 삭제
+            enterRepository.save(enter);
+        } catch (Exception e) {
+            throw new S3Exception(DELETE_ERROR);
+        }
         enterRepository.delete(enter);
     }
 

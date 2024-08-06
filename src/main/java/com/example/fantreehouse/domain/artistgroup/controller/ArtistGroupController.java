@@ -8,6 +8,7 @@ import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupRequestDto;
 import com.example.fantreehouse.domain.artistgroup.dto.ArtistGroupResponseDto;
 import com.example.fantreehouse.domain.artistgroup.service.ArtistGroupService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import java.util.List;
 import static com.example.fantreehouse.common.enums.ErrorType.OVER_LOAD;
 
 @RestController
-@RequestMapping("artistgroup")
+@RequestMapping("/artistgroup")
 @RequiredArgsConstructor
 public class ArtistGroupController {
 
@@ -39,15 +40,14 @@ public class ArtistGroupController {
      */
     @PostMapping
     public ResponseEntity<ResponseMessageDto> createArtistGroup(
-            @PathVariable String enterName,
-            @RequestPart MultipartFile file,
-            @RequestPart ArtistGroupRequestDto request,
+            @RequestPart (value = "file") MultipartFile file,
+            @Valid @ModelAttribute ArtistGroupRequestDto request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         if (file.getSize() > 10 * 1024 * 1024) {
             throw new S3Exception(OVER_LOAD);
         }
-        artistGroupService.createArtistGroup(enterName, file, request, userDetails.getUser());
+        artistGroupService.createArtistGroup(file, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_GROUP_CREATE_SUCCESS));
     }
 
@@ -121,7 +121,6 @@ public class ArtistGroupController {
      */
     @DeleteMapping("/{groupName}/artists/{artistId}")
     public ResponseEntity<ResponseMessageDto> removeArtistFromGroup(
-            @PathVariable String enterName,
             @PathVariable String groupName,
             @PathVariable Long artistId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
