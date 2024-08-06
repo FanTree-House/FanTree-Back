@@ -113,6 +113,11 @@ public class SubscriptionService {
         return subsGroupFeedDtos;
     }
 
+    // 아티스트 그룹을 구독했는 지
+    public boolean getIsSubscribe(User user, String groupName) {
+        return artistGroupRepository.findByGroupNameAndId(groupName, user.getId()).isPresent();
+    }
+
     public User findUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(()
                 -> new CustomException(ErrorType.USER_NOT_FOUND));
@@ -122,6 +127,5 @@ public class SubscriptionService {
         return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
     }
-
 
 }

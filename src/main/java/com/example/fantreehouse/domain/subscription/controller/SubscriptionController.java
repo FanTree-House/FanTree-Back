@@ -63,4 +63,11 @@ public class SubscriptionController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, subscriptGroupFeeds));
     }
 
+    // 아티스트 그룹을 구독했는 지
+    @GetMapping("/{groupName}")
+    public boolean getIsSubscribe(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                  @PathVariable String groupName) {
+        return subscriptionService.getIsSubscribe(userDetails.getUser(), groupName);
+    }
+
 }
