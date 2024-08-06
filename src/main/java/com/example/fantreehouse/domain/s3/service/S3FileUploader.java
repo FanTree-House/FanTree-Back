@@ -178,7 +178,7 @@ public class S3FileUploader {
             amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
-            //기존 이미지 삭제 로직(위치는 추후 조정)
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -199,7 +199,13 @@ public class S3FileUploader {
 
         String key = getImageKey(fileDir);
         try {
-            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
+            if (amazonS3Client.doesObjectExist(bucket, key)) {
+                amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
+            } else {
+                throw new NotFoundException(NOT_STORED_FILE_NAME);//테이블에 저장되어있는 실체없는 url 을 삭제하라고 알려주기
+            }
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new S3Exception(DELETE_ERROR);
         }
@@ -211,8 +217,13 @@ public class S3FileUploader {
         for (String fileDir : filedDirs) {
             String key = getImageKey(fileDir);
             try {
-                amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
-
+                if (amazonS3Client.doesObjectExist(bucket, key)) {
+                    amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
+                } else {
+                    throw new NotFoundException(NOT_STORED_FILE_NAME);
+                }
+            } catch (NotFoundException e) {
+                throw e;
             } catch (Exception e) {
                 throw new S3Exception(DELETE_ERROR);
             }

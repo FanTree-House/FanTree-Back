@@ -35,12 +35,10 @@ public enum ErrorType implements ErrorCode {
     REFRESH_TOKEN_MISMATCH(HttpStatus.NOT_FOUND, "REFRESH_TOKEN 값이 일치 하지 않습니다."),
     MISMATCH_ADMINTOKEN(HttpStatus.OK, "Admin 토큰값이 일치하지 않습니다."),
     MISMATCH_ARTISTTOKEN(HttpStatus.OK, "Artist 토큰값이 일치하지 않습니다."),
-    MISMATCH_ENTERTAINMENTTOKEN(HttpStatus.OK, "Entertainment 토큰값이 일치하지 않습니다."),	AUTH_NUM_NOTFOUND(HttpStatus.NOT_FOUND,
-        "인증번호가 없습니다 확인부탁드립니다."),
-    AUTH_MISMATCH(HttpStatus.NOT_FOUND,
-        "인증번호가 틀렸습니다. 확인부탁드립니다."),
-    EMAIL_DUPLICATE(HttpStatus.NOT_FOUND,
-        "이메일 중복"),
+    MISMATCH_ENTERTAINMENTTOKEN(HttpStatus.OK, "Entertainment 토큰값이 일치하지 않습니다."),
+    AUTH_NUM_NOTFOUND(HttpStatus.NOT_FOUND,"인증번호가 없습니다 확인부탁드립니다."),
+    AUTH_MISMATCH(HttpStatus.NOT_FOUND,"인증번호가 틀렸습니다. 확인부탁드립니다."),
+    EMAIL_DUPLICATE(HttpStatus.NOT_FOUND,"이메일 중복"),
     NOT_AUTH_EMAIL(HttpStatus.OK, "이메일이 인증되지 않았습니다."),
 
     //Feed
@@ -104,6 +102,7 @@ public enum ErrorType implements ErrorCode {
     NOT_IMAGE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "이미지 파일이 아닙니다."),
     OVER_LOAD(HttpStatus.NOT_ACCEPTABLE, "사진은 10MB를 초과할 수 없습니다."),
     MAX_IMAGES_EXCEEDED(HttpStatus.NOT_ACCEPTABLE, "사진은 최대 10장 업로드할 수 있습니다."),
+    NOT_STORED_FILE_NAME(HttpStatus.BAD_REQUEST, "해당 이름을 가진 파일이 존재하지 않습니다."),
 
     ;
 
