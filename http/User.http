@@ -4,11 +4,11 @@ Content-Type: application/json
 
 {
   "id": "user1",
-  "name": "user",
+  "name": "user1",
   "nickname": "user1",
   "email": "rladnwlsok@gmail.com",
-  "password": "user1234",
-  "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT"
+  "password": "test1234",
+  "checkPasswrod": "test1234"
 }
 
 ### 관리자 회원가입
@@ -31,12 +31,12 @@ POST http://localhost:8080/users/invite/artist
 Content-Type: application/json
 
 {
-  "id": "artist1",
-  "name": "artist1",
-  "nickname": "artist1",
-  "email": "artist1@gmail.com",
-  "password": "artist123!@#",
-  "profileImage": "",
+  "id": "artist2",
+  "name": "winter",
+  "nickname": "winter",
+  "email": "rladnwlsok@gmail.com",
+  "password": "test1234",
+  "checkPassword": "test1234",
   "artist": true,
   "artistToken": "acRos3knitterUp2eTt1ng5"
 }
@@ -46,12 +46,12 @@ POST http://localhost:8080/users/invite/entertainment
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
+  "id": "enter1",
   "name": "SMENTERTAINMENT",
-  "nickname": "rladnwls",
+  "nickname": "enter1",
   "email": "rladnwlsok@gmail.com",
-  "password": "rladnwls",
-  "profileImage": "https://ifh.cc/g/tgPwvm.png",
+  "password": "test1234",
+  "checkPassword" : "test1234",
   "entertainment": true,
   "entertainmentToken": "AAABnyxRVklrnYxKz0aHgTBcXukezYGoc"
 }
@@ -77,7 +77,7 @@ Content-Type: application/json
 
 {
   "id": "user1",
-  "password": "user1234"
+  "password": "test1234"
 }
 
 > {%
@@ -108,8 +108,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "rladnwls",
-  "password": "rladnwls"
+  "id": "SMenterManger",
+  "password": "12345678"
 }
 
 > {%
@@ -141,18 +141,18 @@ POST http://localhost:8080/mailsend
 Content-Type: application/json
 
 {
-  "loginId": "artist2",
+  "loginId": "enter1",
   "email": "rladnwlsok@gmail.com"
 }
 
 
 
 ### 인증번호 검증
-PUT http://localhost:8080/mailableCheck
+POST http://localhost:8080/mailableCheck
 Content-Type: application/json
 
 {
-  "loginId": "artist2",
+  "loginId": "enter1",
   "email": "rladnwlsok@gmail.com",
-  "authNum": "436066"
+  "authNum": "261474"
 }

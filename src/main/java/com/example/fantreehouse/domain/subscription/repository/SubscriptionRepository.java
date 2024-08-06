@@ -1,6 +1,7 @@
 package com.example.fantreehouse.domain.subscription.repository;
 
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
+import com.example.fantreehouse.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
 
     Optional<Subscription> findByUser_IdAndArtistGroup_Id(Long userId, Long groupId);
     Optional<Subscription> findByUserId(Long UserId);
+
+    Optional<List<Subscription>> findByUser(User user);
 }
