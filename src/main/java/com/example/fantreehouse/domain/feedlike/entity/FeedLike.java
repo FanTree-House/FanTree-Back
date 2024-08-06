@@ -1,5 +1,6 @@
 package com.example.fantreehouse.domain.feedlike.entity;
 
+import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -9,7 +10,7 @@ import lombok.*;
 @Entity
 @NoArgsConstructor
 @Table(name = "feed_like")
-public class FeedLike {
+public class FeedLike extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

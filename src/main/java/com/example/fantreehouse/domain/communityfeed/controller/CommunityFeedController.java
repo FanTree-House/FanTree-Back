@@ -94,7 +94,7 @@ public class CommunityFeedController {
      */
     @PatchMapping("/{feedId}")
     public ResponseEntity<ResponseMessageDto> updateFeed(
-        @Valid @RequestBody CommunityFeedUpdateRequestDto requestDto,
+        @Valid @RequestPart CommunityFeedUpdateRequestDto requestDto,
         @RequestPart(value = "file", required = false) List<MultipartFile> files,
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long feedId,

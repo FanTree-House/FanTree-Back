@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +38,7 @@ import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
 public class S3FileUploader {
 
     private final AmazonS3Client amazonS3Client;
+    private final String mainUrl = "https://fantree.s3.ap-northeast-2.amazonaws.com/";
 
     @Value("${cloud.aws.s3.bucket}")
     private final String bucket = "fantree";
@@ -52,12 +55,7 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        validateImageTypeWithContentType(contentType);
+        validateImageTypeWithContentType(file);
         validateImageType(uploadFileName);
 
         String originName = uploadFileName.replace(" ", "");
@@ -74,8 +72,7 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        UUID uuid = UUID.randomUUID();
-        String fileName = fileDir + originName + "_" + uuid;
+        String fileName = makeFileName(originName, fileDir);
 
         return uploadFileToS3(file, fileName);
 
@@ -91,21 +88,14 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        validateImageTypeWithContentType(contentType);
+        validateImageTypeWithContentType(file);
         validateImageType(uploadFileName);
 
         String originName = uploadFileName.replace(" ", "");
 
         //저장 경로 설정
         String fileDir = createArtistGroupDir(artistGroupId);
-
-        UUID uuid = UUID.randomUUID(); // 중복되지 않는 문자열 생성
-        String fileName = fileDir + originName + "_" + uuid; // 업로드할 이미지 이름;
+        String fileName = makeFileName(originName, fileDir);
 
         return uploadFileToS3(file, fileName);
     }
@@ -120,55 +110,16 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        validateImageTypeWithContentType(contentType);
+        validateImageTypeWithContentType(file);
         validateImageType(uploadFileName);
 
         String originName = uploadFileName.replace(" ", "");
 
         //저장 경로 설정
         String fileDir = createArtistFeedDir(artistName, feedId);
-
-        UUID uuid = UUID.randomUUID(); // 중복되지 않는 문자열 생성
-        String fileName = fileDir + originName + "_" + uuid; // 업로드할 이미지 이름;
-
+        String fileName = makeFileName(originName, fileDir);
 
         return uploadFileToS3(file, fileName);
-    }
-
-    public String saveEnterFeedImage(MultipartFile file, String enterName, String feedCategory, Long enterFeedId) {
-        if (!S3FileUploaderUtil.isFileExists(file)) {
-            return NO_IMAGE;
-        }
-
-        String uploadFileName = file.getOriginalFilename();
-        if (uploadFileName == null || !uploadFileName.contains(".")) {
-            throw new S3Exception(UPLOAD_ERROR);
-        }
-
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        S3FileUploaderUtil.validateImageTypeWithContentType(contentType);
-        S3FileUploaderUtil.validateImageType(uploadFileName);
-
-        String originName = uploadFileName.replace(" ", "");
-
-        //저장 경로 설정
-        String fileDir = S3FileUploaderUtil.createEnterFeedDir(
-                enterName, feedCategory, enterFeedId);
-
-        UUID uuid = UUID.randomUUID(); // 중복되지 않는 문자열 생성
-        String fileName = fileDir + originName + "_" + uuid; // 업로드할 이미지 이름;
-
-        return uploadFileToS3(file, fileName);
-
     }
 
     public String saveCommunityImage(MultipartFile file, String groupName, Long communityFeedId) {
@@ -181,21 +132,14 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        validateImageTypeWithContentType(contentType);
+        validateImageTypeWithContentType(file);
         validateImageType(uploadFileName);
 
         String originName = uploadFileName.replace(" ", "");
 
         //저장 경로 설정
         String fileDir = createCommunityDir(groupName, communityFeedId);
-
-        UUID uuid = UUID.randomUUID();
-        String fileName = fileDir + originName + "_" + uuid;
+        String fileName = makeFileName(originName, fileDir);
 
         return uploadFileToS3(file, fileName);
 
@@ -212,24 +156,18 @@ public class S3FileUploader {
             throw new S3Exception(UPLOAD_ERROR);
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            throw new S3Exception(NOT_IMAGE);
-        }
-
-        validateImageTypeWithContentType(contentType);
+        validateImageTypeWithContentType(file);
         validateImageType(uploadFileName);
 
         String originName = uploadFileName.replace(" ", "");
 
         //저장 경로 설정
         String fileDir = createProductDir(artistName, productType, productId);
-
-        UUID uuid = UUID.randomUUID(); // 중복되지 않는 문자열 생성
-        String fileName = fileDir + originName + "_" + uuid; // 업로드할 이미지 이름;
+        String fileName = makeFileName(originName, fileDir);
 
         return uploadFileToS3(file, fileName);
     }
+
 
     private String uploadFileToS3(MultipartFile file, String fileName) {
 
@@ -239,6 +177,8 @@ public class S3FileUploader {
         try (InputStream inputStream = file.getInputStream()) {
             amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
+
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -254,11 +194,18 @@ public class S3FileUploader {
         return amazonS3Client.getUrl(bucket, imageUrl).toString();
     }
 
-
     //Dir 단건 삭제
     public void deleteFileInBucket(String fileDir) {
+
+        String key = getImageKey(fileDir);
         try {
-            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileDir));
+            if (amazonS3Client.doesObjectExist(bucket, key)) {
+                amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
+            } else {
+                throw new NotFoundException(NOT_STORED_FILE_NAME);//테이블에 저장되어있는 실체없는 url 을 삭제하라고 알려주기
+            }
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new S3Exception(DELETE_ERROR);
         }
@@ -268,12 +215,30 @@ public class S3FileUploader {
     public void deleteFilesInBucket(List<String> filedDirs) {
 
         for (String fileDir : filedDirs) {
+            String key = getImageKey(fileDir);
             try {
-                amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileDir));
-
+                if (amazonS3Client.doesObjectExist(bucket, key)) {
+                    amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
+                } else {
+                    throw new NotFoundException(NOT_STORED_FILE_NAME);
+                }
+            } catch (NotFoundException e) {
+                throw e;
             } catch (Exception e) {
                 throw new S3Exception(DELETE_ERROR);
             }
         }
+    }
+
+    //파일이름 생성
+    private String makeFileName(String originName, String fileDir) {
+        UUID uuid = UUID.randomUUID();
+        return fileDir + originName + "_" + uuid;
+    }
+
+    //Url 잘라내기(파일명 추출)
+    private String getImageKey(String fileDir) {
+        String key = fileDir.replace(mainUrl, "");
+        return URLDecoder.decode(key, StandardCharsets.UTF_8);
     }
 }

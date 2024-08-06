@@ -68,9 +68,11 @@ public enum ResponseStatus {
     FEED_READ_SUCCESS(HttpStatus.OK, "조회되었습니다."),
     FEED_DELETED(HttpStatus.OK, "삭제되었습니다."),
 
-    //아티스트 Feed/comment Like
+    //아티스트 Feed/Comment Like
     FEED_LIKE_CHANGED(HttpStatus.OK, "Like 상태가 변경되었습니다."),
     COMMENT_LIKE_CHANGED(HttpStatus.OK, "Like 상태가 변경되었습니다."),
+    SUCCESS_GET_FEED_LIKE_USERS(HttpStatus.OK, "조회되었습니다."),
+
 
     // 엔터 피드
     NOTICE_CREATE_SUCCESS(HttpStatus.OK, "공지사항 생성에 성공하였습니다."),

@@ -38,11 +38,10 @@ public class ArtistController {
     public ResponseEntity<ResponseMessageDto> createArtist(
             @RequestPart(value = "file") MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestPart final ArtistRequestDto requestDto
+            @Valid @RequestPart ArtistRequestDto requestDto
     ) {
         if (file.getSize() > 10 * 1024 * 1024) {
-            throw new S3Exception(OVER_LOAD);
-        }
+            throw new S3Exception(OVER_LOAD);}
         artistService.createArtist(userDetails, file, requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_CREATED));
     }
@@ -70,7 +69,7 @@ public class ArtistController {
     }
 
     /**
-     * 아티스트 단건 조회
+     * 아티스트 단건 조회 / 비가입자 가능
      *
      * @param artistId
      * @return
@@ -112,6 +111,7 @@ public class ArtistController {
         artistService.deleteFeed(artistId, userDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_DELETED));
     }
+
 
 
 }

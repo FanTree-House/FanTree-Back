@@ -27,8 +27,6 @@ import java.util.Optional;
 
 @Entity
 @Getter
-@Setter
-
 @NoArgsConstructor
 public class User extends Timestamped {
 
@@ -165,6 +163,10 @@ public class User extends Timestamped {
     }
 
     public void updateImageUrl(String imageUrl) {
-        this.profileImageUrl = (imageUrl);
+        this.profileImageUrl = imageUrl;
+    }
+
+    public void updateEntertainment(Entertainment entertainment) {
+        this.entertainment = entertainment;
     }
 }

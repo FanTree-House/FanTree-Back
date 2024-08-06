@@ -71,7 +71,7 @@ public class Feed extends Timestamped {
 
     public static Feed of(CreateFeedRequestDto requestDto, User user, ArtistGroup artistGroup ) {
         return Feed.builder()
-                .artistName(requestDto.getArtistName())
+                .artistName(user.getArtist().getArtistName())
                 .contents(requestDto.getContents())
                 .user(user)
                 .artistGroup(artistGroup)
@@ -82,4 +82,5 @@ public class Feed extends Timestamped {
     public void updateFeed(UpdateFeedRequestDto requestDto) {
         this.contents = requestDto.getContents();
     }
+
 }

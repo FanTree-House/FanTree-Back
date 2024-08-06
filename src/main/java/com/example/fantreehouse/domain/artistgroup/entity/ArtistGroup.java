@@ -40,7 +40,7 @@ public class ArtistGroup extends Timestamped {
     private Entertainment entertainment;
 
     // 아티스트그룹과 아티스트와의 일대다 매핑
-    @OneToMany(mappedBy = "artistGroup")
+    @OneToMany(mappedBy = "artistGroup", cascade = CascadeType.DETACH)
     private List<Artist> artists = new ArrayList<>();
 
     //엔터피드와 다대일 매핑
