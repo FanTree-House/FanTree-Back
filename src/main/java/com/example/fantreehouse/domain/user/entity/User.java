@@ -11,22 +11,23 @@ import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
-import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.Setter;
 
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class User extends Timestamped {
 
@@ -58,6 +59,8 @@ public class User extends Timestamped {
 
     private String refreshToken;
 
+    private LocalDateTime lastLoginDate;
+
     @Column
     private Long kakaoId;
 
@@ -70,10 +73,6 @@ public class User extends Timestamped {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<CommentLike> commentLikeList = new ArrayList<>();
-
-    //픽업데이터와 일대다 매핑
-    @OneToMany(mappedBy = "user")
-    private List<PickUp> pickUpList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<CommunityLike> likeList = new ArrayList<>();
@@ -169,4 +168,18 @@ public class User extends Timestamped {
     public void updateEntertainment(Entertainment entertainment) {
         this.entertainment = entertainment;
     }
+
+    public void setInactive() {
+        this.status = UserStatusEnum.INACTIVE_USER;
+    }
+
+    public boolean isInactive() {
+        return this.status == UserStatusEnum.INACTIVE_USER;
+    }
+
+
+    public void setLogin(){
+        this.lastLoginDate = LocalDateTime.now();
+    }
+
 }
