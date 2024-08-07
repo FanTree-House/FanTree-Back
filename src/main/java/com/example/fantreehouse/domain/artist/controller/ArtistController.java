@@ -38,7 +38,7 @@ public class ArtistController {
     public ResponseEntity<ResponseMessageDto> createArtist(
             @RequestPart(value = "file") MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @ModelAttribute ArtistRequestDto requestDto
+            @Valid @RequestPart ArtistRequestDto requestDto
     ) {
         if (file.getSize() > 10 * 1024 * 1024) {
             throw new S3Exception(OVER_LOAD);}

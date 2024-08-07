@@ -35,26 +35,24 @@ public class SubscriptionService {
 
     //  구독생성
     @Transactional
-    public Subscription createSubscript(Long userId, String groupName) {
-        User user = findUser(userId);
+    public void createSubscript(User user, String groupName) {
         ArtistGroup artistGroup = findArtistGroup(groupName);
 
-        subscriptionRepository.findByUser_IdAndArtistGroup_Id(user.getId(), artistGroup.getId()).ifPresent(
-                e -> {
+        subscriptionRepository.findByUserIdAndArtistGroupId(user.getId(), artistGroup.getId()).ifPresent(e ->
+                {
                     throw new CustomException(ErrorType.DUPLICATE_USER);
                 });
 
         Subscription subscription = new Subscription(user, artistGroup);
-        return subscriptionRepository.save(subscription);
+        subscriptionRepository.save(subscription);
     }
 
     //구독해지
     @Transactional
-    public void deleteSubscript(Long userId, String groupName) {
-        User user = findUser(userId);
+    public void deleteSubscript(User user, String groupName) {
         ArtistGroup artistGroup = findArtistGroup(groupName);
 
-        Subscription subscription = subscriptionRepository.findByUser_IdAndArtistGroup_Id(user.getId(), artistGroup.getId())
+        Subscription subscription = subscriptionRepository.findByUserIdAndArtistGroupId(user.getId(), artistGroup.getId())
                 .orElseThrow(() -> new CustomException(ErrorType.NOT_SUBSCRIPT_USER));
 
         if (!subscription.getUser().getId().equals(user.getId())) {
@@ -105,12 +103,18 @@ public class SubscriptionService {
         List<FeedResponseDto> subsGroupFeedDtos = new ArrayList<>();
         for (Feed feed : subGroupFeeds) {
             //좋아요 개수 세기
-            int feedLikeCount = feedLikeRepository.countByFeedId(feed.getId());
+            Long feedLikeCount = feedLikeRepository.countByFeedId(feed.getId());
             FeedResponseDto dto = FeedResponseDto.of(feed, feedLikeCount);
             subsGroupFeedDtos.add(dto);
         }
 
         return subsGroupFeedDtos;
+    }
+
+    // 아티스트 그룹을 구독 유무
+    public boolean getIsSubscribe(User user, String groupName) {
+        ArtistGroup artistGroup = findArtistGroup(groupName);
+        return subscriptionRepository.findByUserIdAndArtistGroupId(user.getId(), artistGroup.getId()).isPresent();
     }
 
     public User findUser(Long userId) {
@@ -122,6 +126,5 @@ public class SubscriptionService {
         return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
     }
-
 
 }

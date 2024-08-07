@@ -22,7 +22,6 @@ public class S3FileUploaderUtil {
     private static final String ARTIST_PROFILE_DIR = "ArtistProfile";
     private static final String ENTER_LOGO_DIR = "EnterLogo";
     private static final String ARTIST_GROUP_DIR = "ArtistGroupProfile";
-    private static final String ENTER_FEED_DIR = "EnterFeed";
     private static final String ARTIST_FEED_DIR = "ArtistFeed";
     private static final String COMMUNITY_DIR = "Community";
     private static final String PRODUCT_DIR = "Product";
@@ -40,20 +39,23 @@ public class S3FileUploaderUtil {
 
     //getContentType() 이용한 확장자 확인
     public static void validateImageTypeWithContentType(MultipartFile file) {
-        String contentType = file.getContentType();
+        String contentType = file.getContentType(); //postman 이 원인일 수 있음 >> front 로 확인 권장
         if (contentType == null) {
             throw new S3Exception(NOT_IMAGE);
         }
 
         if (!contentType.startsWith("image")) {
+            if (file.getOriginalFilename().endsWith(".jfif")) {
+                return;
+            }
             throw new S3Exception(NOT_IMAGE);
-        } //contentType = image/jpeg 처럼 되어있음
+        }
     }
 
     public static void validateImageType(String fileName) {
 
         List<String> imageTypeList = Arrays.asList(
-                "jpg", "jpeg", "png", "webp", "gif", "bmp", "tiff", "ppm", "pgm", "pbm", "pnm");
+                "jpg", "jpeg", "jfif", "png", "webp", "gif", "bmp", "tiff", "ppm", "pgm", "pbm", "pnm");
 
         int exWordCount = fileName.lastIndexOf(".");
         if (exWordCount == -1) {
@@ -96,15 +98,6 @@ public class S3FileUploaderUtil {
                 + ARTIST_FEED_DIR + "/"
                 + artistName + "/"
                 + artistFeedId + "/";
-    }
-
-    public static String createEnterFeedDir(String enterName, String feedCategory, Long enterFeedId) {
-
-        return URL_PREFIX + "/"
-                + ENTER_FEED_DIR + "/"
-                + enterName + "/"
-                + feedCategory + "/"
-                + enterFeedId + "/";
     }
 
     public static String createCommunityDir(String groupName, Long communityFeedId) {

@@ -27,12 +27,10 @@ import java.util.stream.Collectors;
 public class EnterFeedService {
 
     private final EnterFeedRepository enterFeedRepository;
-    private final ArtistGroupRepository artistGroupRepository;
     private final EntertainmentRepository entertainmentRepository;
 
     /**
      * [createFeed] 엔터피드를 생성합니다.
-     * @param groupName 아티스트 그룹 이름
      * @param request 요청 데이터 객체
      * @param user 요청을 수행하는 사용자
      */
@@ -69,7 +67,6 @@ public class EnterFeedService {
 
     /**
      * [getAllFeeds] 특정 그룹과 카테고리에 해당하는 모든 피드를 조회합니다.
-     * @param groupName 아티스트 그룹 이름
      * @param category 피드 카테고리
      * @return List<EnterFeedResponseDto> 조회된 피드 리스트
      */
@@ -153,7 +150,6 @@ public class EnterFeedService {
 
     /**
      * [getAllEnterFeeds] 특정 그룹과 카테고리에 해당하는 모든 피드를 조회합니다.
-     * @param groupName 아티스트 그룹 이름
      * @param category 피드 카테고리
      * @return List<EnterFeed> 조회된 피드 리스트
      */

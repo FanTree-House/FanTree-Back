@@ -7,6 +7,7 @@ import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 
+import com.nimbusds.jose.shaded.gson.annotations.Expose;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -36,6 +37,8 @@ public class JwtTokenHelper {
   public static final String AUTHORIZATION_HEADER = "Authorization";
   // Refresh token
   public static final String REFRESH_TOKEN_HEADER = "Refresh_token";
+  //
+  public static  final String ACCESS_CONTROL_EXPOSE_HEADERS_HEADER = "Access-Control-Expose-Headers";
   // 사용자 권한 값의 KEY
   public static final String AUTHORIZATION_KEY = "auth";
   // 회원 상태의 값 KEY

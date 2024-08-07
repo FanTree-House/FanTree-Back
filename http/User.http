@@ -19,7 +19,7 @@ Content-Type: application/json
   "id": "admin1",
   "name": "admin1",
   "nickname": "admin1",
-  "email": "admin1@email.com",
+  "email": "7642510@naver.com",
   "password": "test1234",
   "profileImage": "https://music.youtube.com/playlist?list=PLldFwXdHiTkn4oi2CgqK06Wy2qMmPsFDT",
   "admin": true,
@@ -124,8 +124,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "artist1",
-  "password": "test1234"
+  "id": "SMaespa1",
+  "password": "12345678"
 }
 
 > {%
@@ -141,7 +141,7 @@ POST http://localhost:8080/mailsend
 Content-Type: application/json
 
 {
-  "loginId": "test123",
+  "loginId": "admin1",
   "email": "7642510@naver.com"
 }
 
@@ -152,7 +152,7 @@ POST http://localhost:8080/mailableCheck
 Content-Type: application/json
 
 {
-  "loginId": "test123",
-  "email": "kkx152@gmail.com",
-  "authNum": "159675"
+  "loginId": "admin1",
+  "email": "7642510@naver.com",
+  "authNum": 405304
 }

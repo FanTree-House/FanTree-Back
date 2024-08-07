@@ -35,7 +35,7 @@ public class UserController {
     @PostMapping(value = {"", "/invite/entertainment", "/invite/artist", "/admin"})
     public ResponseEntity<ResponseMessageDto> signUp(
             @RequestPart(value = "file") MultipartFile file,
-            @Valid @RequestPart SignUpRequestDto requestDto) {
+            @Valid @ModelAttribute SignUpRequestDto requestDto) {
 
         if (file.getSize() > 10 * 1024 * 1024) {
             throw new S3Exception(OVER_LOAD);
