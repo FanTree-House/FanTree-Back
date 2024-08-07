@@ -7,6 +7,7 @@ import com.example.fantreehouse.common.exception.errorcode.CommonErrorCode;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.user.dto.LoginRequestDto;
+import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,7 +63,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   @Override
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
       FilterChain chain, Authentication authResult) throws IOException {
-
+    User user = ((UserDetailsImpl)authResult.getPrincipal()).getUser();
     String username = ((UserDetailsImpl)authResult.getPrincipal()).getUsername();
     UserStatusEnum status = ((UserDetailsImpl)authResult.getPrincipal()).getUser().getStatus();
     UserRoleEnum role = ((UserDetailsImpl)authResult.getPrincipal()).getUser().getUserRole();
@@ -76,7 +77,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     response.addHeader(JwtTokenHelper.AUTHORIZATION_HEADER, accessToken);
     response.addHeader(JwtTokenHelper.REFRESH_TOKEN_HEADER, refreshToken);
     response.addHeader(JwtTokenHelper.ACCESS_CONTROL_EXPOSE_HEADERS_HEADER, "Authorization, Refresh_token" );
-    jwtTokenHelper.saveRefreshToken(username, refreshToken);
+    jwtTokenHelper.loginDateAndSaveRefreshToken(username, refreshToken);
 
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setCharacterEncoding("UTF-8");

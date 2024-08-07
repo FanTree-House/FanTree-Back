@@ -1,7 +1,6 @@
 package com.example.fantreehouse.domain.product.product.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
-import com.example.fantreehouse.domain.product.pickup.entity.PickUp;
 import com.example.fantreehouse.domain.product.product.dto.ProductRequestDto;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -24,7 +23,7 @@ public class Product extends Timestamped {
     private String productName;
 
     @Column
-    private Integer stock;
+    private int stock;
 
     @Column
     private String type;
@@ -37,10 +36,7 @@ public class Product extends Timestamped {
     private List<String> productPictureUrl;
 
     @Column
-    private Integer price;
-
-    @OneToMany(mappedBy = "product")
-    private List<PickUp> pickUpList = new ArrayList<>();
+    private int price;
 
     public Product(ProductRequestDto productRequestDto) {
         this.productName = productRequestDto.getProductName();
@@ -55,7 +51,7 @@ public class Product extends Timestamped {
         this.productName = productName;
     }
 
-    public void updateStock(Integer stock) {
+    public void updateStock(int stock) {
         this.stock = stock;
     }
 
@@ -67,7 +63,7 @@ public class Product extends Timestamped {
         this.artist = artist;
     }
 
-    public void updatePrice(Integer price) {
+    public void updatePrice(int price) {
         this.price = price;
     }
 

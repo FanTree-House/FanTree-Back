@@ -8,11 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommunityCommentRepository extends JpaRepository<CommunityComment, Long> {
-
-    List<CommunityComment> findByCommunityFeed_Id(Long feedID);
-
-//    Optional<CommunityComment> findByUserId(Long commentId);
-
     Optional<CommunityComment> findAllById(Long commentId);
+
+    List<CommunityComment> findByCommunityFeedId(Long feedId);
 
 }

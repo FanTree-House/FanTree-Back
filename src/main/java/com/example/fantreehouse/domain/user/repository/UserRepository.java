@@ -2,6 +2,7 @@ package com.example.fantreehouse.domain.user.repository;
 
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByKakaoId(Long kakaoId);
 
   Optional<User> findByEmailAndStatus(String email, UserStatusEnum status);
+
+//  List<User> findByStatusAndLastLoginDateBefore(UserStatusEnum status, LocalDateTime lastLoginDate);
+  List<User> findByLastLoginDateBeforeAndStatus(LocalDateTime date, UserStatusEnum status);
 }
