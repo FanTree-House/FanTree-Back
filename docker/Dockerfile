@@ -11,10 +11,10 @@ WORKDIR /apps
 COPY build/libs/FanTree-House-0.0.1-SNAPSHOT.jar /apps/app.jar
 CMD echo "hello" | tee ~/logfile.txt
 
+
 # 애플리케이션이 사용할 포트 노출
 EXPOSE 8080
 
 # 애플리케이션을 실행하기 위한 엔트리포인트 정의
-ENTRYPOINT ["java", "-jar", "/apps/app.jar"]
-
+ENTRYPOINT ["echo", "hello", "|", "tee", "logfile.txt"]
 
