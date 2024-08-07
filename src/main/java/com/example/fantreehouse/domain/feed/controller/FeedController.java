@@ -52,7 +52,7 @@ public class FeedController {
         if (files != null && files.size() > 10) {
             throw new S3Exception(MAX_IMAGES_EXCEEDED);
         }
-        CreateFeedResponseDto responseDto = feedService.createFeed(groupName, userDetails, files, requestDto);
+        CreateFeedResponseDto responseDto = feedService.createFeed(groupName, userDetails.getUser(), files, requestDto);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_CREATED, responseDto));
     }
 
@@ -92,7 +92,7 @@ public class FeedController {
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        FeedResponseDto responseDto = feedService.getFeed(groupName, artistFeedId, userDetails);
+        FeedResponseDto responseDto = feedService.getFeed(groupName, artistFeedId, userDetails.getUser());
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDto));
     }
 
