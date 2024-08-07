@@ -14,5 +14,5 @@ COPY build/libs/FanTree-House-0.0.1-SNAPSHOT.jar /apps/app.jar
 EXPOSE 8080
 
 # 애플리케이션을 실행하기 위한 엔트리포인트 정의
-ENTRYPOINT ["echo", "hello", "|", "tee", "logfile.txt"]
+ENTRYPOINT ["java", "-jar", "/apps/app.jar"]
 
