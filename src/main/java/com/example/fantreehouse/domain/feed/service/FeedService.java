@@ -56,16 +56,15 @@ public class FeedService {
      * Feed 생성
      *
      * @param groupName
-     * @param userDetails
+     * @param loginUser
      * @param files
      * @param requestDto
      * @return
      */
     @Transactional
-    public CreateFeedResponseDto createFeed(String groupName, UserDetailsImpl userDetails,
+    public CreateFeedResponseDto createFeed(String groupName, User loginUser,
                                             List<MultipartFile> files, CreateFeedRequestDto requestDto) {
 
-        User loginUser = userDetails.getUser(); //로그인 유저
         checkUserStatus(loginUser.getStatus()); // 활성유저인지 확인
         checkUserRole(loginUser.getUserRole()); //Artist 권한 확인
 
@@ -164,12 +163,11 @@ public class FeedService {
      *
      * @param groupName
      * @param artistFeedId
-     * @param userDetails
+     * @param loginUser
      * @return
      */
-    public FeedResponseDto getFeed(String groupName, Long artistFeedId, UserDetailsImpl userDetails) {
+    public FeedResponseDto getFeed(String groupName, Long artistFeedId, User loginUser) {
 
-        User loginUser = userDetails.getUser();
         checkUserStatus(loginUser.getStatus());
 
         //요청하는 feed 찾기
@@ -177,7 +175,7 @@ public class FeedService {
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
 
         List<FeedLike> feedLikeList = feedLikeRepository.findAllFeedLikeByFeedId(artistFeedId);
-        int feedLikeCount = feedLikeList.size();
+        Long feedLikeCount = feedLikeRepository.countByFeedId(artistFeedId);
 
         List<String> imageUrls = new ArrayList<>();
         for (String imageUrl : foundFeed.getImageUrls()) {
@@ -201,7 +199,7 @@ public class FeedService {
         List<FeedResponseDto> feedLikeResponseDtoList = pagedFeed.getContent().stream()
                 .map(feed -> {
                     List<FeedLike> feedLikeList = feedLikeRepository.findAllFeedLikeByFeedId(feed.getId());
-                    int feedLikeCount = feedLikeList.size();
+                    Long feedLikeCount = feedLikeRepository.countByFeedId(feed.getId());
 
                     return FeedResponseDto.of(feed, feedLikeCount);
                 })

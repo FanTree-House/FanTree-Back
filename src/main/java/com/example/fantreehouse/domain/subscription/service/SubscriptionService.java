@@ -103,7 +103,7 @@ public class SubscriptionService {
         List<FeedResponseDto> subsGroupFeedDtos = new ArrayList<>();
         for (Feed feed : subGroupFeeds) {
             //좋아요 개수 세기
-            int feedLikeCount = feedLikeRepository.countByFeedId(feed.getId());
+            Long feedLikeCount = feedLikeRepository.countByFeedId(feed.getId());
             FeedResponseDto dto = FeedResponseDto.of(feed, feedLikeCount);
             subsGroupFeedDtos.add(dto);
         }
@@ -111,7 +111,7 @@ public class SubscriptionService {
         return subsGroupFeedDtos;
     }
 
-    // 아티스트 그룹을 구독했는 지
+    // 아티스트 그룹을 구독 유무
     public boolean getIsSubscribe(User user, String groupName) {
         ArtistGroup artistGroup = findArtistGroup(groupName);
         return subscriptionRepository.findByUserIdAndArtistGroupId(user.getId(), artistGroup.getId()).isPresent();
