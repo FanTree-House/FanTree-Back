@@ -1,5 +1,6 @@
 package com.example.fantreehouse.auth;
 
+import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.enums.ResponseStatus;
@@ -7,6 +8,7 @@ import com.example.fantreehouse.common.exception.errorcode.CommonErrorCode;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.user.dto.LoginRequestDto;
+import com.example.fantreehouse.domain.user.dto.LoginResponseDto;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
@@ -79,13 +81,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     response.addHeader(JwtTokenHelper.ACCESS_CONTROL_EXPOSE_HEADERS_HEADER, "Authorization, Refresh_token" );
     jwtTokenHelper.loginDateAndSaveRefreshToken(username, refreshToken);
 
+    // 로그인한 사용자의 userId와 userRole을 반환하도록 수정
+    LoginResponseDto loginResponse = new LoginResponseDto(username, role);
+
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setCharacterEncoding("UTF-8");
     response.getWriter().write(new ObjectMapper()
-        .writeValueAsString(new ResponseMessageDto(ResponseStatus.LOGIN_SUCCESS)));
+            .writeValueAsString(new ResponseDataDto<>(ResponseStatus.LOGIN_SUCCESS, loginResponse)));
     response.getWriter().flush();
-
   }
+
 
   @Override
   protected void unsuccessfulAuthentication(HttpServletRequest request,
