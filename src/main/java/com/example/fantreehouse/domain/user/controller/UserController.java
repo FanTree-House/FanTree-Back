@@ -133,9 +133,9 @@ public class UserController {
     boolean result = userService.checkPassword(requestDto.getPassword(),
         requestDto.getCheckPassword());
     if (result){
-      return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.MISMATCH_PASSWORD, result));
+        return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.CHECK_PASSWORD, result));
     }
-    else return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.CHECK_PASSWORD, result));
+    else return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.MISMATCH_PASSWORD, result));
 
   }
 }
