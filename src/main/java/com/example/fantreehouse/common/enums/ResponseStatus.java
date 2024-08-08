@@ -96,8 +96,9 @@ public enum ResponseStatus {
 
     CHECK_EMAIL(HttpStatus.OK, "이메일을 확인해주세요."),
     CHECK_AUTHNUM(HttpStatus.OK, "이메일이 인증이 완료되었습니다."),
-    CHECK_PASSWORD(HttpStatus.OK, "비밀번호가 일치합니다.");
+    CHECK_PASSWORD(HttpStatus.OK, "비밀번호가 일치합니다."),
 
+    SUCCESS_ACTIVATE_USER(HttpStatus.OK, "계정이 활성화되었습니다.");
     private final HttpStatus httpStatus;
     private final String message;
 }
