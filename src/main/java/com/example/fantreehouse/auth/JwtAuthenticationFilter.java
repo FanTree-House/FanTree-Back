@@ -56,6 +56,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       }
       return authentication;
 
+      //상태별로 예외처리
+
     } catch (IOException e) {
       log.error(e.getMessage());
       throw new NotFoundException(CommonErrorCode.TOKEN_ERROR);
@@ -101,6 +103,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     response.setCharacterEncoding("utf-8");
     if (failed instanceof DisabledException) {
       response.getWriter().write("상태 : " + response.getStatus() + ", " + failed.getMessage());
+      //Body를 보내줘서
     } else {
       response.getWriter().write("상태 : " + response.getStatus() + ", 로그인 실패");
     }
