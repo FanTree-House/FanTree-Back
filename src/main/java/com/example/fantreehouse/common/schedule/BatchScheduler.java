@@ -19,7 +19,7 @@ public class BatchScheduler {
   @Autowired
   private InactiveUserJobConfig inactiveUserJobConfig;
 
-  @Scheduled(cron = "0 0 * * *") // 10분
+  @Scheduled(cron = "* 0 0 * * *") // 10분
   public void runJob() throws Exception {
     JobParameters parameters = new JobParametersBuilder()
         .addString("markUsersInactiveJob", "inactiveJob" + LocalDateTime.now())
