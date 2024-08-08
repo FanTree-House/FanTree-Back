@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [ refector ]
+    branches: [ main ]
 
 env:
   DOCKER_IMAGE_TAG_NAME: fantree

@@ -28,21 +28,20 @@ import static com.example.fantreehouse.common.enums.ErrorType.OVER_LOAD;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
-    private final JwtTokenHelper jwtTokenHelper;
+  private final UserService userService;
+  private final JwtTokenHelper jwtTokenHelper;
 
+  @PostMapping(value = {"", "/invite/entertainment", "/invite/artist", "/admin"})
+  public ResponseEntity<ResponseMessageDto> signUp(
+          @RequestPart(value = "file") MultipartFile file,
+          @Valid @ModelAttribute SignUpRequestDto requestDto) {
 
-    @PostMapping(value = {"", "/invite/entertainment", "/invite/artist", "/admin"})
-    public ResponseEntity<ResponseMessageDto> signUp(
-            @RequestPart(value = "file") MultipartFile file,
-            @Valid @ModelAttribute SignUpRequestDto requestDto) {
-
-        if (file.getSize() > 10 * 1024 * 1024) {
-            throw new S3Exception(OVER_LOAD);
-        }
-        userService.signUp(file, requestDto);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
-    }
+      if (file.getSize() > 10 * 1024 * 1024) {
+          throw new S3Exception(OVER_LOAD);
+      }
+      userService.signUp(file, requestDto);
+      return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
+  }
 
   @PutMapping("/withDraw")
   public ResponseEntity<ResponseMessageDto> withDraw(

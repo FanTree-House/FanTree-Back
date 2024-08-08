@@ -37,7 +37,6 @@ public class UserService {
     private final RedisUtil redisUtil;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ArtistGroupRepository artistGroupRepository;
     private final S3FileUploader s3FileUploader;
 
     @Value("${auth.admin_token}")
@@ -49,6 +48,7 @@ public class UserService {
 
     //회원가입
     public SignUpResponseDto signUp(MultipartFile file, SignUpRequestDto requestDto) {
+        //비밀번호를 엔티티에서 꺼내올 필요가 있을까?
         String id = requestDto.getId();
         String password = requestDto.getPassword();
         String checkPassowrd = passwordEncoder.encode(requestDto.getCheckPassword());
@@ -57,16 +57,16 @@ public class UserService {
         String nickname = requestDto.getNickname();
         MultipartFile profile = requestDto.getFile();
 
-        //ID 중복확인
+        //ID & 닉네임 중복 확인
         duplicatedId(id);
 
-        //닉네임 중복확인
         duplicatedNickName(nickname);
 
         //비밀번호 재입력 및 확인
         checkPassword(password, checkPassowrd);
 
         String encodePassword = passwordEncoder.encode(password);
+
         // 블랙리스트 검증
         if (userRepository.findByEmailAndStatus(email, UserStatusEnum.BLACK_LIST).isPresent()) {
             throw new CustomException(ErrorType.BLACKLIST_EMAIL);
@@ -82,23 +82,8 @@ public class UserService {
             throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
         }
 
-        UserRoleEnum role = UserRoleEnum.USER;
-        if (requestDto.isAdmin()) {
-            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ADMINTOKEN);
-            }
-            role = UserRoleEnum.ADMIN;
-        } else if (requestDto.isArtist()) {
-            if (!ARTIST_TOKEN.equals(requestDto.getArtistToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ARTISTTOKEN);
-            }
-            role = UserRoleEnum.ARTIST;
-        } else if (requestDto.isEntertainment()) {
-            if (!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
-            }
-            role = UserRoleEnum.ENTERTAINMENT;
-        }
+        //Token을 가지고 회원 권한 확인
+        verifyUserRole(requestDto);
 
         User user = new User(
                 id,
@@ -106,7 +91,7 @@ public class UserService {
                 nickname,
                 email,
                 encodePassword,
-                role
+                verifyUserRole(requestDto)
         );
         userRepository.save(user);
 
@@ -124,7 +109,6 @@ public class UserService {
         redisUtil.deleteData(id);
         return new SignUpResponseDto(user);
     }
-
 
     //회원 탈퇴
     @Transactional
@@ -213,28 +197,22 @@ public class UserService {
         return new ProfileResponseDto(findById(userId));
     }
 
-
     private User findById(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(ErrorType.USER_NOT_FOUND)
         );
     }
 
+    //Id & 닉네임 중복 확인
     public void duplicatedId(String id) {
-        if (userRepository.findByLoginId(id).isPresent()) {
+        if (userRepository.existsByLoginId(id)) {
             throw new DuplicatedException(ErrorType.DUPLICATE_ID);
         }
     }
 
-    public void duplicatedNickName(String nickname) {
-        if (userRepository.findByNickname(nickname).isPresent()) {
+    public void duplicatedNickName(String nickname){
+        if (userRepository.existsByNickname(nickname)) {
             throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
-        }
-    }
-
-    private void validBlackList(String email, UserStatusEnum status) {
-        if (userRepository.findByEmailAndStatus(email, status).get().equals(UserStatusEnum.BLACK_LIST)) {
-            throw new CustomException(ErrorType.BLACKLIST_EMAIL);
         }
     }
 
@@ -245,7 +223,6 @@ public class UserService {
         }
     }
 
-
     private void updateUserImageUrl(ImageUrlCarrier carrier) {
         if (!carrier.getImageUrl().isEmpty()) {
             User user = userRepository.findById(carrier.getId())
@@ -253,5 +230,28 @@ public class UserService {
             user.updateImageUrl(carrier.getImageUrl());
             userRepository.save(user);
         }
+    }
+
+    //회원 권한 확인 , setter
+    private UserRoleEnum verifyUserRole(SignUpRequestDto requestDto){
+        UserRoleEnum role = UserRoleEnum.USER;
+
+        if (requestDto.isAdmin()) {
+            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
+                throw new MismatchException(ErrorType.MISMATCH_ADMINTOKEN);
+            }
+            role = UserRoleEnum.ADMIN;
+        } else if (requestDto.isArtist()) {
+            if (!ARTIST_TOKEN.equals(requestDto.getArtistToken())) {
+                throw new MismatchException(ErrorType.MISMATCH_ARTISTTOKEN);
+            }
+            role = UserRoleEnum.ARTIST;
+        } else if (requestDto.isEntertainment()) {
+            if (!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())) {
+                throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
+            }
+            role = UserRoleEnum.ENTERTAINMENT;
+        }
+        return role;
     }
 }
