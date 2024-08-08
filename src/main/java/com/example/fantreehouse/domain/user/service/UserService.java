@@ -67,7 +67,7 @@ public class UserService {
             throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
         }
         //비밀번호 재입력 및 확인
-        if (checkPassword(password, checkPassowrd)){
+        if (!checkPassword(password, checkPassowrd)){
             throw new MismatchException(ErrorType.MISMATCH_PASSWORD);
         }
 
