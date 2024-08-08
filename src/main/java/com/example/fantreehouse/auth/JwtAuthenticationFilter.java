@@ -4,9 +4,12 @@ import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.enums.ResponseStatus;
+import com.example.fantreehouse.common.exception.errorcode.BlackListException;
 import com.example.fantreehouse.common.exception.errorcode.CommonErrorCode;
+import com.example.fantreehouse.common.exception.errorcode.InactiveException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
+import com.example.fantreehouse.domain.user.dto.ForbiddenResponseDto;
 import com.example.fantreehouse.domain.user.dto.LoginRequestDto;
 import com.example.fantreehouse.domain.user.dto.LoginResponseDto;
 import com.example.fantreehouse.domain.user.entity.User;
@@ -52,11 +55,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       // 사용자 상태 체크
       UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
       if (userDetails.getUser().getStatus().equals(UserStatusEnum.BLACK_LIST)) {
-        throw new DisabledException("로그인이 불가능한 사용자입니다."); // 블랙리스트 예외 처리
+        throw new BlackListException("로그인이 불가능한 사용자입니다."); // 블랙리스트 예외 처리
       }
-      return authentication;
 
-      //상태별로 예외처리
+      if (userDetails.getUser().getStatus().equals(UserStatusEnum.INACTIVE_USER)){
+        throw new InactiveException("휴면 계정입니다. 휴면 상태를 풀어주세요.");
+      }
+
+      if (userDetails.getUser().getStatus().equals(UserStatusEnum.WITHDRAW_USER)){
+        throw new DisabledException("탈퇴한 사용자입니다.");
+      }
+
+      return authentication;
 
     } catch (IOException e) {
       log.error(e.getMessage());
@@ -99,13 +109,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       HttpServletResponse response, AuthenticationException failed) throws IOException {
 
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
     response.setCharacterEncoding("utf-8");
+
     if (failed instanceof DisabledException) {
       response.getWriter().write("상태 : " + response.getStatus() + ", " + failed.getMessage());
       //Body를 보내줘서
+      if (failed instanceof InactiveException){
+        response.getWriter().write(new ObjectMapper()
+            .writeValueAsString(new ForbiddenResponseDto(UserStatusEnum.INACTIVE_USER, ErrorType.INACTIVE_USER)));
+      }
     } else {
       response.getWriter().write("상태 : " + response.getStatus() + ", 로그인 실패");
     }
   }
+
 }

@@ -7,9 +7,10 @@ import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
-import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.s3.service.S3FileUploader;
 import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
+import com.example.fantreehouse.domain.user.dto.EmailCheckRequestDto;
+import com.example.fantreehouse.domain.user.dto.EmailRequestDto;
 import com.example.fantreehouse.domain.user.dto.ProfileRequestDto;
 import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
 import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
@@ -77,15 +78,7 @@ public class UserService {
             throw new CustomException(ErrorType.BLACKLIST_EMAIL);
         }
 
-        //이메일 검증 -> Null 검사
-        if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.equals(redisUtil.getData(id).getStatus())) {
-            throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
-        }
-
-        //redis에 저장된 이메일과 응답받은 이메일이 동일한지 체크
-        if (!email.equals(redisUtil.getData(id).getEmail())) {
-            throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
-        }
+       verifyEmail(id,email);
 
         //Token을 가지고 회원 권한 확인
         verifyUserRole(requestDto);
@@ -255,4 +248,33 @@ public class UserService {
         }
         return role;
     }
+
+    public boolean existsInactiveUser(EmailRequestDto requestDto){
+        return userRepository.existsByLoginIdAndEmailAndStatus(requestDto.getLoginId(),
+            requestDto.getEmail(),UserStatusEnum.INACTIVE_USER);
+    }
+
+    @Transactional
+    public void activateUser(EmailCheckRequestDto requestDto) {
+        User user = userRepository.findByLoginIdAndEmailAndStatus(requestDto.getLoginId(),
+            requestDto.getEmail(), UserStatusEnum.INACTIVE_USER).orElseThrow(()
+                -> new NotFoundException(USER_NOT_FOUND));
+        verifyEmail(requestDto.getLoginId(), requestDto.getEmail());
+        user.activateUser();
+        userRepository.save(user);
+        redisUtil.deleteData(requestDto.getLoginId());
+    }
+
+    private void verifyEmail(String id, String email){
+        //이메일 검증 -> Null 검사
+        if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.equals(redisUtil.getData(id).getStatus())) {
+            throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
+        }
+
+        //redis에 저장된 이메일과 응답받은 이메일이 동일한지 체크
+        if (!email.equals(redisUtil.getData(id).getEmail())) {
+            throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
+        }
+    }
+
 }
