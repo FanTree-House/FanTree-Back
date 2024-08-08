@@ -1,5 +1,6 @@
 package com.example.fantreehouse.common.dto;
 
+import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.enums.ResponseStatus;
 import lombok.Getter;
 
@@ -15,6 +16,11 @@ public class ResponseDataDto<T> {
         this.data = data;
         //상태를 담아주기
     }
+
+    public ResponseDataDto(ErrorType errorType, T data){
+
+    }
+
 
     // 사용 예시
     // return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.CARD_UPDATE_SUCCESS, responseDto));

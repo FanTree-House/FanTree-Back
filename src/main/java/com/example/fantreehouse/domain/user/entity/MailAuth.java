@@ -35,6 +35,14 @@ public class MailAuth {
     this.status = UserStatusEnum.NON_AUTH_USER;
   }
 
+  public MailAuth(String loginId, String email, String authNum, UserStatusEnum status){
+    this.loginId = loginId;
+    this.email = email;
+    this.authNum = authNum;
+    this.status = status;
+  }
+
+
   public void validEmail(){
     this.status = UserStatusEnum.ACTIVE_USER;
   }

@@ -186,4 +186,7 @@ public class User extends Timestamped {
         this.lastLoginDate = LocalDateTime.now();
     }
 
+    public void activateUser(){
+        this.status = UserStatusEnum.ACTIVE_USER;
+    }
 }
