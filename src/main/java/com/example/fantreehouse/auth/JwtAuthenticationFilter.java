@@ -1,5 +1,6 @@
 package com.example.fantreehouse.auth;
 
+import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.enums.ResponseStatus;
@@ -7,6 +8,8 @@ import com.example.fantreehouse.common.exception.errorcode.CommonErrorCode;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.user.dto.LoginRequestDto;
+import com.example.fantreehouse.domain.user.dto.LoginResponseDto;
+import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,6 +56,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       }
       return authentication;
 
+      //상태별로 예외처리
+
     } catch (IOException e) {
       log.error(e.getMessage());
       throw new NotFoundException(CommonErrorCode.TOKEN_ERROR);
@@ -62,7 +67,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   @Override
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
       FilterChain chain, Authentication authResult) throws IOException {
-
+    User user = ((UserDetailsImpl)authResult.getPrincipal()).getUser();
     String username = ((UserDetailsImpl)authResult.getPrincipal()).getUsername();
     UserStatusEnum status = ((UserDetailsImpl)authResult.getPrincipal()).getUser().getStatus();
     UserRoleEnum role = ((UserDetailsImpl)authResult.getPrincipal()).getUser().getUserRole();
@@ -76,15 +81,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     response.addHeader(JwtTokenHelper.AUTHORIZATION_HEADER, accessToken);
     response.addHeader(JwtTokenHelper.REFRESH_TOKEN_HEADER, refreshToken);
     response.addHeader(JwtTokenHelper.ACCESS_CONTROL_EXPOSE_HEADERS_HEADER, "Authorization, Refresh_token" );
-    jwtTokenHelper.saveRefreshToken(username, refreshToken);
+    jwtTokenHelper.loginDateAndSaveRefreshToken(username, refreshToken);
+
+    // 로그인한 사용자의 userId와 userRole을 반환하도록 수정
+    LoginResponseDto loginResponse = new LoginResponseDto(username, role);
 
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setCharacterEncoding("UTF-8");
     response.getWriter().write(new ObjectMapper()
-        .writeValueAsString(new ResponseMessageDto(ResponseStatus.LOGIN_SUCCESS)));
+            .writeValueAsString(new ResponseDataDto<>(ResponseStatus.LOGIN_SUCCESS, loginResponse)));
     response.getWriter().flush();
-
   }
+
 
   @Override
   protected void unsuccessfulAuthentication(HttpServletRequest request,
@@ -95,6 +103,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     response.setCharacterEncoding("utf-8");
     if (failed instanceof DisabledException) {
       response.getWriter().write("상태 : " + response.getStatus() + ", " + failed.getMessage());
+      //Body를 보내줘서
     } else {
       response.getWriter().write("상태 : " + response.getStatus() + ", 로그인 실패");
     }

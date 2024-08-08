@@ -2,8 +2,10 @@ package com.example.fantreehouse.domain.user.controller;
 
 
 import com.example.fantreehouse.auth.JwtTokenHelper;
+import com.example.fantreehouse.common.dto.ResponseBooleanDto;
 import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
+import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.enums.ResponseStatus;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
@@ -28,21 +30,20 @@ import static com.example.fantreehouse.common.enums.ErrorType.OVER_LOAD;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
-    private final JwtTokenHelper jwtTokenHelper;
+  private final UserService userService;
+  private final JwtTokenHelper jwtTokenHelper;
 
+  @PostMapping(value = {"", "/invite/entertainment", "/invite/artist", "/admin"})
+  public ResponseEntity<ResponseMessageDto> signUp(
+          @RequestPart(value = "file") MultipartFile file,
+          @Valid @ModelAttribute SignUpRequestDto requestDto) {
 
-    @PostMapping(value = {"", "/invite/entertainment", "/invite/artist", "/admin"})
-    public ResponseEntity<ResponseMessageDto> signUp(
-            @RequestPart(value = "file") MultipartFile file,
-            @Valid @ModelAttribute SignUpRequestDto requestDto) {
-
-        if (file.getSize() > 10 * 1024 * 1024) {
-            throw new S3Exception(OVER_LOAD);
-        }
-        userService.signUp(file, requestDto);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
-    }
+      if (file.getSize() > 10 * 1024 * 1024) {
+          throw new S3Exception(OVER_LOAD);
+      }
+      userService.signUp(file, requestDto);
+      return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
+  }
 
   @PutMapping("/withDraw")
   public ResponseEntity<ResponseMessageDto> withDraw(
@@ -107,15 +108,34 @@ public class UserController {
   }
 
   @PostMapping("/checkId")
-  public ResponseEntity<ResponseMessageDto> duplicateId(@Valid @RequestBody DuplicateIdRequestDto requestDto){
-    userService.duplicatedId(requestDto.getId());
-    return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.UNIQUE_ID));
+  public ResponseEntity<ResponseBooleanDto> duplicateId(@Valid @RequestBody DuplicateIdRequestDto requestDto){
+    boolean result = userService.duplicatedId(requestDto.getId());
+    if (result){
+      return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.DUPLICATE_ID,result));
+    }
+    else return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.UNIQUE_ID,result));
+    //버튼을 눌렀을 때 사용할 수 있다라고 나오는데 만약에 DB에 겹치면 가입하기에서 오류가나요
   }
 
   @PostMapping("/checkNickname")
-  public ResponseEntity<ResponseMessageDto> duplicateNickname(@Valid @RequestBody
+  public ResponseEntity<ResponseBooleanDto> duplicateNickname(@Valid @RequestBody
       DuplicatedNicknameRequestDto requestDto){
-    userService.duplicatedNickName(requestDto.getNickname());
-    return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.UNIQUE_NICKNAME));
+    boolean result = userService.duplicatedNickName(requestDto.getNickname());
+    if (result){
+      return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.DUPLICATE_NICKNAME,result));
+    }
+    else return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.UNIQUE_NICKNAME,result));
+  }
+
+  @PostMapping("/checkPassword")
+  public ResponseEntity<ResponseBooleanDto> checkPassword(@Valid @RequestBody
+      checkPasswordRequestDto requestDto){
+    boolean result = userService.checkPassword(requestDto.getPassword(),
+        requestDto.getCheckPassword());
+    if (result){
+      return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.CHECK_PASSWORD, result));
+    }
+    else return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.MISMATCH_PASSWORD, result));
+
   }
 }

@@ -37,7 +37,6 @@ public class UserService {
     private final RedisUtil redisUtil;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ArtistGroupRepository artistGroupRepository;
     private final S3FileUploader s3FileUploader;
 
     @Value("${auth.admin_token}")
@@ -49,24 +48,30 @@ public class UserService {
 
     //회원가입
     public SignUpResponseDto signUp(MultipartFile file, SignUpRequestDto requestDto) {
+        //비밀번호를 엔티티에서 꺼내올 필요가 있을까?
         String id = requestDto.getId();
         String password = requestDto.getPassword();
-        String checkPassowrd = passwordEncoder.encode(requestDto.getCheckPassword());
+        String checkPassowrd = requestDto.getCheckPassword();
         String name = requestDto.getName();
         String email = requestDto.getEmail();
         String nickname = requestDto.getNickname();
         MultipartFile profile = requestDto.getFile();
 
-        //ID 중복확인
-        duplicatedId(id);
+        //ID & 닉네임 중복 확인
+        if (duplicatedId(id)){
+            throw new DuplicatedException(ErrorType.DUPLICATE_ID);
+        }
 
-        //닉네임 중복확인
-        duplicatedNickName(nickname);
-
+        if (duplicatedNickName(nickname)){
+            throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
+        }
         //비밀번호 재입력 및 확인
-        checkPassword(password, checkPassowrd);
+        if (checkPassword(password, checkPassowrd)){
+            throw new MismatchException(ErrorType.MISMATCH_PASSWORD);
+        }
 
         String encodePassword = passwordEncoder.encode(password);
+
         // 블랙리스트 검증
         if (userRepository.findByEmailAndStatus(email, UserStatusEnum.BLACK_LIST).isPresent()) {
             throw new CustomException(ErrorType.BLACKLIST_EMAIL);
@@ -82,23 +87,8 @@ public class UserService {
             throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
         }
 
-        UserRoleEnum role = UserRoleEnum.USER;
-        if (requestDto.isAdmin()) {
-            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ADMINTOKEN);
-            }
-            role = UserRoleEnum.ADMIN;
-        } else if (requestDto.isArtist()) {
-            if (!ARTIST_TOKEN.equals(requestDto.getArtistToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ARTISTTOKEN);
-            }
-            role = UserRoleEnum.ARTIST;
-        } else if (requestDto.isEntertainment()) {
-            if (!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
-            }
-            role = UserRoleEnum.ENTERTAINMENT;
-        }
+        //Token을 가지고 회원 권한 확인
+        verifyUserRole(requestDto);
 
         User user = new User(
                 id,
@@ -106,10 +96,11 @@ public class UserService {
                 nickname,
                 email,
                 encodePassword,
-                role
+                verifyUserRole(requestDto)
         );
         userRepository.save(user);
 
+        //메서드로 분리
         String imageUrl = "";
         try {
             imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
@@ -124,7 +115,6 @@ public class UserService {
         redisUtil.deleteData(id);
         return new SignUpResponseDto(user);
     }
-
 
     //회원 탈퇴
     @Transactional
@@ -213,38 +203,26 @@ public class UserService {
         return new ProfileResponseDto(findById(userId));
     }
 
-
     private User findById(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(ErrorType.USER_NOT_FOUND)
         );
     }
 
-    public void duplicatedId(String id) {
-        if (userRepository.findByLoginId(id).isPresent()) {
-            throw new DuplicatedException(ErrorType.DUPLICATE_ID);
-        }
+    //Id 중복 확인
+    public boolean duplicatedId(String id) {
+        return userRepository.existsByLoginId(id);
     }
 
-    public void duplicatedNickName(String nickname) {
-        if (userRepository.findByNickname(nickname).isPresent()) {
-            throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
-        }
-    }
-
-    private void validBlackList(String email, UserStatusEnum status) {
-        if (userRepository.findByEmailAndStatus(email, status).get().equals(UserStatusEnum.BLACK_LIST)) {
-            throw new CustomException(ErrorType.BLACKLIST_EMAIL);
-        }
+    //닉네임 중복 확인
+    public boolean duplicatedNickName(String nickname){
+        return userRepository.existsByNickname(nickname);
     }
 
     //비밀번호 일치 확인
-    private void checkPassword(String password, String checkPassword) {
-        if (!passwordEncoder.matches(password, checkPassword)) {
-            throw new MismatchException(ErrorType.MISMATCH_PASSWORD);
-        }
+    public boolean checkPassword(String password, String checkPassword) {
+        return password.equals(checkPassword);
     }
-
 
     private void updateUserImageUrl(ImageUrlCarrier carrier) {
         if (!carrier.getImageUrl().isEmpty()) {
@@ -253,5 +231,28 @@ public class UserService {
             user.updateImageUrl(carrier.getImageUrl());
             userRepository.save(user);
         }
+    }
+
+    //회원 권한 확인 , setter
+    private UserRoleEnum verifyUserRole(SignUpRequestDto requestDto){
+        UserRoleEnum role = UserRoleEnum.USER;
+
+        if (requestDto.isAdmin()) {
+            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
+                throw new MismatchException(ErrorType.MISMATCH_ADMINTOKEN);
+            }
+            role = UserRoleEnum.ADMIN;
+        } else if (requestDto.isArtist()) {
+            if (!ARTIST_TOKEN.equals(requestDto.getArtistToken())) {
+                throw new MismatchException(ErrorType.MISMATCH_ARTISTTOKEN);
+            }
+            role = UserRoleEnum.ARTIST;
+        } else if (requestDto.isEntertainment()) {
+            if (!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())) {
+                throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
+            }
+            role = UserRoleEnum.ENTERTAINMENT;
+        }
+        return role;
     }
 }

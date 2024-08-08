@@ -28,15 +28,16 @@ public class MailSendService {
   private int authNumber;
 
   @Transactional
-  public void CheckAuthNum(String loginId, EmailCheckRequestDto requestDto) {
+  public boolean CheckAuthNum(String loginId, EmailCheckRequestDto requestDto) {
     MailAuth mailAuth  = redisUtil.getData(loginId);
 
-    if(!mailAuth.getAuthNum().equals(requestDto.getAuthNum())){
-      throw new MismatchException(ErrorType.AUTH_MISMATCH);
+    if(!mailAuth.getAuthNum().equals(requestDto.getAuthNum())) {
+      return false;
     }
 
     mailAuth.validEmail();
     redisUtil.setData(loginId, mailAuth);
+    return true;
   }
 
   //임의의 6자리 양수를 반환합니다.

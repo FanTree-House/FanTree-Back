@@ -94,7 +94,9 @@ public enum ResponseStatus {
     TRANSFORM_BLACKLIST_SUCCESS(HttpStatus.OK, "블랙리스트 전환에 성공하였습니다."),
     USER_ROLE_UPDATE_SUCCESS(HttpStatus.OK, "회원권환 수정에 성공하였습니다."),
 
-    ;
+    CHECK_EMAIL(HttpStatus.OK, "이메일을 확인해주세요."),
+    CHECK_AUTHNUM(HttpStatus.OK, "이메일이 인증이 완료되었습니다."),
+    CHECK_PASSWORD(HttpStatus.OK, "비밀번호가 일치합니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
