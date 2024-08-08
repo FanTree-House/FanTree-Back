@@ -13,6 +13,7 @@ public class ResponseDataDto<T> {
         this.status = responseStatus;
         this.message = responseStatus.getMessage();
         this.data = data;
+        //상태를 담아주기
     }
 
     // 사용 예시
