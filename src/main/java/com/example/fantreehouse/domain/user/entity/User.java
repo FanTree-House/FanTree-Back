@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Entity
@@ -125,6 +126,10 @@ public class User extends Timestamped {
         return refreshToken == null ? true : false;
     }
 
+//    public boolean encodePassword(){
+//
+//    }
+
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
@@ -176,7 +181,6 @@ public class User extends Timestamped {
     public boolean isInactive() {
         return this.status == UserStatusEnum.INACTIVE_USER;
     }
-
 
     public void setLogin(){
         this.lastLoginDate = LocalDateTime.now();
