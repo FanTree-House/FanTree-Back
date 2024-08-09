@@ -39,6 +39,14 @@ public class S3FileUploader {
 
     private final AmazonS3Client amazonS3Client;
     private final String mainUrl = "https://fantree.s3.ap-northeast-2.amazonaws.com/";
+    public static final String BASIC_DIR = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/";
+    public static final String START_PROFILE_URL = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/Start.png";
+    private final String USER_PROFILE_URL = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/User.png";
+    private final String ARTIST_PROFILE_URL = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/Artist.png";
+    private final String ENTER_PROFILE_URL = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/Entertainment.png";
+    private final String ARTIST_GROUP_PROFILE_URL = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/ArtistGroup.png";
+    private final String ADMIN_PROFILE_URL = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/Admin.png";
+
 
     @Value("${cloud.aws.s3.bucket}")
     private final String bucket = "fantree";
@@ -47,7 +55,7 @@ public class S3FileUploader {
 
     public String saveProfileImage(MultipartFile file, Long id, UserRoleEnum userRoleEnum) {
         if (!isFileExists(file)) {
-            return NO_IMAGE;
+            return saveBasicProfileIMG(userRoleEnum);
         }
 
         String uploadFileName = file.getOriginalFilename();
@@ -68,6 +76,8 @@ public class S3FileUploader {
             fileDir = createArtistProfileDir(id);
         } else if (userRoleEnum.equals(UserRoleEnum.ENTERTAINMENT)) {
             fileDir = createEntertainmentLogoDir(id);
+        } else if (userRoleEnum.equals(UserRoleEnum.ADMIN)) {
+            fileDir = createAdminProfileDir(id);
         } else {
             throw new S3Exception(UPLOAD_ERROR);
         }
@@ -78,9 +88,23 @@ public class S3FileUploader {
 
     }
 
+    private String saveBasicProfileIMG(UserRoleEnum userRoleEnum) {
+        if (userRoleEnum.equals(UserRoleEnum.USER)) {
+            return USER_PROFILE_URL;
+        } else if (userRoleEnum.equals(UserRoleEnum.ARTIST)) {
+            return ARTIST_PROFILE_URL;
+        } else if (userRoleEnum.equals(UserRoleEnum.ENTERTAINMENT)) {
+            return ENTER_PROFILE_URL;
+        } else if (userRoleEnum.equals(UserRoleEnum.ADMIN)) {
+            return ADMIN_PROFILE_URL;
+        } else {
+            throw new S3Exception(UPLOAD_ERROR);
+        }
+    }
+
     public String saveArtistGroupImage(MultipartFile file, Long artistGroupId) {
         if (!isFileExists(file)) {
-            return NO_IMAGE;
+            return ARTIST_GROUP_PROFILE_URL;
         }
 
         String uploadFileName = file.getOriginalFilename();
@@ -178,8 +202,6 @@ public class S3FileUploader {
             amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
-
-
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -197,6 +219,10 @@ public class S3FileUploader {
     //Dir 단건 삭제
     public void deleteFileInBucket(String fileDir) {
 
+        if (fileDir.startsWith(BASIC_DIR)) {
+            return;
+        }
+
         String key = getImageKey(fileDir);
         try {
             if (amazonS3Client.doesObjectExist(bucket, key)) {
@@ -209,12 +235,14 @@ public class S3FileUploader {
         } catch (Exception e) {
             throw new S3Exception(DELETE_ERROR);
         }
+
     }
 
     //Dir 다건 삭제
     public void deleteFilesInBucket(List<String> filedDirs) {
 
         for (String fileDir : filedDirs) {
+
             String key = getImageKey(fileDir);
             try {
                 if (amazonS3Client.doesObjectExist(bucket, key)) {
