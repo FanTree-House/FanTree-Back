@@ -9,6 +9,7 @@ import com.example.fantreehouse.domain.artist.dto.request.ArtistRequestDto;
 import com.example.fantreehouse.domain.artist.dto.response.ArtistProfileResponseDto;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artist.repository.ArtistRepository;
+import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.s3.service.S3FileUploader;
 import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
 import com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil;
@@ -143,6 +144,14 @@ public class ArtistService {
         }
         artistRepository.delete(foundArtist);
     }
+
+    public String getArtistGroupName(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getUser().getId();
+        Artist artist = artistRepository.findByUserId(userId)
+                .orElseThrow(() -> new NotFoundException(ARTIST_NOT_IN_GROUP));
+        return artist.getArtistGroup().getGroupName();
+    }
+
 
     // 활성화 유저인지 확인
     private void checkUserStatus(UserStatusEnum userStatusEnum) {
