@@ -1,12 +1,16 @@
 package com.example.fantreehouse.domain.artistgroup.entity;
 
+import static com.example.fantreehouse.common.enums.ErrorType.UNAUTHORIZED;
+
 import com.example.fantreehouse.common.entitiy.Timestamped;
+import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
+import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

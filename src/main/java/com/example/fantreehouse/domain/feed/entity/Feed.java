@@ -1,6 +1,9 @@
 package com.example.fantreehouse.domain.feed.entity;
 
+import static com.example.fantreehouse.common.enums.ErrorType.UNAUTHORIZED;
+
 import com.example.fantreehouse.common.entitiy.Timestamped;
+import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.comment.entity.Comment;
 import com.example.fantreehouse.domain.feed.dto.request.CreateFeedRequestDto;
@@ -83,4 +86,9 @@ public class Feed extends Timestamped {
         this.contents = requestDto.getContents();
     }
 
+    public void checkArtistGroup(User user, String groupName) {
+        if (!user.getArtist().getArtistGroup().getGroupName().equals(groupName)) {
+            throw new UnAuthorizedException(UNAUTHORIZED);
+        }
+    }
 }

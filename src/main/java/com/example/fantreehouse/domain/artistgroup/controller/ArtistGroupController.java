@@ -44,8 +44,10 @@ public class ArtistGroupController {
             @Valid @ModelAttribute ArtistGroupRequestDto request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        if (file.getSize() > 10 * 1024 * 1024) {
-            throw new S3Exception(OVER_LOAD);
+        if (file != null && !file.isEmpty()) {
+            if (file.getSize() > 10 * 1024 * 1024) {
+                throw new S3Exception(OVER_LOAD);
+            }
         }
         artistGroupService.createArtistGroup(file, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_GROUP_CREATE_SUCCESS));

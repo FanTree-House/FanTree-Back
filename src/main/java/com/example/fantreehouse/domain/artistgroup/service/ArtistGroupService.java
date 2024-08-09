@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
+import static com.example.fantreehouse.domain.s3.service.S3FileUploader.BASIC_DIR;
+import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
 import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
 
 @Service
@@ -73,7 +75,7 @@ public class ArtistGroupService {
 
         artistGroupRepository.save(artistGroup);
 
-        String imageUrl = "";
+        String imageUrl = START_PROFILE_URL;
         try {
             imageUrl = s3FileUploader.saveArtistGroupImage(file, artistGroup.getId());
         } catch (Exception e) {
@@ -173,11 +175,11 @@ public class ArtistGroupService {
                 throw new S3Exception(DELETE_ERROR);
             }
 
-            String newImageUrl = "";
+            String newImageUrl;
             try {
                 newImageUrl = s3FileUploader.saveArtistGroupImage(file, artistGroup.getId());
             } catch (Exception e) {
-                s3FileUploader.deleteFileInBucket(newImageUrl);
+                s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
                 throw new S3Exception(UPLOAD_ERROR);
             }
 
@@ -228,13 +230,16 @@ public class ArtistGroupService {
 
         ArtistGroup artistGroup = getArtistGroup(groupName);
 
-        try {
-            s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
-        } catch (NotFoundException e) {
-            artistGroup.updateImageUrl("");
-            artistGroupRepository.save(artistGroup);
-        } catch (Exception e) {
-            throw new S3Exception(DELETE_ERROR);
+        String imageUrl = user.getProfileImageUrl();
+        if (!imageUrl.startsWith(BASIC_DIR)) {
+            try {
+                s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
+            } catch (NotFoundException e) {
+                artistGroup.updateImageUrl(START_PROFILE_URL);
+                artistGroupRepository.save(artistGroup);
+            } catch (Exception e) {
+                throw new S3Exception(DELETE_ERROR);
+            }
         }
         artistGroupRepository.delete(artistGroup);
     }
