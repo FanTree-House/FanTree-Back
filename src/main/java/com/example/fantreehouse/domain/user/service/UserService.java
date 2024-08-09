@@ -82,9 +82,6 @@ public class UserService {
 
        verifyEmail(id,email);
 
-        //Token을 가지고 회원 권한 확인
-        verifyUserRole(requestDto);
-
         User user = new User(
                 id,
                 name,

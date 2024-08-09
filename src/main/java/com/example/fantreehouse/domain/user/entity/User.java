@@ -236,6 +236,7 @@ public class User extends Timestamped {
 
 
 
+
     /**
      * [verifyEntertainmentAuthority] 사용자가 엔터테인먼트 권한 가지고 있는지 확인합니다.
      * @param user 사용자 객체
