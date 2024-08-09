@@ -42,13 +42,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final S3FileUploader s3FileUploader;
 
-    @Value("${auth.admin_token}")
-    private String ADMIN_TOKEN;
-    @Value("${auth.artist_token}")
-    private String ARTIST_TOKEN;
-    @Value("${auth.entertainment_token}")
-    private String ENTERTAINMENT_TOKEN;
-
     //회원가입
     public SignUpResponseDto signUp(MultipartFile file, SignUpRequestDto requestDto) {
         //비밀번호를 엔티티에서 꺼내올 필요가 있을까?
@@ -88,7 +81,7 @@ public class UserService {
                 nickname,
                 email,
                 encodePassword,
-                requestDto.getUserRoleEnum()
+                UserRoleEnum.valueOf(requestDto.getUserRoleEnum())
         );
         userRepository.save(user);
 

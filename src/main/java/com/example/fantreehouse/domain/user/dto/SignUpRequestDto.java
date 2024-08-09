@@ -33,11 +33,11 @@ public class SignUpRequestDto {
 
   private String checkPassword;
 
-  private UserRoleEnum userRoleEnum;
+  private String userRoleEnum;
 
   @JsonCreator
   public SignUpRequestDto(String id, String name, String nickname, String email, String password,
-      MultipartFile file, String checkPassword, UserRoleEnum userRoleEnum) {
+      MultipartFile file, String checkPassword, String userRoleEnum) {
     this.id = id;
     this.name = name;
     this.nickname = nickname;
