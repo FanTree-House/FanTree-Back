@@ -42,7 +42,7 @@ public class CommentService {
     //댓글 작성 - 해당 아티스트 & 구독한 유저가
     public void createComment(String groupName, Long feedId, UserDetailsImpl userDetails, CreateCommentRequestDto requestDto) {
         User loginUser = userDetails.getUser();
-        checkUserStatus(loginUser.getStatus());
+        loginUser.activateUser();
         existArtistGroup(groupName);
 
         // 찾는 Feed 생사 확인
@@ -70,7 +70,7 @@ public class CommentService {
                               UserDetailsImpl userDetails, CommentRequestDto requestDto) {
 
         User loginUser = userDetails.getUser();
-        checkUserStatus(loginUser.getStatus());
+        loginUser.activateUser();
         existArtistGroup(groupName);
 
         Comment foundComment = checkFeedAndCommentExist(feedId, artistFeedCommentId);
@@ -83,7 +83,7 @@ public class CommentService {
     @Transactional
     public void deleteComment(String groupName, Long feedId, Long artistFeedCommentId, UserDetailsImpl userDetails) {
         User loginUser = userDetails.getUser();
-        checkUserStatus(loginUser.getStatus());
+        loginUser.activateUser();
         existArtistGroup(groupName);
 
         Comment foundComment = checkFeedAndCommentExist(feedId, artistFeedCommentId);
