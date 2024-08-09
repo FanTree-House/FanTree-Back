@@ -1,6 +1,8 @@
 package com.example.fantreehouse.domain.feed.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.example.fantreehouse.common.enums.ErrorType;
+import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
@@ -65,8 +67,8 @@ public class FeedService {
     public CreateFeedResponseDto createFeed(String groupName, User loginUser,
                                             List<MultipartFile> files, CreateFeedRequestDto requestDto) {
 
-        checkUserStatus(loginUser.getStatus()); // 활성유저인지 확인
-        checkUserRole(loginUser.getUserRole()); //Artist 권한 확인
+        loginUser.activateUser();
+        loginUser.checkUserRole(loginUser.getUserRole());
 
         //로그인한 아티스트가 groupName 이라는 이름을 가진 ArtistGroup 소속인지 확인 <- 아티스트 그룹을 통해서 아티스트를 찾아 올 수 없는 구조이므로
         ArtistGroup artistGroup = artistGroupRepository.findByGroupName(groupName)
@@ -110,20 +112,23 @@ public class FeedService {
      * @return
      */
     @Transactional
-    public UpdateFeedResponseDto updateFeed(String groupName, Long artistFeedId, UserDetailsImpl userDetails,
-                                            List<MultipartFile> files, UpdateFeedRequestDto requestDto) {
+    public UpdateFeedResponseDto updateFeed(String groupName, Long artistFeedId,
+        UserDetailsImpl userDetails, List<MultipartFile> files, UpdateFeedRequestDto requestDto) {
 
         User loginUser = userDetails.getUser();
-        checkUserStatus(loginUser.getStatus());
+        loginUser.activateUser();
 
         //요청하는 feed 찾기
         Feed foundFeed = feedRepository.findById(artistFeedId)
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
 
-        Artist loginArtist = checkLoginUserRole(loginUser.getId());
+        loginUser.checkUserRole(loginUser.getUserRole());
 
-        checkArtistGroup(loginArtist, groupName);
-        checkWriter(loginUser.getId(), foundFeed.getUser().getId());
+        foundFeed.checkArtistGroup(loginUser, groupName);
+
+        User wirter = foundFeed.getUser();
+        wirter.validationUser(loginUser);
+
         foundFeed.updateFeed(requestDto);
 
         if (areFilesExist(files)) {
@@ -143,7 +148,7 @@ public class FeedService {
             List<String> newImageUrls = new ArrayList<>();
             try {
                 for (MultipartFile file : files) {
-                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, loginArtist.getArtistName(), foundFeed.getId());
+                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, loginUser.getArtist().getArtistName(), foundFeed.getId());
                     newImageUrls.add(imageUrl);
                 }
             } catch (Exception e) {
@@ -168,7 +173,7 @@ public class FeedService {
      */
     public FeedResponseDto getFeed(String groupName, Long artistFeedId, User loginUser) {
 
-        checkUserStatus(loginUser.getStatus());
+        loginUser.activateUser();
 
         //요청하는 feed 찾기
         Feed foundFeed = feedRepository.findById(artistFeedId)
@@ -212,26 +217,16 @@ public class FeedService {
     @Transactional
     public void deleteFeed(Long artistFeedId, UserDetailsImpl userDetails) {
         User loginUser = userDetails.getUser();
-        UserRoleEnum loginUserRole = loginUser.getUserRole();
-        checkUserStatus(loginUser.getStatus());
+        loginUser.activateUser();
 
-        //권한이 Artist 이거나 Entertainment 여야 함
-        if (!(loginUserRole.equals(UserRoleEnum.ARTIST) ||
-                loginUserRole.equals(UserRoleEnum.ENTERTAINMENT))) {
-            throw new UnAuthorizedException(UNAUTHORIZED);
-        }
         //요청하는 feed 찾기
         Feed foundFeed = feedRepository.findById(artistFeedId)
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
 
-        Long loginUserId = loginUser.getId();
-        Long feedWriterId = foundFeed.getUser().getId();
+        User feedWriter = foundFeed.getUser();
 
-        // 로그인유저가 '작성자 본인'이거나 '작성자의 엔터테인먼트를 가진 유저'인 경우
-        if (!(loginUserId.equals(feedWriterId) ||
-                loginUser.getEntertainment().getUser().getId().equals(loginUserId))) {
-            throw new UnAuthorizedException(UNAUTHORIZED);
-        }
+        //유저 검증
+        feedWriter.validationUser(loginUser);
 
         List<String> foundFeedImageUrls = foundFeed.getImageUrls();
         for (String imageUrl : foundFeedImageUrls) {
@@ -256,12 +251,6 @@ public class FeedService {
         }
     }
 
-    //login 유저가 아티스트인지 확인
-    private void checkUserRole(UserRoleEnum userRoleEnum) {
-        if (!userRoleEnum.equals(UserRoleEnum.ARTIST)) {
-            throw new UnAuthorizedException(UNAUTHORIZED);
-        }
-    }
 
     //요청하는 feed 찾기
     private Feed findFeed(Long artistFeedId) {
@@ -278,22 +267,10 @@ public class FeedService {
         }
     }
 
-    //url 의 groupName 과 loginUser 의 소속 group 명이 동일한지 확인
-    private void checkArtistGroup(Artist loginArtist, String groupName) {
-        if (!loginArtist.getArtistGroup().getGroupName().equals(groupName)) {
-            throw new UnAuthorizedException(UNAUTHORIZED);
-        }
-    }
-
     private Artist checkLoginUserRole(Long userId) {
         return artistRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
     }
 
-    //로그인 유저와 feed 작성 유저가 동일한지 확인
-    private void checkWriter(Long loginUserId, Long feedWriterId) {
-        if (!loginUserId.equals(feedWriterId)) {
-            throw new UnAuthorizedException(UNAUTHORIZED);
-        }
-    }
+
 }

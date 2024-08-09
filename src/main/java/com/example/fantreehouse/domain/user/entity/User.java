@@ -1,8 +1,15 @@
 package com.example.fantreehouse.domain.user.entity;
 
 
+import static com.example.fantreehouse.common.enums.ErrorType.NOT_YOUR_ENTERTAINMENT;
+import static com.example.fantreehouse.common.enums.ErrorType.UNAUTHORIZED;
+
 import com.example.fantreehouse.common.entitiy.Timestamped;
+import com.example.fantreehouse.common.enums.ErrorType;
+import com.example.fantreehouse.common.exception.CustomException;
+import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.domain.artist.entity.Artist;
+import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.commentLike.entity.CommentLike;
 import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
@@ -123,12 +130,8 @@ public class User extends Timestamped {
 
     public boolean logout() {
         refreshToken = null;
-        return refreshToken == null ? true : false;
+        return true;
     }
-
-//    public boolean encodePassword(){
-//
-//    }
 
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
@@ -189,4 +192,61 @@ public class User extends Timestamped {
     public void activateUser(){
         this.status = UserStatusEnum.ACTIVE_USER;
     }
+
+    public boolean isAdmin(){
+        return this.userRole == UserRoleEnum.ADMIN;
+    }
+
+    public boolean isArtist(){return this.userRole == UserRoleEnum.ARTIST;}
+
+    public boolean isEntertainment(){return this.userRole == UserRoleEnum.ENTERTAINMENT;}
+
+    /**
+     * [verifyEntertainmentAuthority] 사용자의 권한과 본인인지 확인합니다.
+     * @param user 사용자 객체
+     */
+    public void validationUser(User user){
+        if (user.isAdmin()){
+            return;
+        }
+        if (!(user.getUserRole().equals(UserRoleEnum.ARTIST) ||
+            user.getUserRole().equals(UserRoleEnum.ENTERTAINMENT))) {
+            throw new UnAuthorizedException(UNAUTHORIZED);
+        }
+        if (!this.id.equals(user.getId())){
+            if (!this.entertainment.getId().equals(user.getEntertainment().getId())) {
+                throw new UnAuthorizedException(NOT_YOUR_ENTERTAINMENT);
+            }
+        }
+    }
+
+    public void validationEnterAndAdmin(User user){
+        if (user.isAdmin()){
+            return;
+        }
+        if (!user.getUserRole().equals(UserRoleEnum.ENTERTAINMENT)) {
+            throw new UnAuthorizedException(UNAUTHORIZED);
+        }
+        if (!this.id.equals(user.getId())){
+            if (!this.entertainment.getId().equals(user.getEntertainment().getId())) {
+                throw new UnAuthorizedException(NOT_YOUR_ENTERTAINMENT);
+            }
+        }
+    }
+    /**
+     * [verifyEntertainmentAuthority] 사용자가 엔터테인먼트 권한 가지고 있는지 확인합니다.
+     * @param user 사용자 객체
+     */
+    public void verifyEntertainmentAuthority(User user) {
+        if (!UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole())) {
+            throw new CustomException(ErrorType.UNAUTHORIZED_ACCESS);
+        }
+    }
+
+    public void checkUserRole(UserRoleEnum userRoleEnum) {
+        if (!userRoleEnum.equals(UserRoleEnum.ARTIST)) {
+            throw new UnAuthorizedException(UNAUTHORIZED);
+        }
+    }
+
 }

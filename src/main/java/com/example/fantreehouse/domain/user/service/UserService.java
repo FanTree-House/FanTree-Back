@@ -42,14 +42,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final S3FileUploader s3FileUploader;
 
-    @Value("${auth.admin_token}")
-    private String ADMIN_TOKEN;
-    @Value("${auth.artist_token}")
-    private String ARTIST_TOKEN;
-    @Value("${auth.entertainment_token}")
-    private String ENTERTAINMENT_TOKEN;
-
-
     //회원가입
     public SignUpResponseDto signUp(MultipartFile file, SignUpRequestDto requestDto) {
         //비밀번호를 엔티티에서 꺼내올 필요가 있을까?
@@ -61,11 +53,11 @@ public class UserService {
         String nickname = requestDto.getNickname();
         MultipartFile profile = requestDto.getFile();
 
-        //ID & 닉네임 중복 확인
+        //ID 중복 확인
         if (duplicatedId(id)){
             throw new DuplicatedException(ErrorType.DUPLICATE_ID);
         }
-
+        // 닉네임 중복 확인
         if (duplicatedNickName(nickname)){
             throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
         }
@@ -83,16 +75,13 @@ public class UserService {
 
        verifyEmail(id,email);
 
-        //Token을 가지고 회원 권한 확인
-        verifyUserRole(requestDto);
-
         User user = new User(
                 id,
                 name,
                 nickname,
                 email,
                 encodePassword,
-                verifyUserRole(requestDto)
+                UserRoleEnum.valueOf(requestDto.getUserRoleEnum())
         );
         userRepository.save(user);
 
@@ -134,7 +123,6 @@ public class UserService {
                 throw new S3Exception(DELETE_ERROR);
             }
         }
-
         user.withDraw();
     }
 
@@ -218,11 +206,6 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-    //비밀번호 일치 확인
-    public boolean checkPassword(String password, String checkPassword) {
-        return password.equals(checkPassword);
-    }
-
     private void updateUserImageUrl(ImageUrlCarrier carrier) {
         if (!carrier.getImageUrl().isEmpty()) {
             User user = userRepository.findById(carrier.getId())
@@ -230,29 +213,6 @@ public class UserService {
             user.updateImageUrl(carrier.getImageUrl());
             userRepository.save(user);
         }
-    }
-
-    //회원 권한 확인 , setter
-    private UserRoleEnum verifyUserRole(SignUpRequestDto requestDto){
-        UserRoleEnum role = UserRoleEnum.USER;
-
-        if (requestDto.isAdmin()) {
-            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ADMINTOKEN);
-            }
-            role = UserRoleEnum.ADMIN;
-        } else if (requestDto.isArtist()) {
-            if (!ARTIST_TOKEN.equals(requestDto.getArtistToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ARTISTTOKEN);
-            }
-            role = UserRoleEnum.ARTIST;
-        } else if (requestDto.isEntertainment()) {
-            if (!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
-            }
-            role = UserRoleEnum.ENTERTAINMENT;
-        }
-        return role;
     }
 
     public boolean existsInactiveUser(EmailRequestDto requestDto){
@@ -281,6 +241,10 @@ public class UserService {
         if (!email.equals(redisUtil.getData(id).getEmail())) {
             throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
         }
+    }
+
+    public boolean checkPassword (String password, String checkPassword) {
+        return password.equals(checkPassword);
     }
 
 }
