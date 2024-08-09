@@ -29,7 +29,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
-import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
+import static com.example.fantreehouse.domain.s3.service.S3FileUploader.BASIC_DIR;
+import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
+import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +48,7 @@ public class UserService {
     private String ARTIST_TOKEN;
     @Value("${auth.entertainment_token}")
     private String ENTERTAINMENT_TOKEN;
+
 
     //회원가입
     public SignUpResponseDto signUp(MultipartFile file, SignUpRequestDto requestDto) {
@@ -94,7 +97,7 @@ public class UserService {
         userRepository.save(user);
 
         //메서드로 분리
-        String imageUrl = "";
+        String imageUrl = START_PROFILE_URL;
         try {
             imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
         } catch (Exception e) {
@@ -121,14 +124,17 @@ public class UserService {
         }
 
         String imageUrl = user.getProfileImageUrl();
-        try {
-            s3FileUploader.deleteFileInBucket(imageUrl);
-        } catch (NotFoundException e) {
-            user.updateImageUrl("");//실체 없는 url 테이블에서 삭제
-            userRepository.save(user);
-        } catch (Exception e) {
-            throw new S3Exception(DELETE_ERROR);
+        if (!imageUrl.startsWith(BASIC_DIR)) {
+            try {
+                s3FileUploader.deleteFileInBucket(imageUrl);
+            } catch (NotFoundException e) {
+                user.updateImageUrl(START_PROFILE_URL);//실체 없는 url 테이블에서 삭제
+                userRepository.save(user);
+            } catch (Exception e) {
+                throw new S3Exception(DELETE_ERROR);
+            }
         }
+
         user.withDraw();
     }
 
@@ -170,13 +176,13 @@ public class UserService {
             try {
                 s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
             } catch (NotFoundException e) {
-                user.updateImageUrl("");
+                user.updateImageUrl(START_PROFILE_URL);
                 userRepository.save(user);
             } catch (Exception e) {
                 throw new S3Exception(DELETE_ERROR);
             }
 
-            String newImageUrl = "";
+            String newImageUrl;
             try {
                 newImageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
             } catch (Exception e) {
