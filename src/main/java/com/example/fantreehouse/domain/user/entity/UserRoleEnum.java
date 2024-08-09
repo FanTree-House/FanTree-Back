@@ -1,5 +1,8 @@
 package com.example.fantreehouse.domain.user.entity;
 
+import com.example.fantreehouse.common.enums.ErrorType;
+import com.example.fantreehouse.common.exception.errorcode.MismatchException;
+
 public enum UserRoleEnum {
     ADMIN(Authority.ADMIN),
     USER(Authority.USER),
@@ -17,11 +20,9 @@ public enum UserRoleEnum {
     }
 
     public static class Authority {
-
         public static final String ADMIN = "ADMIN";
         public static final String USER = "USER";
         public static final String ARTIST = "ARTIST";
         public static final String ENTERTAINMENT = "ENTERTAINMENT";
-
     }
 }

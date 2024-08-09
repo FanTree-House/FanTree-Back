@@ -9,6 +9,8 @@
 //import com.example.fantreehouse.domain.communityLike.repository.CommunityLikeRepository;
 //import com.example.fantreehouse.domain.communitycomment.repository.CommunityCommentRepository;
 //import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
+//import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
+//import com.example.fantreehouse.domain.enterfeed.entity.FeedCategory;
 //import com.example.fantreehouse.domain.enterfeed.repository.EnterFeedRepository;
 //import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 //import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRepository;
@@ -20,6 +22,8 @@
 //import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 //import com.example.fantreehouse.domain.user.repository.UserRepository;
 //import jakarta.annotation.PostConstruct;
+//import java.time.LocalDate;
+//import java.time.LocalDateTime;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.stereotype.Component;
@@ -227,5 +231,10 @@
 //    );
 //    artistRepository.saveAll(artistList);
 //
+//    EnterFeed smEnterFeed = new EnterFeed(entertainment,user2,"aespa 스케쥴 공지사항 입니다.",
+//        "스케쥴이 변동되었습니다.",entertainment.getEnterName(), FeedCategory.NOTICE, LocalDate.now(),
+//        artistGroup, artistGroup.getGroupName());
+//
+//    enterFeedRepository.save(smEnterFeed);
 //  }
 //}

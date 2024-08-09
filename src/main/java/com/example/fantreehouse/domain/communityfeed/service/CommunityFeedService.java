@@ -55,7 +55,7 @@ public class CommunityFeedService {
             String groupName) {
         User user = findUser(userId);
         ArtistGroup artistGroup = findArtistGroup(groupName);
-        checkUserStatus(user.getStatus(), user.getUserRole());
+        user.activateUser();
 
         // 구독자 체크
         checksubscriptionList(userId);
@@ -169,11 +169,8 @@ public class CommunityFeedService {
         User user = findUser(userId);
         ArtistGroup artistGroup = findArtistGroup(groupName);
         CommunityFeed feed = findFeed(feedId);
-        if (!(feed.getUser().getId().equals(user.getId()) ||
-                userRoleEnum.equals(UserRoleEnum.ADMIN) ||
-                userRoleEnum.equals(UserRoleEnum.ENTERTAINMENT))) {
-            throw new CustomException(ErrorType.UNAUTHORIZED_FEED_DELETE);
-        }
+
+        user.validationEnterAndAdmin(findUser(userId));
 
         List<String> foundFeedImageUrls = feed.getImageUrls();
         for (String imageUrl : foundFeedImageUrls) {
@@ -189,7 +186,6 @@ public class CommunityFeedService {
             feedRepository.delete(feed);
         }
     }
-
 
     //유저찾기
     public User findUser(Long userId) {
@@ -213,13 +209,6 @@ public class CommunityFeedService {
     public CommunityLike checkUserLike(Long userId) {
         return likeRepository.findByUserId(userId).orElseThrow(()
                 -> new CustomException(ErrorType.DUPLICATE_LIKE));
-    }
-
-    //휴면유저와 UserROle 필터링
-    private void checkUserStatus(UserStatusEnum userStatus, UserRoleEnum userRoleEnum) {
-        if (!(userStatus.equals(UserStatusEnum.ACTIVE_USER) && userRoleEnum.equals(userRoleEnum.USER))) {
-            throw new CustomException(ErrorType.UNAUTHORIZED_FEED_CREATE);
-        }
     }
 
     //구독자 체크

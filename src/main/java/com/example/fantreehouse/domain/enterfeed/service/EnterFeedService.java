@@ -35,12 +35,12 @@ public class EnterFeedService {
      * @param user 요청을 수행하는 사용자
      */
     @Transactional
-    public void createFeed(String  enterName, EnterFeedRequestDto request, User user) {
-        verifyEntertainmentAuthority(user);
+    public void createFeed(String  enterName, EnterFeedRequestDto request, User user, ArtistGroup artistGroup) {
         Entertainment entertainment = entertainmentRepository.findByEnterName(enterName)
                 .orElseThrow(() -> new CustomException(ErrorType.ARTIST_GROUP_NOT_FOUND));
 
-//        entertainment = artistGroup.getEntertainment();
+        entertainment.getUser().verifyEntertainmentAuthority(user);
+
         EnterFeed enterFeed = new EnterFeed(
                 entertainment,
                 user,
@@ -48,9 +48,10 @@ public class EnterFeedService {
                 request.getContents(),
                 entertainment.getEnterName(),
                 request.getCategory(),
-                request.getDate()
-        );
+                request.getDate(),
+                artistGroup,artistGroup.getGroupName()
 
+        );
         enterFeedRepository.save(enterFeed);
     }
 
@@ -87,9 +88,9 @@ public class EnterFeedService {
      */
     @Transactional
     public void updateFeed(String groupName, Long feedId, EnterFeedRequestDto request, User user) {
-        verifyEntertainmentOrAdminAuthority(user);
-
         EnterFeed enterFeed = getEnterFeed(groupName, feedId, request.getCategory());
+
+        enterFeed.getUser().validationUser(user);
 
         enterFeed.updateContents(
                 request.getTitle(),
@@ -97,7 +98,6 @@ public class EnterFeedService {
                 request.getCategory(),
                 request.getDate()
         );
-
         enterFeedRepository.save(enterFeed);
     }
 
@@ -110,32 +110,12 @@ public class EnterFeedService {
      */
     @Transactional
     public void deleteFeed(String groupName, Long feedId, User user, FeedCategory category) {
-        verifyEntertainmentOrAdminAuthority(user);
-
         EnterFeed enterFeed = getEnterFeed(groupName, feedId, category);
+
+        enterFeed.getUser().validationUser(user);
+
         enterFeedRepository.delete(enterFeed);
     }
-
-    /**
-     * [verifyEntertainmentAuthority] 사용자가 엔터테인먼트 권한 가지고 있는지 확인합니다.
-     * @param user 사용자 객체
-     */
-    private void verifyEntertainmentAuthority(User user) {
-        if (!UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole())) {
-            throw new CustomException(ErrorType.UNAUTHORIZED_ACCESS);
-        }
-    }
-
-    /**
-     * [verifyEntertainmentOrAdminAuthority] 사용자가 엔터테인먼트 권한 또는 관리자 가지고 있는지 확인합니다.
-     * @param user 사용자 객체
-     */
-    private void verifyEntertainmentOrAdminAuthority(User user) {
-        if (!UserRoleEnum.ENTERTAINMENT.equals(user.getUserRole()) && !UserRoleEnum.ADMIN.equals(user.getUserRole())) {
-            throw new CustomException(ErrorType.UNAUTHORIZED_ACCESS);
-        }
-    }
-
 
     /**
      * [getEnterFeed] 특정 피드를 조회합니다.

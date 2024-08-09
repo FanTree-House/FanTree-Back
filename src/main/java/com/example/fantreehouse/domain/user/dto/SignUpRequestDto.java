@@ -33,21 +33,11 @@ public class SignUpRequestDto {
 
   private String checkPassword;
 
-//  UserRoleEnum roleName;
-//  String token;
-
-  private boolean admin = false;
-  private String adminToken = "";
-
-  private boolean artist = false;
-  private String artistToken = "";
-
-  private boolean entertainment = false;
-  private String entertainmentToken = "";
+  private UserRoleEnum userRoleEnum;
 
   @JsonCreator
   public SignUpRequestDto(String id, String name, String nickname, String email, String password,
-      MultipartFile file, String checkPassword, String adminToken, String artistToken, String entertainmentToken) {
+      MultipartFile file, String checkPassword, UserRoleEnum userRoleEnum) {
     this.id = id;
     this.name = name;
     this.nickname = nickname;
@@ -55,31 +45,6 @@ public class SignUpRequestDto {
     this.password = password;
     this.file = file;
     this.checkPassword = checkPassword;
-    this.adminToken = adminToken;
-    this.artistToken = artistToken;
-    this.entertainmentToken = entertainmentToken;
-    setAdmin(adminToken);
-    setArtist(artistToken);
-    setEnter(entertainmentToken);
+    this.userRoleEnum = userRoleEnum;
   }
-
-  private void setAdmin(String adminToken){
-    if(StringUtils.hasLength(adminToken)){
-      this.admin = true;
-    }
-    else this.admin = false;
-  }
-  private void setEnter(String entertainmentToken){
-    if(StringUtils.hasLength(entertainmentToken)){
-      this.entertainment = true;
-    }
-    else this.entertainment = false;
-  }
-  private void setArtist(String artistToken){
-    if(StringUtils.hasLength(artistToken)){
-      this.artist = true;
-    }
-    else this.artist = false;
-  }
-
 }
