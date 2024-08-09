@@ -7,9 +7,10 @@ import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
-import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.s3.service.S3FileUploader;
 import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
+import com.example.fantreehouse.domain.user.dto.EmailCheckRequestDto;
+import com.example.fantreehouse.domain.user.dto.EmailRequestDto;
 import com.example.fantreehouse.domain.user.dto.ProfileRequestDto;
 import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
 import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
@@ -51,19 +52,24 @@ public class UserService {
         //비밀번호를 엔티티에서 꺼내올 필요가 있을까?
         String id = requestDto.getId();
         String password = requestDto.getPassword();
-        String checkPassowrd = passwordEncoder.encode(requestDto.getCheckPassword());
+        String checkPassowrd = requestDto.getCheckPassword();
         String name = requestDto.getName();
         String email = requestDto.getEmail();
         String nickname = requestDto.getNickname();
         MultipartFile profile = requestDto.getFile();
 
         //ID & 닉네임 중복 확인
-        duplicatedId(id);
+        if (duplicatedId(id)){
+            throw new DuplicatedException(ErrorType.DUPLICATE_ID);
+        }
 
-        duplicatedNickName(nickname);
-
+        if (duplicatedNickName(nickname)){
+            throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
+        }
         //비밀번호 재입력 및 확인
-        checkPassword(password, checkPassowrd);
+        if (!checkPassword(password, checkPassowrd)){
+            throw new MismatchException(ErrorType.MISMATCH_PASSWORD);
+        }
 
         String encodePassword = passwordEncoder.encode(password);
 
@@ -72,15 +78,7 @@ public class UserService {
             throw new CustomException(ErrorType.BLACKLIST_EMAIL);
         }
 
-        //이메일 검증 -> Null 검사
-        if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.equals(redisUtil.getData(id).getStatus())) {
-            throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
-        }
-
-        //redis에 저장된 이메일과 응답받은 이메일이 동일한지 체크
-        if (!email.equals(redisUtil.getData(id).getEmail())) {
-            throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
-        }
+       verifyEmail(id,email);
 
         //Token을 가지고 회원 권한 확인
         verifyUserRole(requestDto);
@@ -95,6 +93,7 @@ public class UserService {
         );
         userRepository.save(user);
 
+        //메서드로 분리
         String imageUrl = "";
         try {
             imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
@@ -203,24 +202,19 @@ public class UserService {
         );
     }
 
-    //Id & 닉네임 중복 확인
-    public void duplicatedId(String id) {
-        if (userRepository.existsByLoginId(id)) {
-            throw new DuplicatedException(ErrorType.DUPLICATE_ID);
-        }
+    //Id 중복 확인
+    public boolean duplicatedId(String id) {
+        return userRepository.existsByLoginId(id);
     }
 
-    public void duplicatedNickName(String nickname){
-        if (userRepository.existsByNickname(nickname)) {
-            throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
-        }
+    //닉네임 중복 확인
+    public boolean duplicatedNickName(String nickname){
+        return userRepository.existsByNickname(nickname);
     }
 
     //비밀번호 일치 확인
-    private void checkPassword(String password, String checkPassword) {
-        if (!passwordEncoder.matches(password, checkPassword)) {
-            throw new MismatchException(ErrorType.MISMATCH_PASSWORD);
-        }
+    public boolean checkPassword(String password, String checkPassword) {
+        return password.equals(checkPassword);
     }
 
     private void updateUserImageUrl(ImageUrlCarrier carrier) {
@@ -254,4 +248,33 @@ public class UserService {
         }
         return role;
     }
+
+    public boolean existsInactiveUser(EmailRequestDto requestDto){
+        return userRepository.existsByLoginIdAndEmailAndStatus(requestDto.getLoginId(),
+            requestDto.getEmail(),UserStatusEnum.INACTIVE_USER);
+    }
+
+    @Transactional
+    public void activateUser(EmailCheckRequestDto requestDto) {
+        User user = userRepository.findByLoginIdAndEmailAndStatus(requestDto.getLoginId(),
+            requestDto.getEmail(), UserStatusEnum.INACTIVE_USER).orElseThrow(()
+                -> new NotFoundException(USER_NOT_FOUND));
+        verifyEmail(requestDto.getLoginId(), requestDto.getEmail());
+        user.activateUser();
+        userRepository.save(user);
+        redisUtil.deleteData(requestDto.getLoginId());
+    }
+
+    private void verifyEmail(String id, String email){
+        //이메일 검증 -> Null 검사
+        if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.equals(redisUtil.getData(id).getStatus())) {
+            throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
+        }
+
+        //redis에 저장된 이메일과 응답받은 이메일이 동일한지 체크
+        if (!email.equals(redisUtil.getData(id).getEmail())) {
+            throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
+        }
+    }
+
 }

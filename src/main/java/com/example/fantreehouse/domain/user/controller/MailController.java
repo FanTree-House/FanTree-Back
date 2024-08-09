@@ -1,6 +1,9 @@
 package com.example.fantreehouse.domain.user.controller;
 
+import com.example.fantreehouse.common.dto.ResponseBooleanDto;
+import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ErrorType;
+import com.example.fantreehouse.common.enums.ResponseStatus;
 import com.example.fantreehouse.domain.user.dto.EmailCheckRequestDto;
 import com.example.fantreehouse.domain.user.dto.EmailRequestDto;
 import com.example.fantreehouse.domain.user.service.MailSendService;
@@ -18,19 +21,22 @@ public class MailController {
   private final MailSendService mailSendService;
 
   @PostMapping("/mailsend")
-  public ResponseEntity mailSend(@RequestBody @Valid EmailRequestDto requestDto) {
+  public ResponseEntity<ResponseMessageDto> mailSend(@RequestBody @Valid EmailRequestDto requestDto) {
     mailSendService.joinEmail(requestDto);
-    return ResponseEntity.ok().body("메일을 확인해주세요.");
+    return ResponseEntity.ok().body(new ResponseMessageDto(ResponseStatus.CHECK_EMAIL));
   }
 
   @PostMapping("/mailableCheck")
-  public ResponseEntity AuthCheck(@RequestBody @Valid EmailCheckRequestDto requestDto) {
+  public ResponseEntity<ResponseBooleanDto> AuthCheck(@RequestBody @Valid EmailCheckRequestDto requestDto) {
 
     String loginId = requestDto.getLoginId();
     if (null == requestDto.getAuthNum()) {
-      return ResponseEntity.status(200).body(ErrorType.AUTH_NUM_NOTFOUND);
+      return ResponseEntity.ok().body(new ResponseBooleanDto(ErrorType.AUTH_NUM_NOTFOUND));
     }
-    mailSendService.CheckAuthNum(loginId, requestDto);
-    return ResponseEntity.ok().body("인증 완료 했습니다");
+    boolean result = mailSendService.CheckAuthNum(loginId, requestDto);
+    if (result){
+      return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.CHECK_AUTHNUM, result));
+    }
+    else return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.AUTH_MISMATCH, result));
   }
 }
