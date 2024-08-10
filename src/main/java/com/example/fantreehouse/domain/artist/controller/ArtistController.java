@@ -112,6 +112,13 @@ public class ArtistController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_DELETED));
     }
 
+    @GetMapping("/group")
+    public ResponseEntity<ResponseDataDto> getArtistGroupName(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        String groupName = artistService.getArtistGroupName(userDetails);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_READ_SUCCESS, groupName));
+    }
 
 
 }

@@ -27,7 +27,7 @@ public enum ErrorType implements ErrorCode {
 
     //user
     USER_NOT_FOUND(HttpStatus.OK, "유저를 찾을 수 없습니다."),
-    MISMATCH_PASSWORD(HttpStatus.OK, "비밀번호가 일치하지 않습니다."),
+    MISMATCH_PASSWORD(HttpStatus.NOT_ACCEPTABLE, "비밀번호가 일치하지 않습니다."),
     DUPLICATE_ID(HttpStatus.OK, "중복된 아이디입니다."),
     BLACKLIST_EMAIL(HttpStatus.OK, "블랙리스트에 등록된 이메일로 가입할 수 없습니다."),
     DUPLICATE_NICKNAME(HttpStatus.OK, "중복된 닉네임입니다."),
@@ -104,7 +104,9 @@ public enum ErrorType implements ErrorCode {
     MAX_IMAGES_EXCEEDED(HttpStatus.NOT_ACCEPTABLE, "사진은 최대 10장 업로드할 수 있습니다."),
     NOT_STORED_FILE_NAME(HttpStatus.BAD_REQUEST, "해당 이름을 가진 파일이 존재하지 않습니다."),
 
-    ;
+    INACTIVE_USER(HttpStatus.FORBIDDEN, "휴면 계정입니다. 휴면 상태를 풀어주세요."),
+    CHECK_YOUR_INFO(HttpStatus.NOT_FOUND, "입력한 정보의 유저를 찾을 수 없습니다."),
+    NOT_YOUR_ENTERTAINMENT(HttpStatus.NOT_ACCEPTABLE, "소속사가 다른 아티스트입니다.");
 
 
 

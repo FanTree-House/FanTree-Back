@@ -1,11 +1,10 @@
 package com.example.fantreehouse.domain.user.service;
 
 import com.example.fantreehouse.auth.RedisUtil;
-import com.example.fantreehouse.common.enums.ErrorType;
-import com.example.fantreehouse.common.exception.errorcode.MismatchException;
 import com.example.fantreehouse.domain.user.dto.EmailCheckRequestDto;
 import com.example.fantreehouse.domain.user.dto.EmailRequestDto;
 import com.example.fantreehouse.domain.user.entity.MailAuth;
+import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +27,16 @@ public class MailSendService {
   private int authNumber;
 
   @Transactional
-  public void CheckAuthNum(String loginId, EmailCheckRequestDto requestDto) {
+  public boolean CheckAuthNum(String loginId, EmailCheckRequestDto requestDto) {
     MailAuth mailAuth  = redisUtil.getData(loginId);
 
-    if(!mailAuth.getAuthNum().equals(requestDto.getAuthNum())){
-      throw new MismatchException(ErrorType.AUTH_MISMATCH);
+    if(!mailAuth.getAuthNum().equals(requestDto.getAuthNum())) {
+      return false;
     }
 
     mailAuth.validEmail();
     redisUtil.setData(loginId, mailAuth);
+    return true;
   }
 
   //임의의 6자리 양수를 반환합니다.
@@ -69,6 +69,27 @@ public class MailSendService {
     redisUtil.setData(loginId, mailAuth);
     return Integer.toString(authNumber);
   }
+
+  public String changeInactiveUserStatusEmail(EmailRequestDto requestDto){
+    String randomNumber = String.valueOf(makeRandomNumber());
+    String loginId = requestDto.getLoginId();
+    UserStatusEnum status = UserStatusEnum.INACTIVE_USER;
+    String setFrom = "zergskybmw@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
+    String toMail = requestDto.getEmail();
+    String title = "휴면 계정 해제 이메일입니다."; // 이메일 제목
+    MailAuth mailAuth = new MailAuth(loginId,toMail,randomNumber,status);
+    String content =
+        "휴면 계정 해제를 위해 인증번호가 필요합니다." +    //html 형식으로 작성 !
+            "<br><br>" +
+            "인증 번호는 " + authNumber + "입니다." +
+            "<br>" +
+            "인증번호를 제대로 입력해주세요"; //이메일 내용 삽입
+    mailSend(setFrom, toMail, title, content, mailAuth);
+    redisUtil.setData(loginId, mailAuth);
+    return Integer.toString(authNumber);
+  }
+
+
 
   //이메일을 전송합니다.
   public void mailSend(String setFrom, String toMail, String title, String content, MailAuth mailAuth) {

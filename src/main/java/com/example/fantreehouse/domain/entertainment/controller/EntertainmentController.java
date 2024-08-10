@@ -44,6 +44,7 @@ public class EntertainmentController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ENTERTAINMENT_CREATE_SUCCESS));
     }
 
+
     /**
      * 엔터테이먼트 계정 조회
      * @param enterName

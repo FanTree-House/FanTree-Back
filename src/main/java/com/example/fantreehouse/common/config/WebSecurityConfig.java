@@ -78,7 +78,7 @@ public class WebSecurityConfig {
                 "/enter","/users/invite/artist",
                 "/users/invite/entertainment","/users/admin",
                 "/mailsend", "/mailableCheck",
-                "/users/checkId", "/users/checkNickname")
+                "/users/checkId", "/users/checkNickname", "/users/checkPassword")
             .permitAll() // 메인 페이지 요청 허가
             .requestMatchers(HttpMethod.GET).permitAll() // get요청  접근 허가
             .anyRequest().authenticated() // 그 외 모든 요청 인증처리
