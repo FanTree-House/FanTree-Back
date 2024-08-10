@@ -87,13 +87,14 @@ public class UserController {
     public ResponseEntity<ResponseDataDto> updateProfile(
             @RequestPart(value = "file", required = false) MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestPart ProfileRequestDto requestDto) {
+            @Valid @ModelAttribute ProfileRequestDto requestDto) {
 
         if (file != null && !file.isEmpty()) {
             if (file.getSize() > 10 * 1024 * 1024) {
                 throw new S3Exception(OVER_LOAD);
             }
         }
+        log.info("컨트롤러 진입");
         Long userId = userDetails.getUser().getId();
         ProfileResponseDto updateProfile = userService.updateProfile(file, userId, requestDto);
 
