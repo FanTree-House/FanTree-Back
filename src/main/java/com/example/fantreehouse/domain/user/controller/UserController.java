@@ -83,23 +83,23 @@ public class UserController {
         .body(new ResponseDataDto(ResponseStatus.UPDATE_TOKEN_SUCCESS_MESSAGE, newAccessToken));
   }
 
-    @PutMapping
-    public ResponseEntity<ResponseDataDto> updateProfile(
-            @RequestPart(value = "file", required = false) MultipartFile file,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestPart ProfileRequestDto requestDto) {
+  @PutMapping
+  public ResponseEntity<ResponseDataDto> updateProfile(
+          @RequestPart(value = "file", required = false) MultipartFile file,
+          @AuthenticationPrincipal UserDetailsImpl userDetails,
+          @Valid @RequestPart ProfileRequestDto requestDto) {
 
-        if (file != null && !file.isEmpty()) {
-            if (file.getSize() > 10 * 1024 * 1024) {
-                throw new S3Exception(OVER_LOAD);
-            }
-        }
-        Long userId = userDetails.getUser().getId();
-        ProfileResponseDto updateProfile = userService.updateProfile(file, userId, requestDto);
+      if (file != null && !file.isEmpty()) {
+          if (file.getSize() > 10 * 1024 * 1024) {
+              throw new S3Exception(OVER_LOAD);
+          }
+      }
+      Long userId = userDetails.getUser().getId();
+      ProfileResponseDto updateProfile = userService.updateProfile(file, userId, requestDto);
 
-        return ResponseEntity.ok()
-                .body(new ResponseDataDto(ResponseStatus.PROFILE_UPDATE, updateProfile));
-    }
+      return ResponseEntity.ok()
+              .body(new ResponseDataDto(ResponseStatus.PROFILE_UPDATE, updateProfile));
+  }
 
   @GetMapping
   public ResponseEntity<ProfileResponseDto> getProfile(
