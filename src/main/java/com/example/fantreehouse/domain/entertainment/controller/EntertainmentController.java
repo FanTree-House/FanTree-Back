@@ -34,7 +34,7 @@ public class EntertainmentController {
     @PostMapping
     public ResponseEntity<ResponseMessageDto> createEnter(
             @RequestPart(value = "file") MultipartFile file,
-            @Valid @RequestPart EntertainmentRequestDto enterRequestDto,
+            @Valid @ModelAttribute EntertainmentRequestDto enterRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         if (file.getSize() > 10 * 1024 * 1024) {
@@ -43,6 +43,7 @@ public class EntertainmentController {
         entertainmentService.createEnter(file, enterRequestDto , userDetails.getUser().getId());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ENTERTAINMENT_CREATE_SUCCESS));
     }
+
 
     /**
      * 엔터테이먼트 계정 조회
