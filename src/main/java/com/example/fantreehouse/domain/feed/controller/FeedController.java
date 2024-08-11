@@ -10,6 +10,7 @@ import com.example.fantreehouse.domain.feed.dto.request.UpdateFeedRequestDto;
 import com.example.fantreehouse.domain.feed.dto.response.CreateFeedResponseDto;
 import com.example.fantreehouse.domain.feed.dto.response.FeedResponseDto;
 import com.example.fantreehouse.domain.feed.dto.response.UpdateFeedResponseDto;
+import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feed.service.FeedService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +31,7 @@ import static com.example.fantreehouse.common.enums.ErrorType.MAX_IMAGES_EXCEEDE
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/{groupName}")
+@RequestMapping
 public class FeedController {
 
     private final FeedService feedService;
@@ -42,7 +43,7 @@ public class FeedController {
      * @param requestDto
      * @return
      */
-    @PostMapping
+    @PostMapping("/{groupName}")
     public ResponseEntity<ResponseDataDto<CreateFeedResponseDto>> createFeed(
             @PathVariable final String groupName,
             @RequestPart(value = "file", required = false) List<MultipartFile> files,
@@ -64,7 +65,7 @@ public class FeedController {
      * @param requestDto
      * @return
      */
-    @PatchMapping("/feed/{artistFeedId}")
+    @PatchMapping("/{groupName}/feed/{artistFeedId}")
     public ResponseEntity<ResponseDataDto<UpdateFeedResponseDto>> updateFeed(
             @PathVariable final String groupName,
             @RequestPart(value = "file", required = false) List<MultipartFile> files,
@@ -86,7 +87,7 @@ public class FeedController {
      * @param artistFeedId
      * @return
      */
-    @GetMapping("/feed/{artistFeedId}")
+    @GetMapping("/{groupName}/feed/{artistFeedId}")
     public ResponseEntity<ResponseDataDto<FeedResponseDto>> getFeed(
             @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
@@ -103,7 +104,7 @@ public class FeedController {
      * @param page
      * @return
      */
-    @GetMapping("/feeds")
+    @GetMapping("/{groupName}/feeds")
     public ResponseEntity<ResponseDataDto<Page<FeedResponseDto>>> getAllFeed(
             @PathVariable final String groupName,
             @RequestParam int page
@@ -118,13 +119,22 @@ public class FeedController {
      * @param artistFeedId
      * @return
      */
-    @DeleteMapping("/feed/{artistFeedId}")
+    @DeleteMapping("/{groupName}/feed/{artistFeedId}")
     public ResponseEntity<ResponseMessageDto> deleteFeed(
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl UserDetails
     ) {
         feedService.deleteFeed(artistFeedId, UserDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_DELETED));
+    }
+
+    //개인별 좋아요 누른 feed 모아보기
+    @GetMapping("/feed/likes")
+    public ResponseEntity<ResponseDataDto<List<FeedResponseDto>>> getLikeFeeds(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        List<FeedResponseDto> FeedResponseDtoList = feedService.getLikeFeeds(userDetails.getUser());
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.SUCCESS_GET_FEED_LIKE_USERS, FeedResponseDtoList));
     }
 
 }

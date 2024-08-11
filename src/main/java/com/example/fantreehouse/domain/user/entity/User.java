@@ -137,9 +137,10 @@ public class User extends Timestamped {
         this.refreshToken = refreshToken;
     }
 
-    public void update(Optional<String> email, Optional<String> newEncodePw) {
+    public void update(Optional<String> email, Optional<String> newEncodePw, Optional<String> nickname) {
         this.email = email.orElse(this.email);
         this.password = newEncodePw.orElse(this.password);
+        this.nickname = nickname.orElse(this.nickname);
     }
 
     public User(String loginId, String name, String nickname, String email, String password, UserRoleEnum userRole, UserStatusEnum status, Long kakaoId) {

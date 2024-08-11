@@ -80,6 +80,7 @@ public enum ErrorType implements ErrorCode {
 
     //좋아요
     NOT_FOUND_FEED_LIKE(HttpStatus.NOT_FOUND, "좋아요한 피드가 아닙니다"),
+    NOT_FOUND_FEED_LIKES(HttpStatus.NOT_FOUND, "좋아요한 피드가 없습니다."),
     NOT_FOUND_COMMENT_LIKE(HttpStatus.NOT_FOUND, "좋아요한 댓글이 아닙니다"),
     NOT_FOUND_LIKE_USER(HttpStatus.NOT_FOUND, "좋아요를 누른 유저가 없습니다."),
 

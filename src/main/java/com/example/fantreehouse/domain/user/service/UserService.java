@@ -34,6 +34,7 @@ import static com.example.fantreehouse.domain.s3.service.S3FileUploader.BASIC_DI
 import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
 import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
 
+@Slf4j
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -154,14 +155,25 @@ public class UserService {
         User user = findById(userId);
         String newEncodePw = null;
 
+        log.info("서비스단 진입");
         if (requestDto.getPassword() != null) {
+            log.info("패스워드 검증 진입");
             if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
                 newEncodePw = passwordEncoder.encode(requestDto.getNewPassword());
             }
         }
+        log.info("패스워드 검증 통과");
+
+        if (requestDto.getNickname() != null) {
+            if (duplicatedNickName(requestDto.getNickname())){
+                throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
+            }
+        }
 
         user.update(Optional.ofNullable(requestDto.getEmail()),
-                Optional.ofNullable(newEncodePw));
+                Optional.ofNullable(newEncodePw),
+                Optional.ofNullable(requestDto.getNickname())
+                );
 
         if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
 
@@ -185,6 +197,7 @@ public class UserService {
             ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), newImageUrl);
             updateUserImageUrl(carrier);
         }
+        userRepository.save(user);
 
         return new ProfileResponseDto(user);
     }
