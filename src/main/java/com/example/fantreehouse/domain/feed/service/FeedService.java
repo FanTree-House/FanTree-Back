@@ -179,8 +179,8 @@ public class FeedService {
 
         List<String> imageUrls = new ArrayList<>();
         for (String imageUrl : foundFeed.getImageUrls()) {
-            String url = s3FileUploader.getFileUrl(imageUrl);//이미지 url 가져옴
-            imageUrls.add(url);
+//            String url = s3FileUploader.getFileUrl(imageUrl);//이미지 url 가져옴
+            imageUrls.add(imageUrl);
         }
 
         return FeedResponseDto.of(foundFeed, feedLikeCount, imageUrls, foundFeed.getId(), foundFeed.getArtistName());
