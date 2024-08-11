@@ -328,7 +328,6 @@ public class ArtistGroupService {
     public List<ArtistGroupResponseDto> getArtistRank() {
         List<ArtistGroup> artistGroups = artistGroupRepository.findTop15ArtistGroupsBySubscriptionCount();
 
-
         // 여기코드 너무 쓰레기같음..
         return artistGroups.stream().map(ag -> new ArtistGroupResponseDto(
                 convertToResponseDto(ag),
