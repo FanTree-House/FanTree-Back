@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
@@ -179,7 +180,6 @@ public class FeedService {
         Feed foundFeed = feedRepository.findById(artistFeedId)
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
 
-        List<FeedLike> feedLikeList = feedLikeRepository.findAllFeedLikeByFeedId(artistFeedId);
         Long feedLikeCount = feedLikeRepository.countByFeedId(artistFeedId);
 
         List<String> imageUrls = new ArrayList<>();
@@ -243,6 +243,29 @@ public class FeedService {
         }
     }
 
+    // 개인별 좋아요 누른 Feed 모아보기
+    public List<FeedResponseDto> getLikeFeeds(User user) {
+        user.activateUser();
+
+        //좋아요 누른 feed 찾기
+        List<FeedLike> foundFeedLikeList = feedLikeRepository.findAllFeedLikeByUserId(user.getId());
+        if (foundFeedLikeList.isEmpty()) {
+            throw new NotFoundException(NOT_FOUND_FEED_LIKES);
+        }
+        List<Feed> foundFeedList = foundFeedLikeList.stream().map(FeedLike::getFeed)
+                .sorted(Comparator.comparing(Feed::getCreatedAt).reversed())
+                .toList();
+
+        List<FeedResponseDto> feedResponseDtoList = new ArrayList<>();
+        for (Feed feed : foundFeedList) {
+            Long likeCount = feedLikeRepository.countByFeedId(feed.getId());
+            List<String> feedImageUrls = feed.getImageUrls();
+
+            feedResponseDtoList.add(FeedResponseDto.of(feed, likeCount, feedImageUrls, feed.getId(), feed.getArtistName()));
+        }
+        return feedResponseDtoList;
+    }
+
 
     //유저 status 확인 (활동 여부)
     private void checkUserStatus(UserStatusEnum userStatusEnum) {
@@ -271,6 +294,7 @@ public class FeedService {
         return artistRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
     }
+
 
 
 }

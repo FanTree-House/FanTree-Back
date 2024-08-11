@@ -28,15 +28,13 @@ import static com.example.fantreehouse.common.enums.ErrorType.*;
 public class FeedLikeService {
 
     private final FeedRepository feedRepository;
-    private final ArtistGroupRepository artistGroupRepository;
     private final FeedLikeServiceSupport feedLikeServiceSupport;
     private final FeedLikeRepository feedLikeRepository;
 
     @Transactional
-    public void addOrCancelLike(String groupName, Long artistFeedId, User loginUser) {
+    public void addOrCancelLike(Long artistFeedId, User loginUser) {
 
         checkUserStatus(loginUser.getStatus());
-        existArtistGroup(groupName);
         Feed foundFeed = feedRepository.findById(artistFeedId)
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
 
@@ -56,14 +54,13 @@ public class FeedLikeService {
     }
 
     // 좋아요 유무
-    public boolean getIsLiked(String groupName, Long artistFeedId, User user) {
+    public boolean getIsLiked(Long artistFeedId, User user) {
         return feedLikeRepository.findByFeedIdAndUserId(artistFeedId, user.getId()).isPresent();
     }
 
-    public List<FeedLikeUserResponseDto> getUserAllFeedLikeUser(String groupName, Long artisFeedId, User loginUser) {
+    public List<FeedLikeUserResponseDto> getUserAllFeedLikeUser(Long artisFeedId, User loginUser) {
 
         checkUserStatus(loginUser.getStatus());
-        existArtistGroup(groupName);
 
         List<FeedLike> feedLikeList = feedLikeRepository.findAllFeedLikeByFeedId(artisFeedId);
         if (feedLikeList.isEmpty()) {
@@ -83,7 +80,7 @@ public class FeedLikeService {
     }
 
     // 피드의 좋아요 수 조회
-    public Long getFeedLikes(String groupName, Long artistFeedId) {
+    public Long getFeedLikes(Long artistFeedId) {
         return feedLikeRepository.countByFeedId(artistFeedId);
     }
 
@@ -92,10 +89,5 @@ public class FeedLikeService {
         if (!userStatusEnum.equals(UserStatusEnum.ACTIVE_USER)) {
             throw new UnAuthorizedException(UNAUTHORIZED);
         }
-    }
-
-    private void existArtistGroup(String groupName) {
-        artistGroupRepository.findByGroupName(groupName)
-                .orElseThrow(() -> new NotFoundException(ARTIST_GROUP_NOT_FOUND));
     }
 }
