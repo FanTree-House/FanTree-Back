@@ -67,30 +67,7 @@ public class EntertainmentService {
 
 
     /**
-     * 엔터 계정 조회
-     *
-     * @param enterName
-     * @param user
-     * @return
-     */
-/*
-    public EntertainmentResponseDto getEnter(String enterName, User user) {
-        // [예외1] - Entertainment 권한 체크
-        checkEntertainmentAuthority(user);
-
-        // [예외 2] - 존재하지 않는 엔터테이먼트 계정
-        Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() ->
-                new CustomException(ErrorType.NOT_FOUND_ENTER));
-
-        EntertainmentResponseDto enterResponseDto = new EntertainmentResponseDto(enter);
-
-        return enterResponseDto;
-    }
-*/
-
-
-    /**
-     * 로그인된 사용자가 소유한 엔터 계정을 조회합니다.
+     * 로그인된 사용자가 소유한 엔터 계정 조회
      *
      * @param user 로그인된 사용자
      * @return 엔터 계정 정보
