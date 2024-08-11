@@ -92,6 +92,16 @@ public class ArtistGroupController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_READ_SUCCESS, responseDto));
     }
 
+    /**
+     * 아티스트 랭킹 조회
+     * @return
+     */
+    @GetMapping("/ranking")
+    public ResponseEntity<ResponseDataDto<List<ArtistGroupResponseDto>>> getArtistRank() {
+        List<ArtistGroupResponseDto> responseDtos = artistGroupService.getArtistRank();
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_GROUP_READ_RANK_SUCCESS, responseDtos));
+    }
+
 
     /**
      * [updateArtistGroup] 아티스트 그룹 수정
@@ -104,7 +114,7 @@ public class ArtistGroupController {
     public ResponseEntity<ResponseMessageDto> updateArtistGroup(
             @PathVariable String groupName,
             @RequestPart(required = false) MultipartFile file,
-            @RequestPart ArtistGroupRequestDto request,
+            @RequestPart @ModelAttribute ArtistGroupRequestDto request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         if (file != null && file.getSize() > 10 * 1024 * 1024) {

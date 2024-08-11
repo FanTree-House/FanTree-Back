@@ -82,7 +82,7 @@ jobs:
                 -e AWS_S3_BUCKET=${{secrets.AWS_S3_BUCKET}} \
                 -e AWS_ACCESS_KEY=${{secrets.AWS_ACCESS_KEY}} \
                 -e AWS_SECRET_KEY=${{secrets.AWS_SECRET_KEY}} \
-                -e REDIS_SERVER=${{sercrets.REDIS_SERVER}} \
-                -e REDIS_PASSWORD=${{sercrets.REDIS_PASSWORD}} \
-                -e REDIS_PORT=${{sercrets.REDIS_PORT}} \
+                -e REDIS_SERVER=${{secrets.REDIS_SERVER}} \
+                -e REDIS_PASSWORD=${{secrets.REDIS_PASSWORD}} \
+                -e REDIS_PORT=${{secrets.REDIS_PORT}} \
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest

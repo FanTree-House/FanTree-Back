@@ -89,18 +89,17 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @ModelAttribute ProfileRequestDto requestDto) {
 
-        if (file != null && !file.isEmpty()) {
-            if (file.getSize() > 10 * 1024 * 1024) {
-                throw new S3Exception(OVER_LOAD);
-            }
-        }
-        log.info("컨트롤러 진입");
-        Long userId = userDetails.getUser().getId();
-        ProfileResponseDto updateProfile = userService.updateProfile(file, userId, requestDto);
+      if (file != null && !file.isEmpty()) {
+          if (file.getSize() > 10 * 1024 * 1024) {
+              throw new S3Exception(OVER_LOAD);
+          }
+      }
+      Long userId = userDetails.getUser().getId();
+      ProfileResponseDto updateProfile = userService.updateProfile(file, userId, requestDto);
 
-        return ResponseEntity.ok()
-                .body(new ResponseDataDto(ResponseStatus.PROFILE_UPDATE, updateProfile));
-    }
+      return ResponseEntity.ok()
+              .body(new ResponseDataDto(ResponseStatus.PROFILE_UPDATE, updateProfile));
+  }
 
   @GetMapping
   public ResponseEntity<ProfileResponseDto> getProfile(

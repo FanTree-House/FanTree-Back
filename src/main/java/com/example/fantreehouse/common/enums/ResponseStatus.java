@@ -61,6 +61,7 @@ public enum ResponseStatus {
     ARTIST_GROUP_UPDATE_SUCCESS(HttpStatus.OK, "아티스트 그룹 수정에 성공하였습니다."),
     ARTIST_REMOVE_SUCCESS(HttpStatus.OK, "그룹에서 아티스트 삭제를 성공하였습니다."),
     ARTIST_GROUP_DELETE_SUCCESS(HttpStatus.OK, "아티스트 그룹 삭제에 성공하였습니다."),
+    ARTIST_GROUP_READ_RANK_SUCCESS(HttpStatus.OK, "아티스트 그룹 랭킹 조회에 성공했습니다."),
 
     //Feed
     FEED_CREATED(HttpStatus.CREATED, "글이 등록되었습니다."),

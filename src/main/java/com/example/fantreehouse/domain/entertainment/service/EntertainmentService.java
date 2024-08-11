@@ -67,24 +67,23 @@ public class EntertainmentService {
 
 
     /**
-     * 엔터 계정 조회
+     * 로그인된 사용자가 소유한 엔터 계정 조회
      *
-     * @param enterName
-     * @param user
-     * @return
+     * @param user 로그인된 사용자
+     * @return 엔터 계정 정보
      */
-    public EntertainmentResponseDto getEnter(String enterName, User user) {
+    public EntertainmentResponseDto getEnter(User user) {
         // [예외1] - Entertainment 권한 체크
         checkEntertainmentAuthority(user);
 
-        // [예외 2] - 존재하지 않는 엔터테이먼트 계정
-        Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() ->
-                new CustomException(ErrorType.NOT_FOUND_ENTER));
+        // [예외 2] - 사용자가 소유한 엔터테이먼트 계정이 없는 경우 예외 발생
+        Entertainment entertainment = enterRepository.findByUser(user)
+                .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
 
-        EntertainmentResponseDto enterResponseDto = new EntertainmentResponseDto(enter);
-
-        return enterResponseDto;
+        // 조회된 엔터테이먼트 계정 정보를 DTO로 변환하여 반환
+        return new EntertainmentResponseDto(entertainment);
     }
+
 
     /**
      * 엔터 계정 수정
@@ -186,4 +185,3 @@ public class EntertainmentService {
         }
     }
 }
-
