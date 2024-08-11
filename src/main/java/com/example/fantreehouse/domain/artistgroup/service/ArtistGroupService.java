@@ -308,7 +308,17 @@ public class ArtistGroupService {
         List<ArtistResponseDto> artistDtos = artistGroup.getArtists().stream()
                 .map(artist -> new ArtistResponseDto(artist.getId(), artist.getArtistName(), artist.getIntroduction(), artist.getArtistProfileImageUrl()))
                 .collect(Collectors.toList());
-        return new ArtistGroupResponseDto(artistGroup.getId(), artistGroup.getGroupName(), artistGroup.getArtistGroupProfileImageUrl(), entertainmentDto, artistDtos, artistGroup.getEnterName());
+
+        // 그룹 정보 추가
+        return new ArtistGroupResponseDto(
+                artistGroup.getId(),
+                artistGroup.getGroupName(),
+                artistGroup.getArtistGroupProfileImageUrl(),
+                entertainmentDto,
+                artistDtos,
+                artistGroup.getEnterName(),
+                artistGroup.getGroupInfo()
+        );
     }
 
     /**
