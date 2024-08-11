@@ -21,10 +21,13 @@ public class S3FileUploaderUtil {
     private static final String USER_PROFILE_DIR = "UserProfile";
     private static final String ARTIST_PROFILE_DIR = "ArtistProfile";
     private static final String ENTER_LOGO_DIR = "EnterLogo";
+    private static final String ADMIN_PROFILE_DIR = "AdminProfile";
     private static final String ARTIST_GROUP_DIR = "ArtistGroupProfile";
     private static final String ARTIST_FEED_DIR = "ArtistFeed";
     private static final String COMMUNITY_DIR = "Community";
     private static final String PRODUCT_DIR = "Product";
+
+
 
     public static boolean isFileExists(MultipartFile multipartFile) {
         return multipartFile != null && !multipartFile.isEmpty();
@@ -68,7 +71,6 @@ public class S3FileUploaderUtil {
         }
     }
 
-
     public static String createUserProfileDir(Long userId) {
         return URL_PREFIX + "/"
                 + USER_PROFILE_DIR + "/"
@@ -85,6 +87,12 @@ public class S3FileUploaderUtil {
         return URL_PREFIX + "/"
                 + ENTER_LOGO_DIR + "/"
                 + enterId + "/";
+    }
+
+    public static String createAdminProfileDir(Long userId) {
+        return URL_PREFIX + "/"
+                + ADMIN_PROFILE_DIR + "/"
+                + userId + "/";
     }
 
     public static String createArtistGroupDir(Long groupId) {

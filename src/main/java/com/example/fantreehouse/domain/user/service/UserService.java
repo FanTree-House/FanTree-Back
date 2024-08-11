@@ -21,6 +21,7 @@ import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
-import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
+import static com.example.fantreehouse.domain.s3.service.S3FileUploader.BASIC_DIR;
+import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
+import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
 
@@ -39,13 +43,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final S3FileUploader s3FileUploader;
-
-    @Value("${auth.admin_token}")
-    private String ADMIN_TOKEN;
-    @Value("${auth.artist_token}")
-    private String ARTIST_TOKEN;
-    @Value("${auth.entertainment_token}")
-    private String ENTERTAINMENT_TOKEN;
+    private final MailSendService mailSendService;
 
     //회원가입
     public SignUpResponseDto signUp(MultipartFile file, SignUpRequestDto requestDto) {
@@ -58,11 +56,11 @@ public class UserService {
         String nickname = requestDto.getNickname();
         MultipartFile profile = requestDto.getFile();
 
-        //ID & 닉네임 중복 확인
+        //ID 중복 확인
         if (duplicatedId(id)){
             throw new DuplicatedException(ErrorType.DUPLICATE_ID);
         }
-
+        // 닉네임 중복 확인
         if (duplicatedNickName(nickname)){
             throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
         }
@@ -80,21 +78,18 @@ public class UserService {
 
        verifyEmail(id,email);
 
-        //Token을 가지고 회원 권한 확인
-        verifyUserRole(requestDto);
-
         User user = new User(
                 id,
                 name,
                 nickname,
                 email,
                 encodePassword,
-                verifyUserRole(requestDto)
+                UserRoleEnum.valueOf(requestDto.getUserRoleEnum())
         );
         userRepository.save(user);
 
         //메서드로 분리
-        String imageUrl = "";
+        String imageUrl = START_PROFILE_URL;
         try {
             imageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
         } catch (Exception e) {
@@ -121,15 +116,18 @@ public class UserService {
         }
 
         String imageUrl = user.getProfileImageUrl();
-        try {
-            s3FileUploader.deleteFileInBucket(imageUrl);
-        } catch (NotFoundException e) {
-            user.updateImageUrl("");//실체 없는 url 테이블에서 삭제
-            userRepository.save(user);
-        } catch (Exception e) {
-            throw new S3Exception(DELETE_ERROR);
+        if (!imageUrl.startsWith(BASIC_DIR)) {
+            try {
+                s3FileUploader.deleteFileInBucket(imageUrl);
+            } catch (NotFoundException e) {
+                user.updateImageUrl(START_PROFILE_URL);//실체 없는 url 테이블에서 삭제
+                userRepository.save(user);
+            } catch (Exception e) {
+                throw new S3Exception(DELETE_ERROR);
+            }
         }
         user.withDraw();
+        userRepository.save(user);
     }
 
     // 로그아웃
@@ -170,13 +168,13 @@ public class UserService {
             try {
                 s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
             } catch (NotFoundException e) {
-                user.updateImageUrl("");
+                user.updateImageUrl(START_PROFILE_URL);
                 userRepository.save(user);
             } catch (Exception e) {
                 throw new S3Exception(DELETE_ERROR);
             }
 
-            String newImageUrl = "";
+            String newImageUrl;
             try {
                 newImageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
             } catch (Exception e) {
@@ -212,11 +210,6 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-    //비밀번호 일치 확인
-    public boolean checkPassword(String password, String checkPassword) {
-        return password.equals(checkPassword);
-    }
-
     private void updateUserImageUrl(ImageUrlCarrier carrier) {
         if (!carrier.getImageUrl().isEmpty()) {
             User user = userRepository.findById(carrier.getId())
@@ -224,29 +217,6 @@ public class UserService {
             user.updateImageUrl(carrier.getImageUrl());
             userRepository.save(user);
         }
-    }
-
-    //회원 권한 확인 , setter
-    private UserRoleEnum verifyUserRole(SignUpRequestDto requestDto){
-        UserRoleEnum role = UserRoleEnum.USER;
-
-        if (requestDto.isAdmin()) {
-            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ADMINTOKEN);
-            }
-            role = UserRoleEnum.ADMIN;
-        } else if (requestDto.isArtist()) {
-            if (!ARTIST_TOKEN.equals(requestDto.getArtistToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ARTISTTOKEN);
-            }
-            role = UserRoleEnum.ARTIST;
-        } else if (requestDto.isEntertainment()) {
-            if (!ENTERTAINMENT_TOKEN.equals(requestDto.getEntertainmentToken())) {
-                throw new MismatchException(ErrorType.MISMATCH_ENTERTAINMENTTOKEN);
-            }
-            role = UserRoleEnum.ENTERTAINMENT;
-        }
-        return role;
     }
 
     public boolean existsInactiveUser(EmailRequestDto requestDto){
@@ -259,22 +229,30 @@ public class UserService {
         User user = userRepository.findByLoginIdAndEmailAndStatus(requestDto.getLoginId(),
             requestDto.getEmail(), UserStatusEnum.INACTIVE_USER).orElseThrow(()
                 -> new NotFoundException(USER_NOT_FOUND));
+        mailSendService.CheckAuthNum(requestDto.getLoginId(),requestDto);
         verifyEmail(requestDto.getLoginId(), requestDto.getEmail());
-        user.activateUser();
-        userRepository.save(user);
+
+        User findUser = userRepository.findById(user.getId()).orElseThrow(()
+            -> new NotFoundException(USER_NOT_FOUND));
+       findUser.activateUser();
+        userRepository.save(findUser);
         redisUtil.deleteData(requestDto.getLoginId());
     }
 
     private void verifyEmail(String id, String email){
         //이메일 검증 -> Null 검사
-        if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.equals(redisUtil.getData(id).getStatus())) {
+        if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.
+            equals(redisUtil.getData(id).getStatus())){
             throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
         }
-
         //redis에 저장된 이메일과 응답받은 이메일이 동일한지 체크
         if (!email.equals(redisUtil.getData(id).getEmail())) {
             throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
         }
+    }
+
+    public boolean checkPassword (String password, String checkPassword) {
+        return password.equals(checkPassword);
     }
 
 }

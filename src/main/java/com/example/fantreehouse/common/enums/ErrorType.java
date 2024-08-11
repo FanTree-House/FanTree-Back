@@ -105,7 +105,8 @@ public enum ErrorType implements ErrorCode {
     NOT_STORED_FILE_NAME(HttpStatus.BAD_REQUEST, "해당 이름을 가진 파일이 존재하지 않습니다."),
 
     INACTIVE_USER(HttpStatus.FORBIDDEN, "휴면 계정입니다. 휴면 상태를 풀어주세요."),
-    CHECK_YOUR_INFO(HttpStatus.NOT_FOUND, "입력한 정보의 유저를 찾을 수 없습니다.");
+    CHECK_YOUR_INFO(HttpStatus.NOT_FOUND, "입력한 정보의 유저를 찾을 수 없습니다."),
+    NOT_YOUR_ENTERTAINMENT(HttpStatus.NOT_ACCEPTABLE, "소속사가 다른 아티스트입니다.");
 
 
 

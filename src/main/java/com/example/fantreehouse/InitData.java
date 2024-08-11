@@ -9,6 +9,8 @@
 //import com.example.fantreehouse.domain.communityLike.repository.CommunityLikeRepository;
 //import com.example.fantreehouse.domain.communitycomment.repository.CommunityCommentRepository;
 //import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
+//import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
+//import com.example.fantreehouse.domain.enterfeed.entity.FeedCategory;
 //import com.example.fantreehouse.domain.enterfeed.repository.EnterFeedRepository;
 //import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 //import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRepository;
@@ -20,6 +22,8 @@
 //import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 //import com.example.fantreehouse.domain.user.repository.UserRepository;
 //import jakarta.annotation.PostConstruct;
+//import java.time.LocalDate;
+//import java.time.LocalDateTime;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.stereotype.Component;
@@ -53,10 +57,10 @@
 //     User user1 = new User("ModhauseManager", "모드하우스", "Modhaus", "modhausmanager@gmail.com",
 //          passwordEncoder.encode("12345678"), UserRoleEnum.ENTERTAINMENT);
 //
-//     User user2 = new User("SMenterManger", "에스엠엔터", "SM Entertainment", "smentermanager@gmail.com",
+//     User user2 = new User("SMenterManger", "에스엠엔터", "SM Entertainment", "zergskybmw@gmail.com",
 //              passwordEncoder.encode("12345678"), UserRoleEnum.ENTERTAINMENT);
 //
-//     User user3 = new User("tripleS1", "윤서연", "서연", "ModhausS1@gmail.com",
+//     User user3 = new User("tripleS1", "윤서연", "서연", "zergskybmw@gmail.com",
 //          passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
 //
 //     User user4 = new User("tripleS2", "정혜린", "혜린", "ModhausS2@gmail.com",
@@ -227,5 +231,10 @@
 //    );
 //    artistRepository.saveAll(artistList);
 //
+//    EnterFeed smEnterFeed = new EnterFeed(entertainment,user2,"aespa 스케쥴 공지사항 입니다.",
+//        "스케쥴이 변동되었습니다.",entertainment.getEnterName(), FeedCategory.NOTICE, LocalDate.now(),
+//        artistGroup, artistGroup.getGroupName());
+//
+//    enterFeedRepository.save(smEnterFeed);
 //  }
 //}

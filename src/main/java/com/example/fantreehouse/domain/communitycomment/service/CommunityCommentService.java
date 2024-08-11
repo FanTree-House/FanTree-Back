@@ -98,31 +98,31 @@ public class CommunityCommentService {
 
 
     //유저조회
-    public User findUser(Long userId) {
+    private User findUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(()
                 -> new CustomException(ErrorType.USER_NOT_FOUND));
     }
 
     //아티스트 그룹 조회
-    public ArtistGroup findArtistGroup(String groupName) {
+    private ArtistGroup findArtistGroup(String groupName) {
         return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
     }
 
     //피드조회
-    public CommunityFeed findFeed(Long feedId) {
+    private CommunityFeed findFeed(Long feedId) {
         return feedRepository.findById(feedId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_FEED));
     }
 
     //댓글찾기
-    public CommunityComment findComment(Long commentId) {
+    private CommunityComment findComment(Long commentId) {
         return commentRepository.findAllById(commentId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_COMMENT));
     }
 
     //자기가 쓴 댓글 검증
-    public void checkMyComment(Long commentId,Long userId){
+    private void checkMyComment(Long commentId,Long userId){
         CommunityComment comment = findComment(commentId);
 
         if (!comment.getUser().getId().equals(userId)) {

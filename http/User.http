@@ -108,8 +108,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "enter1",
-  "password": "test1234"
+  "id": "SMenterManger",
+  "password": "12345678"
 }
 
 > {%
@@ -156,4 +156,23 @@ Content-Type: application/json
   "loginId": "test123",
   "email": "kkx152@gmail.com",
   "authNum": "159675"
+}
+
+### 휴면 유저 이메일인증 받기
+POST http://localhost:8080/Inactive
+Content-Type: application/json
+
+{
+  "loginId": "SMenterManger",
+  "email": "zergskybmw@gmail.com"
+}
+
+### 인증번호 검증
+POST http://localhost:8080/fromInactiveToActive
+Content-Type: application/json
+
+{
+  "loginId": "SMenterManger",
+  "email": "zergskybmw@gmail.com",
+  "authNum": "439358"
 }

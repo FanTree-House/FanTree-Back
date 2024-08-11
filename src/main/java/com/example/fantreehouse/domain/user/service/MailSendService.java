@@ -1,10 +1,15 @@
 package com.example.fantreehouse.domain.user.service;
 
+import static com.example.fantreehouse.common.enums.ErrorType.USER_NOT_FOUND;
+
 import com.example.fantreehouse.auth.RedisUtil;
+import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.domain.user.dto.EmailCheckRequestDto;
 import com.example.fantreehouse.domain.user.dto.EmailRequestDto;
 import com.example.fantreehouse.domain.user.entity.MailAuth;
+import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
+import com.example.fantreehouse.domain.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +30,7 @@ public class MailSendService {
   private final JavaMailSender mailSender;
   private final RedisUtil redisUtil;
   private int authNumber;
+  private final UserRepository userRepository;
 
   @Transactional
   public boolean CheckAuthNum(String loginId, EmailCheckRequestDto requestDto) {
@@ -72,12 +78,17 @@ public class MailSendService {
 
   public String changeInactiveUserStatusEmail(EmailRequestDto requestDto){
     String randomNumber = String.valueOf(makeRandomNumber());
+
     String loginId = requestDto.getLoginId();
     UserStatusEnum status = UserStatusEnum.INACTIVE_USER;
+    User inactiveUser = userRepository.findByLoginIdAndEmailAndStatus(loginId,
+        requestDto.getEmail(), status).orElseThrow(()->  new NotFoundException(USER_NOT_FOUND));
+
     String setFrom = "zergskybmw@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
     String toMail = requestDto.getEmail();
     String title = "휴면 계정 해제 이메일입니다."; // 이메일 제목
-    MailAuth mailAuth = new MailAuth(loginId,toMail,randomNumber,status);
+    MailAuth mailAuth = new MailAuth(inactiveUser.getLoginId(),
+        inactiveUser.getEmail(),randomNumber,inactiveUser.getStatus());
     String content =
         "휴면 계정 해제를 위해 인증번호가 필요합니다." +    //html 형식으로 작성 !
             "<br><br>" +

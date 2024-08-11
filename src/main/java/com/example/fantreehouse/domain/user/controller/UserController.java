@@ -35,11 +35,13 @@ public class UserController {
 
   @PostMapping(value = {"", "/invite/entertainment", "/invite/artist", "/admin"})
   public ResponseEntity<ResponseMessageDto> signUp(
-          @RequestPart(value = "file") MultipartFile file,
+          @RequestPart(value = "file", required = false) MultipartFile file,
           @Valid @ModelAttribute SignUpRequestDto requestDto) {
 
-      if (file.getSize() > 10 * 1024 * 1024) {
-          throw new S3Exception(OVER_LOAD);
+      if (file != null && !file.isEmpty()) {
+          if (file.getSize() > 10 * 1024 * 1024) {
+              throw new S3Exception(OVER_LOAD);
+          }
       }
       userService.signUp(file, requestDto);
       return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
@@ -81,21 +83,23 @@ public class UserController {
         .body(new ResponseDataDto(ResponseStatus.UPDATE_TOKEN_SUCCESS_MESSAGE, newAccessToken));
   }
 
-    @PutMapping
-    public ResponseEntity<ResponseDataDto> updateProfile(
-            @RequestPart(value = "file") MultipartFile file,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestPart ProfileRequestDto requestDto) {
+  @PutMapping
+  public ResponseEntity<ResponseDataDto> updateProfile(
+          @RequestPart(value = "file", required = false) MultipartFile file,
+          @AuthenticationPrincipal UserDetailsImpl userDetails,
+          @Valid @RequestPart ProfileRequestDto requestDto) {
 
-        if (file.getSize() > 10 * 1024 * 1024) {
-            throw new S3Exception(OVER_LOAD);
-        }
-        Long userId = userDetails.getUser().getId();
-        ProfileResponseDto updateProfile = userService.updateProfile(file, userId, requestDto);
+      if (file != null && !file.isEmpty()) {
+          if (file.getSize() > 10 * 1024 * 1024) {
+              throw new S3Exception(OVER_LOAD);
+          }
+      }
+      Long userId = userDetails.getUser().getId();
+      ProfileResponseDto updateProfile = userService.updateProfile(file, userId, requestDto);
 
-        return ResponseEntity.ok()
-                .body(new ResponseDataDto(ResponseStatus.PROFILE_UPDATE, updateProfile));
-    }
+      return ResponseEntity.ok()
+              .body(new ResponseDataDto(ResponseStatus.PROFILE_UPDATE, updateProfile));
+  }
 
   @GetMapping
   public ResponseEntity<ProfileResponseDto> getProfile(

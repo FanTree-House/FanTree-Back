@@ -1,6 +1,6 @@
 ### 변수 정의
-@enterName = SM
-@groupName = seventeen
+@enterName = SM Entertainment
+@groupName = aespa
 @feedId = 1
 
 ### 공지사항 생성
@@ -27,7 +27,7 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "title": "seventeen 공지사항 수정",
+  "title": "aespa 공지사항 수정",
   "contents": "공지사항1 수정 됨"
 }
 
@@ -37,7 +37,7 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "title": "seventeen 공지사항 수정",
+  "title": "aespa 공지사항 수정",
   "contents": "공지사항2 수정 됨",
   "postPicture": "example.com/pic.jpg"
 }
