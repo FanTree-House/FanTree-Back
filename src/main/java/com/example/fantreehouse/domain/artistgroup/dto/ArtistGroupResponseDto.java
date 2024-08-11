@@ -14,6 +14,7 @@ public class ArtistGroupResponseDto {
     private EntertainmentResponseDto entertainmentDto;
     private List<ArtistResponseDto> artistDtos;
     private String enterName;
+    private Long subscribeCount;
 
     public ArtistGroupResponseDto(Long id, String groupName, String artistGroupProfileImageUrl, EntertainmentResponseDto entertainmentDto,
                                   List<ArtistResponseDto> artistDtos, String enterName) {
@@ -23,5 +24,15 @@ public class ArtistGroupResponseDto {
         this.entertainmentDto = entertainmentDto;
         this.artistDtos = artistDtos;
         this.enterName = enterName;
+    }
+
+    public ArtistGroupResponseDto(ArtistGroupResponseDto ag, Long subscribeCount) {
+        this.id = ag.id;
+        this.groupName = ag.groupName;
+        this.artistGroupProfileImageUrl = ag.artistGroupProfileImageUrl;
+        this.entertainmentDto = ag.entertainmentDto;
+        this.artistDtos = ag.artistDtos;
+        this.enterName = ag.enterName;
+        this.subscribeCount = subscribeCount;
     }
 }

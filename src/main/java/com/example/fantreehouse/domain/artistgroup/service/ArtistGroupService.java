@@ -16,7 +16,7 @@ import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRepository;
 import com.example.fantreehouse.domain.s3.service.S3FileUploader;
 import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
-import com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil;
+import com.example.fantreehouse.domain.subscription.repository.SubscriptionRepository;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
@@ -306,5 +306,20 @@ public class ArtistGroupService {
                 .map(artist -> new ArtistResponseDto(artist.getId(), artist.getArtistName(), artist.getIntroduction(), artist.getArtistProfileImageUrl()))
                 .collect(Collectors.toList());
         return new ArtistGroupResponseDto(artistGroup.getId(), artistGroup.getGroupName(), artistGroup.getArtistGroupProfileImageUrl(), entertainmentDto, artistDtos, artistGroup.getEnterName());
+    }
+
+    /**
+     * 아티스트 랭킹 조회
+     * @return
+     */
+    public List<ArtistGroupResponseDto> getArtistRank() {
+        List<ArtistGroup> artistGroups = artistGroupRepository.findTop15ArtistGroupsBySubscriptionCount();
+
+
+        // 여기코드 너무 쓰레기같음..
+        return artistGroups.stream().map(ag -> new ArtistGroupResponseDto(
+                convertToResponseDto(ag),
+                (long) ag.getSubscriptionList().size()
+        )).collect(Collectors.toList());
     }
 }
