@@ -114,7 +114,7 @@ public class ArtistGroupController {
     public ResponseEntity<ResponseMessageDto> updateArtistGroup(
             @PathVariable String groupName,
             @RequestPart(required = false) MultipartFile file,
-            @RequestPart ArtistGroupRequestDto request,
+            @RequestPart @ModelAttribute ArtistGroupRequestDto request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         if (file != null && file.getSize() > 10 * 1024 * 1024) {

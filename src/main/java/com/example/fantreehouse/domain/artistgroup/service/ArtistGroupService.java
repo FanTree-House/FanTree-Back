@@ -308,7 +308,17 @@ public class ArtistGroupService {
         List<ArtistResponseDto> artistDtos = artistGroup.getArtists().stream()
                 .map(artist -> new ArtistResponseDto(artist.getId(), artist.getArtistName(), artist.getIntroduction(), artist.getArtistProfileImageUrl()))
                 .collect(Collectors.toList());
-        return new ArtistGroupResponseDto(artistGroup.getId(), artistGroup.getGroupName(), artistGroup.getArtistGroupProfileImageUrl(), entertainmentDto, artistDtos, artistGroup.getEnterName());
+
+        // 그룹 정보 추가
+        return new ArtistGroupResponseDto(
+                artistGroup.getId(),
+                artistGroup.getGroupName(),
+                artistGroup.getArtistGroupProfileImageUrl(),
+                entertainmentDto,
+                artistDtos,
+                artistGroup.getEnterName(),
+                artistGroup.getGroupInfo()
+        );
     }
 
     /**
@@ -317,7 +327,6 @@ public class ArtistGroupService {
      */
     public List<ArtistGroupResponseDto> getArtistRank() {
         List<ArtistGroup> artistGroups = artistGroupRepository.findTop15ArtistGroupsBySubscriptionCount();
-
 
         // 여기코드 너무 쓰레기같음..
         return artistGroups.stream().map(ag -> new ArtistGroupResponseDto(
