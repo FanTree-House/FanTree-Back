@@ -45,17 +45,31 @@ public class EntertainmentController {
     }
 
 
-    /**
+/*
      * 엔터테이먼트 계정 조회
      * @param enterName
      * @param userDetails
      * @return
-     */
+
     @GetMapping("/{enterName}")
     public ResponseEntity<ResponseDataDto<EntertainmentResponseDto>> getEnter(
             @PathVariable String enterName,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         EntertainmentResponseDto responseDto = entertainmentService.getEnter(enterName, userDetails.getUser());
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ENTERTAINMENT_READ_SUCCESS, responseDto));
+    }*/
+
+    /**
+     * 엔터테이먼트 계정 조회
+     * 로그인된 사용자가 생성한 엔터테이먼트 계정만 조회할 수 있도록 수정되었습니다.
+     * @param userDetails
+     * @return
+     */
+    @GetMapping("/my")
+    public ResponseEntity<ResponseDataDto<EntertainmentResponseDto>> getMyEnter(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        // 로그인된 사용자의 정보를 이용해 엔터테인먼트 계정을 조회합니다.
+        EntertainmentResponseDto responseDto = entertainmentService.getEnter(userDetails.getUser());
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ENTERTAINMENT_READ_SUCCESS, responseDto));
     }
 
@@ -70,7 +84,7 @@ public class EntertainmentController {
     public ResponseEntity<ResponseMessageDto> updateEnter(
             @RequestPart(value = "file") MultipartFile file,
             @PathVariable String enterName,
-            @RequestPart EntertainmentRequestDto enterRequestDto,
+            @RequestPart @ModelAttribute EntertainmentRequestDto enterRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         if (file.getSize() > 10 * 1024 * 1024) {

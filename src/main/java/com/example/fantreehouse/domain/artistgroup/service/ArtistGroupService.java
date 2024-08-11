@@ -157,11 +157,14 @@ public class ArtistGroupService {
         artistGroup.setGroupName(request.getGroupName());
         artistGroup.setGroupInfo(request.getGroupInfo());
 
-        artistGroup.clearArtists();
-        for (Long artistId : request.getArtistIds()) {
-            Artist artist = artistRepository.findById(artistId)
-                    .orElseThrow(() -> new CustomException(ARTIST_NOT_FOUND));
-            artistGroup.addArtist(artist);
+        // artistIds가 null인지 확인하고, null이면 빈 리스트로 초기화
+        if (request.getArtistIds() != null) {
+            artistGroup.clearArtists();
+            for (Long artistId : request.getArtistIds()) {
+                Artist artist = artistRepository.findById(artistId)
+                        .orElseThrow(() -> new CustomException(ARTIST_NOT_FOUND));
+                artistGroup.addArtist(artist);
+            }
         }
 
         if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
