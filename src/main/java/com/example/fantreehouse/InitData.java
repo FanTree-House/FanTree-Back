@@ -57,10 +57,10 @@
 //     User user1 = new User("ModhauseManager", "모드하우스", "Modhaus", "modhausmanager@gmail.com",
 //          passwordEncoder.encode("12345678"), UserRoleEnum.ENTERTAINMENT);
 //
-//     User user2 = new User("SMenterManger", "에스엠엔터", "SM Entertainment", "smentermanager@gmail.com",
+//     User user2 = new User("SMenterManger", "에스엠엔터", "SM Entertainment", "zergskybmw@gmail.com",
 //              passwordEncoder.encode("12345678"), UserRoleEnum.ENTERTAINMENT);
 //
-//     User user3 = new User("tripleS1", "윤서연", "서연", "ModhausS1@gmail.com",
+//     User user3 = new User("tripleS1", "윤서연", "서연", "zergskybmw@gmail.com",
 //          passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
 //
 //     User user4 = new User("tripleS2", "정혜린", "혜린", "ModhausS2@gmail.com",
