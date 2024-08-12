@@ -190,8 +190,9 @@ public class User extends Timestamped {
         this.lastLoginDate = LocalDateTime.now();
     }
 
-    public void activateUser(){
+    public void fromInactiveToActive(){
         this.status = UserStatusEnum.ACTIVE_USER;
+        this.lastLoginDate = LocalDateTime.now();
     }
 
     public boolean isAdmin(){

@@ -59,8 +59,11 @@ public class FeedLikeController {
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        List<FeedLikeUserResponseDto> feedLikeUserResponseDtoList = feedLikeService.getUserAllFeedLikeUser( artistFeedId, userDetails.getUser());
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.SUCCESS_GET_FEED_LIKE_USERS, feedLikeUserResponseDtoList));
+        List<FeedLikeUserResponseDto> feedLikeUserResponseDtoList = feedLikeService
+            .getUserAllFeedLikeUser( artistFeedId, userDetails.getUser());
+        return ResponseEntity
+            .ok(new ResponseDataDto<>(ResponseStatus.SUCCESS_GET_FEED_LIKE_USERS,
+                feedLikeUserResponseDtoList));
     }
 
     /**

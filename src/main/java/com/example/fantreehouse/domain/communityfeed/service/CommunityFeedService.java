@@ -58,7 +58,6 @@ public class CommunityFeedService {
             String groupName) {
         User user = findUser(userId);
         ArtistGroup artistGroup = findArtistGroup(groupName);
-        user.activateUser();
 
         // 구독자 체크
         checkSubscriptionList(userId);
@@ -255,7 +254,5 @@ public class CommunityFeedService {
             }
         }
     }
-
-
 }
 

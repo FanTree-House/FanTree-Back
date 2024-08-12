@@ -36,6 +36,7 @@ import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final RedisUtil redisUtil;
@@ -153,14 +154,14 @@ public class UserService {
         User user = findById(userId);
         String newEncodePw = null;
 
-        log.info("서비스단 진입");
+        log.debug("서비스단 진입");
         if (requestDto.getPassword() != null) {
-            log.info("패스워드 검증 진입");
+            log.debug("패스워드 검증 진입");
             if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
                 newEncodePw = passwordEncoder.encode(requestDto.getNewPassword());
             }
         }
-        log.info("패스워드 검증 통과");
+        log.debug("패스워드 검증 통과");
 
         if (requestDto.getNickname() != null) {
             if (duplicatedNickName(requestDto.getNickname())){
@@ -182,18 +183,6 @@ public class UserService {
         userRepository.save(user);
 
         return new ProfileResponseDto(user);
-    }
-
-    //프로필 이미지 수정
-    @Transactional
-    public void updateProfileImage(MultipartFile file, Long userId) {
-        User user = findById(userId);
-
-        String newImageUrl = controlS3Images(file, user);
-        ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), newImageUrl);
-        updateUserImageUrl(carrier);
-
-        userRepository.save(user);
     }
 
     //유저 프로필 조회
@@ -236,13 +225,12 @@ public class UserService {
         User user = userRepository.findByLoginIdAndEmailAndStatus(requestDto.getLoginId(),
             requestDto.getEmail(), UserStatusEnum.INACTIVE_USER).orElseThrow(()
                 -> new NotFoundException(USER_NOT_FOUND));
+
         mailSendService.CheckAuthNum(requestDto.getLoginId(),requestDto);
         verifyEmail(requestDto.getLoginId(), requestDto.getEmail());
 
-        User findUser = userRepository.findById(user.getId()).orElseThrow(()
-            -> new NotFoundException(USER_NOT_FOUND));
-       findUser.activateUser();
-        userRepository.save(findUser);
+        user.fromInactiveToActive();
+        userRepository.save(user);
         redisUtil.deleteData(requestDto.getLoginId());
     }
 

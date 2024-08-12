@@ -1,6 +1,8 @@
 package com.example.fantreehouse.domain.communitycomment.entity;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
+import com.example.fantreehouse.common.enums.ErrorType;
+import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 import com.example.fantreehouse.domain.communitycomment.dto.CommunityCommentRequestDto;
 import com.example.fantreehouse.domain.communitycomment.dto.CommunityCommentUpdateRequestDto;
@@ -60,4 +62,5 @@ public class CommunityComment extends Timestamped {
         this.communityFeed = feed;
         this.likes = comment.getLikes() - 1L;
     }
+
 }

@@ -35,7 +35,7 @@ public class EnterFeedService {
      * @param user 요청을 수행하는 사용자
      */
     @Transactional
-    public void createFeed(String  enterName, EnterFeedRequestDto request, User user, ArtistGroup artistGroup) {
+    public void createFeed(String  enterName, EnterFeedRequestDto request, User user) {
         Entertainment entertainment = entertainmentRepository.findByEnterName(enterName)
                 .orElseThrow(() -> new CustomException(ErrorType.ARTIST_GROUP_NOT_FOUND));
 
