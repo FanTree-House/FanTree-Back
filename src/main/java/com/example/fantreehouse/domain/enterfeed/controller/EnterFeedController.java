@@ -29,11 +29,10 @@ public class EnterFeedController {
     public ResponseEntity<ResponseMessageDto> createNotice(
             @PathVariable (value = "groupName") String groupName,
             @RequestBody EnterFeedRequestDto request,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            ArtistGroup artist) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         request.setCategory(FeedCategory.NOTICE);
-        enterFeedService.createFeed(groupName, request, userDetails.getUser(),artist);
+        enterFeedService.createFeed(groupName, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.NOTICE_CREATE_SUCCESS));
     }
 
@@ -83,11 +82,10 @@ public class EnterFeedController {
     public ResponseEntity<ResponseMessageDto> createSchedule(
             @PathVariable String groupName,
             @RequestBody EnterFeedRequestDto request,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            ArtistGroup artistGroup) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         request.setCategory(FeedCategory.SCHEDULE);
-        enterFeedService.createFeed(groupName, request, userDetails.getUser(), artistGroup);
+        enterFeedService.createFeed(groupName, request, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SCHEDULE_CREATE_SUCCESS));
     }
 

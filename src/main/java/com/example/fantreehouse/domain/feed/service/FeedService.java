@@ -67,8 +67,6 @@ public class FeedService {
     @Transactional
     public CreateFeedResponseDto createFeed(String groupName, User loginUser,
                                             List<MultipartFile> files, CreateFeedRequestDto requestDto) {
-
-        loginUser.activateUser();
         loginUser.checkUserRole(loginUser.getUserRole());
 
         //로그인한 아티스트가 groupName 이라는 이름을 가진 ArtistGroup 소속인지 확인 <- 아티스트 그룹을 통해서 아티스트를 찾아 올 수 없는 구조이므로
@@ -117,7 +115,6 @@ public class FeedService {
         UserDetailsImpl userDetails, List<MultipartFile> files, UpdateFeedRequestDto requestDto) {
 
         User loginUser = userDetails.getUser();
-        loginUser.activateUser();
 
         //요청하는 feed 찾기
         Feed foundFeed = feedRepository.findById(artistFeedId)
@@ -174,8 +171,6 @@ public class FeedService {
      */
     public FeedResponseDto getFeed(String groupName, Long artistFeedId, User loginUser) {
 
-        loginUser.activateUser();
-
         //요청하는 feed 찾기
         Feed foundFeed = feedRepository.findById(artistFeedId)
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
@@ -217,7 +212,6 @@ public class FeedService {
     @Transactional
     public void deleteFeed(Long artistFeedId, UserDetailsImpl userDetails) {
         User loginUser = userDetails.getUser();
-        loginUser.activateUser();
 
         //요청하는 feed 찾기
         Feed foundFeed = feedRepository.findById(artistFeedId)
@@ -245,7 +239,6 @@ public class FeedService {
 
     // 개인별 좋아요 누른 Feed 모아보기
     public List<FeedResponseDto> getLikeFeeds(User user) {
-        user.activateUser();
 
         //좋아요 누른 feed 찾기
         List<FeedLike> foundFeedLikeList = feedLikeRepository.findAllFeedLikeByUserId(user.getId());
@@ -294,7 +287,4 @@ public class FeedService {
         return artistRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
     }
-
-
-
 }
