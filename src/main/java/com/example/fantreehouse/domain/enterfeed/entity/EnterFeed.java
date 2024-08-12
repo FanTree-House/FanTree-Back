@@ -44,8 +44,6 @@ public class EnterFeed extends Timestamped {
 
     private String enterName;
 
-    private String artistGroupName;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FeedCategory category;
@@ -53,7 +51,7 @@ public class EnterFeed extends Timestamped {
     private LocalDate scheduleDate;
 
     public EnterFeed(Entertainment entertainment, User user, String title, String contents, FeedCategory category,
-                     LocalDate scheduleDate, ArtistGroup artistGroup, String artistGroupName) {
+                     LocalDate scheduleDate) {
         this.entertainment = entertainment;
         this.enterName = entertainment.getEnterName();
         this.user = user;
@@ -61,14 +59,12 @@ public class EnterFeed extends Timestamped {
         this.contents = contents;
         this.category = category;
         this.scheduleDate = scheduleDate;
-        this.artistGroup = artistGroup;
-        this.artistGroupName = artistGroup.getGroupName();
     }
 
-    public void updateContents(String title, String contents,  FeedCategory category, LocalDate scheduleDate) {
+    public void updateContents(String title, String contents,  FeedCategory category, LocalDate date) {
         this.title = title;
         this.contents = contents;
         this.category = category;
-        this.scheduleDate = scheduleDate;
+        this.scheduleDate = date;
     }
 }
