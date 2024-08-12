@@ -142,7 +142,7 @@ POST http://localhost:8080/mailsend
 Content-Type: application/json
 
 {
-  "loginId": "test123",
+  "loginId": "admin1",
   "email": "7642510@naver.com"
 }
 
@@ -153,9 +153,9 @@ POST http://localhost:8080/mailableCheck
 Content-Type: application/json
 
 {
-  "loginId": "test123",
-  "email": "kkx152@gmail.com",
-  "authNum": "159675"
+  "loginId": "admin1",
+  "email": "7642510@naver.com",
+  "authNum": 405304
 }
 
 ### 휴면 유저 이메일인증 받기

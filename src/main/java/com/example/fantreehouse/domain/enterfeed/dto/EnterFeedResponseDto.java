@@ -13,17 +13,15 @@ public class EnterFeedResponseDto {
     private Long id;
     private String title;
     private String contents;
-    private String enterName;
     private FeedCategory category;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
-    public EnterFeedResponseDto(Long id, String title, String contents, String enterName, FeedCategory category,
+    public EnterFeedResponseDto(Long id, String title, String contents, FeedCategory category,
                                 LocalDate date) {
         this.id = id;
         this.title = title;
         this.contents = contents;
-        this.enterName = enterName;
         this.category = category;
         this.date = date;
     }

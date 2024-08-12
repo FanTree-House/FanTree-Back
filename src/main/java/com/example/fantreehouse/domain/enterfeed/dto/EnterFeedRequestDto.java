@@ -24,12 +24,12 @@ public class EnterFeedRequestDto {
     @Setter
     private FeedCategory category;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private LocalDate scheduleDate;
 
-    public EnterFeedRequestDto(String title, String contents, LocalDate date, FeedCategory category) {
+    public EnterFeedRequestDto(String title, String contents, LocalDate scheduleDate, FeedCategory category) {
         this.title = title;
         this.contents = contents;
-        this.date = date;
+        this.scheduleDate = scheduleDate;
         this.category = category;
     }
 

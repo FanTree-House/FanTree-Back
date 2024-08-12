@@ -46,11 +46,9 @@ public class EnterFeedService {
                 user,
                 request.getTitle(),
                 request.getContents(),
-                entertainment.getEnterName(),
                 request.getCategory(),
-                request.getDate(),
+                request.getScheduleDate(),
                 artistGroup,artistGroup.getGroupName()
-
         );
         enterFeedRepository.save(enterFeed);
     }
@@ -96,7 +94,7 @@ public class EnterFeedService {
                 request.getTitle(),
                 request.getContents(),
                 request.getCategory(),
-                request.getDate()
+                request.getScheduleDate()
         );
         enterFeedRepository.save(enterFeed);
     }
@@ -146,11 +144,10 @@ public class EnterFeedService {
     private EnterFeedResponseDto convertToResponseDto(EnterFeed enterFeed) {
         return new EnterFeedResponseDto(
                 enterFeed.getId(),
-                enterFeed.getEnterName(),
                 enterFeed.getTitle(),
                 enterFeed.getContents(),
                 enterFeed.getCategory(),
-                enterFeed.getDate()
+                enterFeed.getScheduleDate()
         );
     }
 }
