@@ -35,8 +35,8 @@ import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PR
 import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final RedisUtil redisUtil;
@@ -154,37 +154,33 @@ public class UserService {
         User user = findById(userId);
         String newEncodePw = null;
 
+        log.debug("서비스단 진입");
         if (requestDto.getPassword() != null) {
+            log.debug("패스워드 검증 진입");
             if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
                 newEncodePw = passwordEncoder.encode(requestDto.getNewPassword());
             }
         }
+        log.debug("패스워드 검증 통과");
+
+        if (requestDto.getNickname() != null) {
+            if (duplicatedNickName(requestDto.getNickname())){
+                throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
+            }
+        }
 
         user.update(Optional.ofNullable(requestDto.getEmail()),
-                Optional.ofNullable(newEncodePw));
+                Optional.ofNullable(newEncodePw),
+                Optional.ofNullable(requestDto.getNickname())
+                );
 
         if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
 
-            try {
-                s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
-            } catch (NotFoundException e) {
-                user.updateImageUrl(START_PROFILE_URL);
-                userRepository.save(user);
-            } catch (Exception e) {
-                throw new S3Exception(DELETE_ERROR);
-            }
-
-            String newImageUrl;
-            try {
-                newImageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
-            } catch (Exception e) {
-                s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
-                throw new S3Exception(UPLOAD_ERROR);
-            }
-
+            String newImageUrl = controlS3Images(file, user);
             ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), newImageUrl);
             updateUserImageUrl(carrier);
         }
+        userRepository.save(user);
 
         return new ProfileResponseDto(user);
     }
@@ -229,13 +225,12 @@ public class UserService {
         User user = userRepository.findByLoginIdAndEmailAndStatus(requestDto.getLoginId(),
             requestDto.getEmail(), UserStatusEnum.INACTIVE_USER).orElseThrow(()
                 -> new NotFoundException(USER_NOT_FOUND));
+
         mailSendService.CheckAuthNum(requestDto.getLoginId(),requestDto);
         verifyEmail(requestDto.getLoginId(), requestDto.getEmail());
 
-        User findUser = userRepository.findById(user.getId()).orElseThrow(()
-            -> new NotFoundException(USER_NOT_FOUND));
-       findUser.activateUser();
-        userRepository.save(findUser);
+        user.fromInactiveToActive();
+        userRepository.save(user);
         redisUtil.deleteData(requestDto.getLoginId());
     }
 
@@ -253,6 +248,27 @@ public class UserService {
 
     public boolean checkPassword (String password, String checkPassword) {
         return password.equals(checkPassword);
+    }
+
+    //S3에 프로필 이미지 삭제 및 저장
+    private String controlS3Images(MultipartFile file, User user) {
+        try {
+            s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
+        } catch (NotFoundException e) {
+            user.updateImageUrl(START_PROFILE_URL);
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new S3Exception(DELETE_ERROR);
+        }
+
+        String newImageUrl;
+        try {
+            newImageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
+        } catch (Exception e) {
+            s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
+            throw new S3Exception(UPLOAD_ERROR);
+        }
+        return newImageUrl;
     }
 
 }

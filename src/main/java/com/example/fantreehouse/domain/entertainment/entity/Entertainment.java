@@ -41,7 +41,8 @@ public class Entertainment extends Timestamped {
     private List<EnterFeed> enterFeedList = new ArrayList<>();
 
     //엔터와 원투원 매핑
-    @OneToOne(mappedBy = "entertainment")
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false) // User와의 관계를 매핑합니다.
     private User user;
 
 

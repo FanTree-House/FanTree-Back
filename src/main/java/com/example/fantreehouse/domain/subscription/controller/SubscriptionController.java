@@ -29,8 +29,9 @@ public class SubscriptionController {
      * @return
      */
     @PostMapping("/{groupName}")
-    public ResponseEntity<ResponseMessageDto> createSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                              @PathVariable String groupName) {
+    public ResponseEntity<ResponseMessageDto> createSubscript(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable String groupName) {
         subscriptionService.createSubscript(userDetails.getUser(), groupName);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_SUCCESS_SUBSCRIPT));
     }
@@ -42,8 +43,9 @@ public class SubscriptionController {
      * @return
      */
     @DeleteMapping("/{groupName}")
-    public ResponseEntity<ResponseMessageDto> deleteSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                              @PathVariable String groupName) {
+    public ResponseEntity<ResponseMessageDto> deleteSubscript(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable String groupName) {
         subscriptionService.deleteSubscript(userDetails.getUser(), groupName);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.USER_DELETE_SUBSCRIPT));
     }
@@ -51,22 +53,26 @@ public class SubscriptionController {
     //구독리스트조회
     @GetMapping
     public ResponseEntity<?> findAllSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<SubscriptionResponseDto> responseDto = subscriptionService.findAllSubscript(userDetails.getUser().getId());
+        List<SubscriptionResponseDto> responseDto = subscriptionService
+            .findAllSubscript(userDetails.getUser().getId());
         return ResponseEntity.ok(responseDto);
     }
 
     //구독한 그룹 피드 모아보기
     @GetMapping("/feeds")//임시 api 주소
-    public ResponseEntity<ResponseDataDto<List<FeedResponseDto>>> getSubscriptGroupFeeds(@AuthenticationPrincipal UserDetailsImpl userDetails
+    public ResponseEntity<ResponseDataDto<List<FeedResponseDto>>> getSubscriptGroupFeeds(
+        @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        List<FeedResponseDto> subscriptGroupFeeds = subscriptionService.getSubscribedGroupFeeds(userDetails.getUser());
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, subscriptGroupFeeds));
+        List<FeedResponseDto> subscriptGroupFeeds = subscriptionService
+            .getSubscribedGroupFeeds(userDetails.getUser());
+        return ResponseEntity
+            .ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, subscriptGroupFeeds));
     }
 
     // 아티스트 그룹을 구독 유무
     @GetMapping("/{groupName}")
-    public boolean getIsSubscribe(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                  @PathVariable String groupName) {
+    public boolean getIsSubscribe(
+        @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable String groupName) {
         return subscriptionService.getIsSubscribe(userDetails.getUser(), groupName);
     }
 

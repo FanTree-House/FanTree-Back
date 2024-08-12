@@ -83,11 +83,11 @@ public class UserController {
         .body(new ResponseDataDto(ResponseStatus.UPDATE_TOKEN_SUCCESS_MESSAGE, newAccessToken));
   }
 
-  @PutMapping
-  public ResponseEntity<ResponseDataDto> updateProfile(
-          @RequestPart(value = "file", required = false) MultipartFile file,
-          @AuthenticationPrincipal UserDetailsImpl userDetails,
-          @Valid @RequestPart ProfileRequestDto requestDto) {
+    @PutMapping
+    public ResponseEntity<ResponseDataDto> updateProfile(
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @Valid @ModelAttribute ProfileRequestDto requestDto) {
 
       if (file != null && !file.isEmpty()) {
           if (file.getSize() > 10 * 1024 * 1024) {

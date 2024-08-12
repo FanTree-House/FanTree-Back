@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/{groupName}/feed/{artistFeedId}")
+@RequestMapping("/feed/{artistFeedId}")
 public class FeedLikeController {
 
     private final FeedLikeService feedLikeService;
@@ -25,61 +25,57 @@ public class FeedLikeController {
     /**
      * 아티스트 Feed 좋아요 추가 또는 취소
      *
-     * @param groupName
      * @param artistFeedId
      * @param userDetails
      * @return
      */
     @PostMapping
     public ResponseEntity<ResponseMessageDto> addOrDeleteLike(
-            @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        feedLikeService.addOrCancelLike(groupName, artistFeedId, userDetails.getUser());
+        feedLikeService.addOrCancelLike( artistFeedId, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_LIKE_CHANGED));
     }
 
     // 좋아요 유무
     @GetMapping("/check")
     public boolean getIsLiked(
-            @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return feedLikeService.getIsLiked(groupName, artistFeedId, userDetails.getUser());
+        return feedLikeService.getIsLiked(artistFeedId, userDetails.getUser());
     }
 
     /**
      * Feed 의 좋아요를 누른 유저 List 보기 (최신순)
      *
-     * @param groupName
      * @param artistFeedId
      * @param userDetails
      * @return
      */
     @GetMapping("/like")
     public ResponseEntity<ResponseDataDto<List<FeedLikeUserResponseDto>>> getUserAllFeedLikeUser(
-            @PathVariable final String groupName,
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        List<FeedLikeUserResponseDto> feedLikeUserResponseDtoList = feedLikeService.getUserAllFeedLikeUser(groupName, artistFeedId, userDetails.getUser());
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.SUCCESS_GET_FEED_LIKE_USERS, feedLikeUserResponseDtoList));
+        List<FeedLikeUserResponseDto> feedLikeUserResponseDtoList = feedLikeService
+            .getUserAllFeedLikeUser( artistFeedId, userDetails.getUser());
+        return ResponseEntity
+            .ok(new ResponseDataDto<>(ResponseStatus.SUCCESS_GET_FEED_LIKE_USERS,
+                feedLikeUserResponseDtoList));
     }
 
     /**
      * 피드의 좋아요 수 조회
      *
-     * @param groupName
      * @param artistFeedId
      * @return
      */
     @GetMapping("/likes")
     public Long getFeedLikes(
-            @PathVariable final String groupName,
             @PathVariable final Long artistFeedId
     ) {
-        return feedLikeService.getFeedLikes(groupName, artistFeedId);
+        return feedLikeService.getFeedLikes(artistFeedId);
     }
 }

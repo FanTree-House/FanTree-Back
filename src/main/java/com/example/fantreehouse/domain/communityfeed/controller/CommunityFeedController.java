@@ -1,5 +1,6 @@
 package com.example.fantreehouse.domain.communityfeed.controller;
 
+import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.dto.ResponseMessageDto;
 import com.example.fantreehouse.common.enums.ResponseStatus;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
@@ -85,6 +86,19 @@ public class CommunityFeedController {
     }
 
     /**
+     * 개인별 커뮤피드 전체 조회
+     * @param userDetails
+     * @return
+     */
+    @GetMapping("/myFeeds")
+    public ResponseEntity<ResponseDataDto> findAllMyFeeds(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        List<CommunityFeedResponseDto> responseDtoList = feedService.findAllMyFeeds(userDetails.getUser());
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDtoList));
+    }
+
+    /**
      * 피드 수정
      * @param requestDto
      * @param userDetails
@@ -94,18 +108,19 @@ public class CommunityFeedController {
      */
     @PatchMapping("/{feedId}")
     public ResponseEntity<ResponseMessageDto> updateFeed(
-        @Valid @RequestPart CommunityFeedUpdateRequestDto requestDto,
-        @RequestPart(value = "file", required = false) List<MultipartFile> files,
-        @AuthenticationPrincipal UserDetailsImpl userDetails,
-        @PathVariable Long feedId,
-        @PathVariable String groupName
+            @Valid @RequestPart CommunityFeedUpdateRequestDto requestDto,
+            @RequestPart(value = "file", required = false) List<MultipartFile> files,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long feedId,
+            @PathVariable String groupName
     ) {
+
         if (files != null && files.size() > 10) {
             throw new S3Exception(MAX_IMAGES_EXCEEDED);
         }
         feedService.updateFeed(requestDto, files, feedId, userDetails.getUser().getId(), groupName);
         return ResponseEntity
-            .ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_UPDATE_SUCCESS));
+                .ok(new ResponseMessageDto(ResponseStatus.USER_COMMUNITY_UPDATE_SUCCESS));
     }
 
     /***
