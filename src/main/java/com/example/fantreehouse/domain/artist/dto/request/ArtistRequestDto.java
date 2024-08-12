@@ -29,7 +29,6 @@ public class ArtistRequestDto {
     @JsonCreator //object mapper에서 생성자를 찾는 어노테이션 생성자를 못찾을떄 , 비선호어노테이션
     public ArtistRequestDto(String artistName,String introduction, MultipartFile file) {
         this.artistName = artistName;
-
         this.introduction = introduction;
         this.file = file;
     }

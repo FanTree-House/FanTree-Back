@@ -57,6 +57,7 @@ public enum ErrorType implements ErrorCode {
     ARTIST_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "아티스트 그룹을 찾을 수 없습니다."),
     ENROLLED_USER_AS_ARTIST(HttpStatus.UNAUTHORIZED, "이미 아티스트 등록을 하셨습니다."),
     ENROLLED_ARTIST_NAME(HttpStatus.UNAUTHORIZED, "이미 아티스트 등록을 하셨습니다."),
+    NOT_FOUND_SUBSCRIBER(HttpStatus.NOT_FOUND, "구독자를 찾을 수 없습니다."),
 
     //유저 커뮤니티 피드
     NOT_FOUND_FEED(HttpStatus.NOT_FOUND, "피드를 찾을수 없습니다"),
@@ -79,6 +80,7 @@ public enum ErrorType implements ErrorCode {
 
     //좋아요
     NOT_FOUND_FEED_LIKE(HttpStatus.NOT_FOUND, "좋아요한 피드가 아닙니다"),
+    NOT_FOUND_FEED_LIKES(HttpStatus.NOT_FOUND, "좋아요한 피드가 없습니다."),
     NOT_FOUND_COMMENT_LIKE(HttpStatus.NOT_FOUND, "좋아요한 댓글이 아닙니다"),
     NOT_FOUND_LIKE_USER(HttpStatus.NOT_FOUND, "좋아요를 누른 유저가 없습니다."),
 

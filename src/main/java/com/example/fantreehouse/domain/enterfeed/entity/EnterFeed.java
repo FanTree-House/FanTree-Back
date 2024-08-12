@@ -5,7 +5,6 @@ import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -53,7 +52,7 @@ public class EnterFeed extends Timestamped {
 
     private LocalDate scheduleDate;
 
-    public EnterFeed(Entertainment entertainment, User user, String title, String contents, String enterName, FeedCategory category,
+    public EnterFeed(Entertainment entertainment, User user, String title, String contents, FeedCategory category,
                      LocalDate scheduleDate, ArtistGroup artistGroup, String artistGroupName) {
         this.entertainment = entertainment;
         this.enterName = entertainment.getEnterName();

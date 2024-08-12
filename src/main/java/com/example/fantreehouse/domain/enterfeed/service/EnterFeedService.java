@@ -47,9 +47,8 @@ public class EnterFeedService {
                 request.getTitle(),
                 request.getContents(),
                 request.getCategory(),
-                request.getDate(),
+                request.getScheduleDate(),
                 artistGroup,artistGroup.getGroupName()
-
         );
         enterFeedRepository.save(enterFeed);
     }
@@ -95,7 +94,7 @@ public class EnterFeedService {
                 request.getTitle(),
                 request.getContents(),
                 request.getCategory(),
-                request.getDate()
+                request.getScheduleDate()
         );
         enterFeedRepository.save(enterFeed);
     }

@@ -21,6 +21,7 @@ import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,9 @@ import static com.example.fantreehouse.domain.s3.service.S3FileUploader.BASIC_DI
 import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
 import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
 
+@Slf4j
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
 
@@ -41,6 +44,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final S3FileUploader s3FileUploader;
+    private final MailSendService mailSendService;
 
     //회원가입
     public SignUpResponseDto signUp(MultipartFile file, SignUpRequestDto requestDto) {
@@ -124,6 +128,7 @@ public class UserService {
             }
         }
         user.withDraw();
+        userRepository.save(user);
     }
 
     // 로그아웃
@@ -150,14 +155,25 @@ public class UserService {
         User user = findById(userId);
         String newEncodePw = null;
 
+        log.info("서비스단 진입");
         if (requestDto.getPassword() != null) {
+            log.info("패스워드 검증 진입");
             if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
                 newEncodePw = passwordEncoder.encode(requestDto.getNewPassword());
             }
         }
+        log.info("패스워드 검증 통과");
+
+        if (requestDto.getNickname() != null) {
+            if (duplicatedNickName(requestDto.getNickname())){
+                throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
+            }
+        }
 
         user.update(Optional.ofNullable(requestDto.getEmail()),
-                Optional.ofNullable(newEncodePw));
+                Optional.ofNullable(newEncodePw),
+                Optional.ofNullable(requestDto.getNickname())
+                );
 
         if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
 
@@ -181,6 +197,7 @@ public class UserService {
             ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), newImageUrl);
             updateUserImageUrl(carrier);
         }
+        userRepository.save(user);
 
         return new ProfileResponseDto(user);
     }
@@ -225,18 +242,22 @@ public class UserService {
         User user = userRepository.findByLoginIdAndEmailAndStatus(requestDto.getLoginId(),
             requestDto.getEmail(), UserStatusEnum.INACTIVE_USER).orElseThrow(()
                 -> new NotFoundException(USER_NOT_FOUND));
+        mailSendService.CheckAuthNum(requestDto.getLoginId(),requestDto);
         verifyEmail(requestDto.getLoginId(), requestDto.getEmail());
-        user.activateUser();
-        userRepository.save(user);
+
+        User findUser = userRepository.findById(user.getId()).orElseThrow(()
+            -> new NotFoundException(USER_NOT_FOUND));
+       findUser.activateUser();
+        userRepository.save(findUser);
         redisUtil.deleteData(requestDto.getLoginId());
     }
 
     private void verifyEmail(String id, String email){
         //이메일 검증 -> Null 검사
-        if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.equals(redisUtil.getData(id).getStatus())) {
+        if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.
+            equals(redisUtil.getData(id).getStatus())){
             throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
         }
-
         //redis에 저장된 이메일과 응답받은 이메일이 동일한지 체크
         if (!email.equals(redisUtil.getData(id).getEmail())) {
             throw new CustomException(ErrorType.NOT_AUTH_EMAIL);

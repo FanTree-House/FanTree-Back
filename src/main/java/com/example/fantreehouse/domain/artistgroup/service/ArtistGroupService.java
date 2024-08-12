@@ -16,7 +16,7 @@ import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRepository;
 import com.example.fantreehouse.domain.s3.service.S3FileUploader;
 import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
-import com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil;
+import com.example.fantreehouse.domain.subscription.repository.SubscriptionRepository;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
@@ -157,11 +157,14 @@ public class ArtistGroupService {
         artistGroup.setGroupName(request.getGroupName());
         artistGroup.setGroupInfo(request.getGroupInfo());
 
-        artistGroup.clearArtists();
-        for (Long artistId : request.getArtistIds()) {
-            Artist artist = artistRepository.findById(artistId)
-                    .orElseThrow(() -> new CustomException(ARTIST_NOT_FOUND));
-            artistGroup.addArtist(artist);
+        // artistIds가 null인지 확인하고, null이면 빈 리스트로 초기화
+        if (request.getArtistIds() != null) {
+            artistGroup.clearArtists();
+            for (Long artistId : request.getArtistIds()) {
+                Artist artist = artistRepository.findById(artistId)
+                        .orElseThrow(() -> new CustomException(ARTIST_NOT_FOUND));
+                artistGroup.addArtist(artist);
+            }
         }
 
         if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
@@ -305,6 +308,30 @@ public class ArtistGroupService {
         List<ArtistResponseDto> artistDtos = artistGroup.getArtists().stream()
                 .map(artist -> new ArtistResponseDto(artist.getId(), artist.getArtistName(), artist.getIntroduction(), artist.getArtistProfileImageUrl()))
                 .collect(Collectors.toList());
-        return new ArtistGroupResponseDto(artistGroup.getId(), artistGroup.getGroupName(), artistGroup.getArtistGroupProfileImageUrl(), entertainmentDto, artistDtos, artistGroup.getEnterName());
+
+        // 그룹 정보 추가
+        return new ArtistGroupResponseDto(
+                artistGroup.getId(),
+                artistGroup.getGroupName(),
+                artistGroup.getArtistGroupProfileImageUrl(),
+                entertainmentDto,
+                artistDtos,
+                artistGroup.getEnterName(),
+                artistGroup.getGroupInfo()
+        );
+    }
+
+    /**
+     * 아티스트 랭킹 조회
+     * @return
+     */
+    public List<ArtistGroupResponseDto> getArtistRank() {
+        List<ArtistGroup> artistGroups = artistGroupRepository.findTop15ArtistGroupsBySubscriptionCount();
+
+        // 여기코드 너무 쓰레기같음..
+        return artistGroups.stream().map(ag -> new ArtistGroupResponseDto(
+                convertToResponseDto(ag),
+                (long) ag.getSubscriptionList().size()
+        )).collect(Collectors.toList());
     }
 }
