@@ -61,7 +61,7 @@ public class CommunityFeedService {
         user.activateUser();
 
         // 구독자 체크
-        checksubscriptionList(userId);
+        checkSubscriptionList(userId);
 
         CommunityFeed feed = new CommunityFeed(requestDto, user, artistGroup);
         feedRepository.save(feed);
@@ -92,7 +92,7 @@ public class CommunityFeedService {
 
 
         // 구독자 체크
-        checksubscriptionList(userId);
+        checkSubscriptionList(userId);
         List<CommunityFeed> feedList = feedRepository.findAll();
 
         if (feedList.isEmpty()) {
@@ -111,7 +111,7 @@ public class CommunityFeedService {
                 -> new CustomException(NOT_FOUND_FEED));
 
         // 구독자 체크
-        checksubscriptionList(userId);
+        checkSubscriptionList(userId);
 
         return feed;
     }
@@ -245,7 +245,7 @@ public class CommunityFeedService {
     }
 
     //구독자 체크
-    private void checksubscriptionList(Long userId) {
+    private void checkSubscriptionList(Long userId) {
         List<Subscription> subscriptionList = subscriptionRepository
                 .findAllByUserId(userId).orElseThrow(()
                         -> new CustomException(USER_NOT_FOUND));

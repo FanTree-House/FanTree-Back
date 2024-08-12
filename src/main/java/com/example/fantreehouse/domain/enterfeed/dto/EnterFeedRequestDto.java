@@ -26,7 +26,7 @@ public class EnterFeedRequestDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
-    public EnterFeedRequestDto(String title, String contents, LocalDate date, FeedCategory category) {
+    public EnterFeedRequestDto(String title, String contents, LocalDate scheduleDate, FeedCategory category) {
         this.title = title;
         this.contents = contents;
         this.date = date;

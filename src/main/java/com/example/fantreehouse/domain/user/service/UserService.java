@@ -35,7 +35,6 @@ import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PR
 import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class UserService {
 
