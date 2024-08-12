@@ -23,7 +23,7 @@ import java.util.List;
 import static com.example.fantreehouse.common.enums.ErrorType.MAX_IMAGES_EXCEEDED;
 
 @RestController
-@RequestMapping("/artist/{groupName}/feeds")
+@RequestMapping
 @RequiredArgsConstructor
 
 public class CommunityFeedController {
@@ -37,7 +37,7 @@ public class CommunityFeedController {
      * @param groupName
      * @return
      */
-    @PostMapping
+    @PostMapping("/artist/{groupName}/feeds")
     public ResponseEntity<?> createFeed(
         @RequestPart CommunityFeedRequestDto requestDto,
         @RequestPart(value = "file", required = false) List<MultipartFile> files,
@@ -57,7 +57,7 @@ public class CommunityFeedController {
      * @param groupName
      * @return
      */
-    @GetMapping
+    @GetMapping("/artist/{groupName}/feeds")
     public ResponseEntity<?> findAllFeed(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable String groupName) {
@@ -74,7 +74,7 @@ public class CommunityFeedController {
      * @param groupName
      * @return
      */
-    @GetMapping("/{feedId}")
+    @GetMapping("/artist/{groupName}/feeds/{feedId}")
      public ResponseEntity<?> findFeed(
          @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long feedId,
@@ -90,7 +90,7 @@ public class CommunityFeedController {
      * @param userDetails
      * @return
      */
-    @GetMapping("/myFeeds")
+    @GetMapping("feeds/myFeeds")
     public ResponseEntity<ResponseDataDto> findAllMyFeeds(
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
@@ -106,7 +106,7 @@ public class CommunityFeedController {
      * @param groupName
      * @return
      */
-    @PatchMapping("/{feedId}")
+    @PatchMapping("/artist/{groupName}/feeds/{feedId}")
     public ResponseEntity<ResponseMessageDto> updateFeed(
             @Valid @RequestPart CommunityFeedUpdateRequestDto requestDto,
             @RequestPart(value = "file", required = false) List<MultipartFile> files,
@@ -130,7 +130,7 @@ public class CommunityFeedController {
      * @param groupName
      * @return
      */
-    @DeleteMapping("/{feedId}")
+    @DeleteMapping("/artist/{groupName}/feeds/{feedId}")
     public ResponseEntity<ResponseMessageDto> deleteFeed(
         @PathVariable Long feedId,
         @AuthenticationPrincipal UserDetailsImpl userDetails,
