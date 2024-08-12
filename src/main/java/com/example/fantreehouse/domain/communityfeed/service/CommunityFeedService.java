@@ -4,6 +4,7 @@ import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
+import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
@@ -24,17 +25,19 @@ import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ssl.DefaultSslBundleRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 
@@ -93,7 +96,7 @@ public class CommunityFeedService {
         List<CommunityFeed> feedList = feedRepository.findAll();
 
         if (feedList.isEmpty()) {
-            throw new CustomException(ErrorType.NOT_FOUND_FEED);
+            throw new CustomException(NOT_FOUND_FEED);
         }
         return feedList.stream()
                 .map(CommunityFeedResponseDto::new)
@@ -105,12 +108,41 @@ public class CommunityFeedService {
         ArtistGroup artistGroup = findArtistGroup(groupName);
         User user = findUser(userId);
         CommunityFeed feed = feedRepository.findById(feedId).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_FOUND_FEED));
+                -> new CustomException(NOT_FOUND_FEED));
 
         // 구독자 체크
         checkSubscriptionList(userId);
 
         return feed;
+    }
+
+    // 개인별 피드 전체 조회
+    public List<CommunityFeedResponseDto> findAllMyFeeds(User user) {
+
+        List<Subscription> subscriptionList = user.getSubscriptions();
+
+        List<CommunityFeed> allMyFeeds = new ArrayList<>();
+        //유저의 구독그룹리스트의 커뮤니티에서 Feed 들을 뽑아온다
+        for (Subscription subscription : subscriptionList) {
+            try {
+                List<CommunityFeed> feedList = feedRepository.findAllByArtistGroupId(subscription.getArtistGroup().getId())
+                        .orElseThrow(() -> new NotFoundException(NOT_FOUND_FEED));
+                allMyFeeds.addAll(feedList);
+            } catch (NotFoundException e) {
+                log.info(subscription.getArtistGroup() + "에 사용자로 등록된 커뮤니티 피드가 없습니다.");
+            } catch (Exception e) {
+                log.error("커뮤니티 피드를 검색 중 오류 발생");
+            }
+        }
+
+        if (allMyFeeds.isEmpty()) {
+            throw new NotFoundException(NOT_FOUND_FEED); //이 경우 프론트에서 받아서 메세지 전달 가능
+        }
+
+        return allMyFeeds
+                .stream().sorted(Comparator.comparing(CommunityFeed::getCreatedAt)
+                .reversed()).map(CommunityFeedResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     //피드 업데이트
@@ -120,7 +152,7 @@ public class CommunityFeedService {
         ArtistGroup artistGroup = findArtistGroup(groupName);
         CommunityFeed feed = findFeed(feedId);
         if (!feed.getUser().getId().equals(user.getId())) {
-            throw new CustomException(ErrorType.NOT_USER_FEED);
+            throw new CustomException(NOT_USER_FEED);
         }
         feed.updateFeed(requestDto);
 
@@ -152,6 +184,7 @@ public class CommunityFeedService {
             updateCommunityFeedImageUrls(carrier);
         }
     }
+
 
     private void updateCommunityFeedImageUrls(ImageUrlCarrier carrier) {
         if (!carrier.getImageUrls().isEmpty()) {
@@ -190,35 +223,35 @@ public class CommunityFeedService {
     //유저찾기
     public User findUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(()
-                -> new CustomException(ErrorType.USER_NOT_FOUND));
+                -> new CustomException(USER_NOT_FOUND));
     }
 
     //피드찾기
     public CommunityFeed findFeed(Long feedId) {
         return feedRepository.findById(feedId).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_USER_FEED));
+                -> new CustomException(NOT_USER_FEED));
     }
 
     //아티스트 그룹찾기
     public ArtistGroup findArtistGroup(String groupName) {
         return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
+                -> new CustomException(NOT_FOUND_ARTISTGROUP));
     }
 
     //유저가 좋아요를 눌렀나 확인
     public CommunityLike checkUserLike(Long userId) {
         return likeRepository.findByUserId(userId).orElseThrow(()
-                -> new CustomException(ErrorType.DUPLICATE_LIKE));
+                -> new CustomException(DUPLICATE_LIKE));
     }
 
     //구독자 체크
     private void checkSubscriptionList(Long userId) {
         List<Subscription> subscriptionList = subscriptionRepository
                 .findAllByUserId(userId).orElseThrow(()
-                        -> new CustomException(ErrorType.USER_NOT_FOUND));
+                        -> new CustomException(USER_NOT_FOUND));
         for (Subscription subscription : subscriptionList) {
             if (!subscription.getUser().getId().equals(userId)) {
-                throw new CustomException(ErrorType.UNAUTHORIZED_FEED_ACCESS);
+                throw new CustomException(UNAUTHORIZED_FEED_ACCESS);
             }
         }
     }

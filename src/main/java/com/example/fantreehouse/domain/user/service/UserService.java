@@ -34,7 +34,6 @@ import static com.example.fantreehouse.domain.s3.service.S3FileUploader.BASIC_DI
 import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
 import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -176,29 +175,25 @@ public class UserService {
 
         if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
 
-            try {
-                s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
-            } catch (NotFoundException e) {
-                user.updateImageUrl(START_PROFILE_URL);
-                userRepository.save(user);
-            } catch (Exception e) {
-                throw new S3Exception(DELETE_ERROR);
-            }
-
-            String newImageUrl;
-            try {
-                newImageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
-            } catch (Exception e) {
-                s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
-                throw new S3Exception(UPLOAD_ERROR);
-            }
-
+            String newImageUrl = controlS3Images(file, user);
             ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), newImageUrl);
             updateUserImageUrl(carrier);
         }
         userRepository.save(user);
 
         return new ProfileResponseDto(user);
+    }
+
+    //프로필 이미지 수정
+    @Transactional
+    public void updateProfileImage(MultipartFile file, Long userId) {
+        User user = findById(userId);
+
+        String newImageUrl = controlS3Images(file, user);
+        ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), newImageUrl);
+        updateUserImageUrl(carrier);
+
+        userRepository.save(user);
     }
 
     //유저 프로필 조회
@@ -265,6 +260,27 @@ public class UserService {
 
     public boolean checkPassword (String password, String checkPassword) {
         return password.equals(checkPassword);
+    }
+
+    //S3에 프로필 이미지 삭제 및 저장
+    private String controlS3Images(MultipartFile file, User user) {
+        try {
+            s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
+        } catch (NotFoundException e) {
+            user.updateImageUrl(START_PROFILE_URL);
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new S3Exception(DELETE_ERROR);
+        }
+
+        String newImageUrl;
+        try {
+            newImageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
+        } catch (Exception e) {
+            s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
+            throw new S3Exception(UPLOAD_ERROR);
+        }
+        return newImageUrl;
     }
 
 }
