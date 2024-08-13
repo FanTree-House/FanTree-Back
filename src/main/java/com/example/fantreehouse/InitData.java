@@ -21,7 +21,6 @@
 //import com.example.fantreehouse.domain.feed.repository.FeedRepository;
 //import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 //import com.example.fantreehouse.domain.feedlike.repository.FeedLikeRepository;
-//import com.example.fantreehouse.domain.product.repository.ProductRepository;
 //import com.example.fantreehouse.domain.subscription.entity.Subscription;
 //import com.example.fantreehouse.domain.subscription.repository.SubscriptionRepository;
 //import com.example.fantreehouse.domain.user.entity.User;
@@ -43,7 +42,6 @@
 //@RequiredArgsConstructor
 //public class InitData {
 //    private final UserRepository userRepository;
-//    private final ProductRepository productRepository;
 //    private final PasswordEncoder passwordEncoder;
 //    private final SubscriptionRepository subscriptionRepository;
 //    private final FeedLikeRepository feedLikeRepository;

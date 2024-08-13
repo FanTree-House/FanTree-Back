@@ -181,18 +181,6 @@ public class UserService {
         return new ProfileResponseDto(user);
     }
 
-    //프로필 이미지 수정
-    @Transactional
-    public void updateProfileImage(MultipartFile file, Long userId) {
-        User user = findById(userId);
-
-        String newImageUrl = controlS3Images(file, user);
-        ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), newImageUrl);
-        updateUserImageUrl(carrier);
-
-        userRepository.save(user);
-    }
-
     //유저 프로필 조회
     public ProfileResponseDto getProfile(Long userId) {
         return new ProfileResponseDto(findById(userId));
@@ -233,13 +221,12 @@ public class UserService {
         User user = userRepository.findByLoginIdAndEmailAndStatus(requestDto.getLoginId(),
             requestDto.getEmail(), UserStatusEnum.INACTIVE_USER).orElseThrow(()
                 -> new NotFoundException(USER_NOT_FOUND));
+
         mailSendService.CheckAuthNum(requestDto.getLoginId(),requestDto);
         verifyEmail(requestDto.getLoginId(), requestDto.getEmail());
 
-        User findUser = userRepository.findById(user.getId()).orElseThrow(()
-            -> new NotFoundException(USER_NOT_FOUND));
-       findUser.activateUser();
-        userRepository.save(findUser);
+        user.fromInactiveToActive();
+        userRepository.save(user);
         redisUtil.deleteData(requestDto.getLoginId());
     }
 
