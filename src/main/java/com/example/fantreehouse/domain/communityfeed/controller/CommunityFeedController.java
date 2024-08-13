@@ -92,10 +92,10 @@ public class CommunityFeedController {
      * @return
      */
     @GetMapping("/communityFeed/myFeeds")
-    public ResponseEntity<ResponseDataDto> findAllMyFeeds(
+    public ResponseEntity<ResponseDataDto<List<CommunityFeedResponseDtoExtension>>> findAllMyFeeds(
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        List<CommunityFeedResponseDto> responseDtoList = feedService.findAllMyFeeds(userDetails.getUser());
+        List<CommunityFeedResponseDtoExtension> responseDtoList = feedService.findAllMyFeeds(userDetails.getUser());
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDtoList));
     }
 

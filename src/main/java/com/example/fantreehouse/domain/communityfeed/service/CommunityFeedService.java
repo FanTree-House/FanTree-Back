@@ -64,7 +64,7 @@ public class CommunityFeedService {
         ArtistGroup artistGroup = findArtistGroup(groupName);
 
         // 구독자 체크
-        checkSubscriptionList(userId,artistGroup.getId());
+        checkSubscriptionList(userId, artistGroup.getId());
 
         CommunityFeed feed = new CommunityFeed(requestDto, user, artistGroup);
         feedRepository.save(feed);
@@ -120,7 +120,7 @@ public class CommunityFeedService {
     }
 
     // 개인별 피드 전체 조회
-    public List<CommunityFeedResponseDto> findAllMyFeeds(User user) {
+    public List<CommunityFeedResponseDtoExtension> findAllMyFeeds(User user) {
 
         List<Subscription> subscriptionList = user.getSubscriptions();
 
@@ -142,10 +142,17 @@ public class CommunityFeedService {
             throw new NotFoundException(NOT_FOUND_FEED); //이 경우 프론트에서 받아서 메세지 전달 가능
         }
 
-        return allMyFeeds
-                .stream().sorted(Comparator.comparing(CommunityFeed::getCreatedAt)
-                .reversed()).map(CommunityFeedResponseDto::new)
-                .collect(Collectors.toList());
+        List<CommunityFeed> sortedFeeds = allMyFeeds.stream().sorted(Comparator.comparing(CommunityFeed::getCreatedAt)
+                        .reversed()).toList();
+
+        List<CommunityFeedResponseDtoExtension> feedResponseDtoList = new ArrayList<>();
+
+        for (CommunityFeed feed : sortedFeeds) {
+            Long likeCount = likeRepository.countByCommunityFeedId(feed.getId());
+            feedResponseDtoList.add(CommunityFeedResponseDtoExtension.of(feed, likeCount));
+        }
+
+        return feedResponseDtoList;
     }
 
     public List<CommunityFeedResponseDtoExtension> findAllLikeFeeds(User user) {
