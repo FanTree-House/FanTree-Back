@@ -226,13 +226,12 @@ public class UserService {
         User user = userRepository.findByLoginIdAndEmailAndStatus(requestDto.getLoginId(),
             requestDto.getEmail(), UserStatusEnum.INACTIVE_USER).orElseThrow(()
                 -> new NotFoundException(USER_NOT_FOUND));
+
         mailSendService.CheckAuthNum(requestDto.getLoginId(),requestDto);
         verifyEmail(requestDto.getLoginId(), requestDto.getEmail());
 
-        User findUser = userRepository.findById(user.getId()).orElseThrow(()
-            -> new NotFoundException(USER_NOT_FOUND));
-       findUser.activateUser();
-        userRepository.save(findUser);
+        user.fromInactiveToActive();
+        userRepository.save(user);
         redisUtil.deleteData(requestDto.getLoginId());
     }
 

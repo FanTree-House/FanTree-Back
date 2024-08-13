@@ -122,13 +122,14 @@ public class CommunityCommentService {
     }
 
     //자기가 쓴 댓글 검증
-    private void checkMyComment(Long commentId,Long userId){
+    public void checkMyComment(Long commentId,Long userId){
         CommunityComment comment = findComment(commentId);
 
         if (!comment.getUser().getId().equals(userId)) {
             throw new CustomException(ErrorType.NOT_USER_COMMENT);
         }
     }
+
 }
 
 
