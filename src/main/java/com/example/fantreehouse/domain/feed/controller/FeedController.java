@@ -128,7 +128,11 @@ public class FeedController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_DELETED));
     }
 
-    //개인별 좋아요 누른 feed 모아보기
+    /**
+     * 개인별 좋아요 누른 feed 모아보기
+     * @param userDetails
+     * @return
+     */
     @GetMapping("/feed/likes")
     public ResponseEntity<ResponseDataDto<List<FeedResponseDto>>> getLikeFeeds(
             @AuthenticationPrincipal UserDetailsImpl userDetails

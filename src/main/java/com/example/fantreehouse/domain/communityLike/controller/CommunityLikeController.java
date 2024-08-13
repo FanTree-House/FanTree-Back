@@ -11,7 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/artist/{groupName}/feeds/{feedId}")
+@RequestMapping("/artist")
 @RequiredArgsConstructor
 
 public class CommunityLikeController {
@@ -24,7 +24,7 @@ public class CommunityLikeController {
      * @param groupName
      * @return
      */
-    @PostMapping("/like")
+    @PostMapping("/{groupName}/feeds/{feedId}/like")
     public ResponseEntity<ResponseMessageDto> pressFeedLike(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long feedId, @PathVariable String groupName) {
@@ -39,11 +39,21 @@ public class CommunityLikeController {
      * @param groupName
      * @return
      */
-    @DeleteMapping("/like")
+    @DeleteMapping("/{groupName}/feeds/{feedId}/like")
     public ResponseEntity<ResponseMessageDto> pressFeedIsLike(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long feedId, @PathVariable String groupName) {
         likeService.pressFeedIsLike(userDetails.getUser().getId(), feedId, groupName);
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.DELETE_FEED_LIKE));
+    }
+
+    //커뮤피드 좋아요 취소 기능 (groupName) 없는 ver.
+    @DeleteMapping("/artist/cancelLike/{communityFeedId}")
+    public ResponseEntity<ResponseMessageDto> cancelFeedLike(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long communityFeedId
+    ) {
+        likeService.cancelFeedLike(userDetails.getUser().getId(), communityFeedId);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.DELETE_FEED_LIKE));
     }
 
@@ -55,7 +65,7 @@ public class CommunityLikeController {
      * @param commentId
      * @return
      */
-    @PostMapping("/comments/{commentId}/like")
+    @PostMapping("/{groupName}/feeds/{feedId}/comments/{commentId}/like")
     public ResponseEntity<ResponseMessageDto> pressCommentLike(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long feedId, @PathVariable String groupName,
@@ -72,7 +82,7 @@ public class CommunityLikeController {
      * @param commentId
      * @return
      */
-    @DeleteMapping("/comments/{commentId}/like")
+    @DeleteMapping("/{groupName}/feeds/{feedId}/comments/{commentId}/like")
     public ResponseEntity<ResponseMessageDto> pressCommentIsLike(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long feedId, @PathVariable String groupName,

@@ -91,7 +91,7 @@ public class CommunityFeedController {
      * @param userDetails
      * @return
      */
-    @GetMapping("feeds/myFeeds")
+    @GetMapping("/communityFeed/myFeeds")
     public ResponseEntity<ResponseDataDto> findAllMyFeeds(
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
@@ -104,7 +104,7 @@ public class CommunityFeedController {
      * @param userDetails
      * @return
      */
-    @GetMapping("feeds/likes")
+    @GetMapping("/communityFeed/likes")
     public ResponseEntity<ResponseDataDto<List<CommunityFeedResponseDtoExtension>>> findAllLikeFeeds(
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
