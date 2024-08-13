@@ -20,4 +20,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
             "GROUP BY a.artistGroup " +
             "ORDER BY COUNT(a) DESC")
     List<Long> findMostDataArtistGroups();
+
+    boolean existsByUserIdAndArtistGroupId(Long userId, Long id);
 }

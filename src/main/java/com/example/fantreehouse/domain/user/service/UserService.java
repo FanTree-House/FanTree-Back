@@ -36,7 +36,6 @@ import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UserService {
 
     private final RedisUtil redisUtil;
@@ -154,14 +153,11 @@ public class UserService {
         User user = findById(userId);
         String newEncodePw = null;
 
-        log.debug("서비스단 진입");
         if (requestDto.getPassword() != null) {
-            log.debug("패스워드 검증 진입");
             if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
                 newEncodePw = passwordEncoder.encode(requestDto.getNewPassword());
             }
         }
-        log.debug("패스워드 검증 통과");
 
         if (requestDto.getNickname() != null) {
             if (duplicatedNickName(requestDto.getNickname())){
