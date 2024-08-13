@@ -123,4 +123,8 @@ public class CommunityLikeService {
     }
 
 
+    public boolean getIsLiked(Long communityFeedId, User user) {
+        return likeRepository.existsByCommunityFeedIdAndUserId(communityFeedId, user.getId());
+
+    }
 }

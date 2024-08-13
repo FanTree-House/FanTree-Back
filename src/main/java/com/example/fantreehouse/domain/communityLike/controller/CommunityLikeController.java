@@ -91,4 +91,13 @@ public class CommunityLikeController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.DELETE_COMMENT_LIKE));
     }
 
+    // 좋아요 유무
+    @GetMapping("/check/{communityFeedId}")
+    public boolean getIsLiked(
+            @PathVariable final Long communityFeedId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return likeService.getIsLiked(communityFeedId, userDetails.getUser());
+    }
+
 }
