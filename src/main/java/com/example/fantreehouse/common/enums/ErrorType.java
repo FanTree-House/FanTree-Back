@@ -26,7 +26,7 @@ public enum ErrorType implements ErrorCode {
     NOT_AVAILABLE_PERMISSION(HttpStatus.LOCKED, "권한이 없습니다."),
 
     //user
-    USER_NOT_FOUND(HttpStatus.OK, "유저를 찾을 수 없습니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
     MISMATCH_PASSWORD(HttpStatus.NOT_ACCEPTABLE, "비밀번호가 일치하지 않습니다."),
     DUPLICATE_ID(HttpStatus.OK, "중복된 아이디입니다."),
     BLACKLIST_EMAIL(HttpStatus.OK, "블랙리스트에 등록된 이메일로 가입할 수 없습니다."),
