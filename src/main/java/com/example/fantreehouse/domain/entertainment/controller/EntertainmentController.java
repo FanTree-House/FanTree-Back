@@ -48,7 +48,7 @@ public class EntertainmentController {
 
     /**
      * 엔터테이먼트 계정 조회
-     * 로그인된 사용자가 생성한 엔터테이먼트 계정만 조회할 수 있도록 수정되었습니다.
+     * 로그인된 사용자가 생성한 엔터테이먼트 계정만 조회할 수 있도록 수정
      * @param userDetails
      * @return
      */

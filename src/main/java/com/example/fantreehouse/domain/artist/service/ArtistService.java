@@ -145,6 +145,7 @@ public class ArtistService {
         artistRepository.delete(foundArtist);
     }
 
+    // 아티스트가 속한 그룹 이름 조회
     public String getArtistGroupName(UserDetailsImpl userDetails) {
         Long userId = userDetails.getUser().getId();
         Artist artist = artistRepository.findByUserId(userId)

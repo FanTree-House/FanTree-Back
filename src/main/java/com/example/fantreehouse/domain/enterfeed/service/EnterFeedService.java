@@ -30,7 +30,7 @@ public class EnterFeedService {
     private final EntertainmentRepository entertainmentRepository;
 
     /**
-     * [createFeed] 엔터피드를 생성합니다.
+     *  엔터피드를 생성
      * @param request 요청 데이터 객체
      * @param user 요청을 수행하는 사용자
      */
@@ -54,7 +54,7 @@ public class EnterFeedService {
     }
 
     /**
-     * [getFeed] 특정 피드를 조회합니다.
+     * 특정 피드를 조회
      * @param groupName 아티스트 그룹 이름
      * @param feedId 피드 ID
      * @param category 피드 카테고리
@@ -66,7 +66,7 @@ public class EnterFeedService {
     }
 
     /**
-     * [getAllFeeds] 특정 그룹과 카테고리에 해당하는 모든 피드를 조회합니다.
+     * 특정 그룹과 카테고리에 해당하는 모든 피드 조회
      * @param category 피드 카테고리
      * @return List<EnterFeedResponseDto> 조회된 피드 리스트
      */
@@ -78,7 +78,7 @@ public class EnterFeedService {
     }
 
     /**
-     * [updateFeed] 기존 피드를 수정합니다.
+     * 기존 피드를 수정
      * @param groupName 아티스트 그룹 이름
      * @param feedId 피드 ID
      * @param request 수정 요청 데이터
@@ -100,7 +100,7 @@ public class EnterFeedService {
     }
 
     /**
-     * [deleteFeed] 특정 피드를 삭제합니다.
+     * 특정 피드를 삭제
      * @param groupName 아티스트 그룹 이름
      * @param feedId 피드 ID
      * @param user 삭제 요청을 하는 사용자
@@ -116,7 +116,7 @@ public class EnterFeedService {
     }
 
     /**
-     * [getEnterFeed] 특정 피드를 조회합니다.
+     * 특정 피드를 조회
      * @param groupName 아티스트 그룹 이름
      * @param feedId 피드 ID
      * @param category 피드 카테고리
@@ -128,7 +128,7 @@ public class EnterFeedService {
     }
 
     /**
-     * [getAllEnterFeeds] 특정 그룹과 카테고리에 해당하는 모든 피드를 조회합니다.
+     *  특정 그룹과 카테고리에 해당하는 모든 피드 조회
      * @param category 피드 카테고리
      * @return List<EnterFeed> 조회된 피드 리스트
      */
@@ -137,7 +137,7 @@ public class EnterFeedService {
     }
 
     /**
-     * [convertToResponseDto] EnterFeed 객체를 EnterFeedResponseDto로 변환합니다.
+     * EnterFeed 객체를 EnterFeedResponseDto로 변환
      * @param enterFeed 변환할 EnterFeed 객체
      * @return EnterFeedResponseDto 변환된 DTO 객체
      */

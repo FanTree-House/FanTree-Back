@@ -127,7 +127,6 @@ public class ArtistGroup extends Timestamped {
         this.groupInfo = groupInfo;
     }
 
-
     public void updateImageUrl(String imageUrl) {
         this.artistGroupProfileImageUrl = imageUrl;
     }
