@@ -108,7 +108,8 @@ public enum ErrorType implements ErrorCode {
 
     INACTIVE_USER(HttpStatus.FORBIDDEN, "휴면 계정입니다. 휴면 상태를 풀어주세요."),
     CHECK_YOUR_INFO(HttpStatus.NOT_FOUND, "입력한 정보의 유저를 찾을 수 없습니다."),
-    NOT_YOUR_ENTERTAINMENT(HttpStatus.NOT_ACCEPTABLE, "소속사가 다른 아티스트입니다.");
+    NOT_YOUR_ENTERTAINMENT(HttpStatus.NOT_ACCEPTABLE, "소속사가 다른 아티스트입니다."),
+    ARTIST_NOT_SUBSCRIBED(HttpStatus.NOT_ACCEPTABLE, "구독한 뒤 사용할 수 있는 서비스 입니다.");
 
 
 

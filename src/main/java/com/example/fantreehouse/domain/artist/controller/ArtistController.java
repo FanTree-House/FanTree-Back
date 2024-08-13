@@ -59,7 +59,7 @@ public class ArtistController {
             @PathVariable Long artistId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart(required = false) MultipartFile file,
-            @Valid @RequestPart final ArtistRequestDto requestDto
+            @Valid @ModelAttribute final ArtistRequestDto requestDto
     ) {
         if (file != null && file.getSize() > 10 * 1024 * 1024) {
             throw new S3Exception(OVER_LOAD);

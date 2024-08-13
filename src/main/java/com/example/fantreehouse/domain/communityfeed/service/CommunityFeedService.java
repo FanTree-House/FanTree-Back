@@ -64,7 +64,7 @@ public class CommunityFeedService {
         ArtistGroup artistGroup = findArtistGroup(groupName);
 
         // 구독자 체크
-        checkSubscriptionList(userId);
+        checkSubscriptionList(userId,artistGroup.getId());
 
         CommunityFeed feed = new CommunityFeed(requestDto, user, artistGroup);
         feedRepository.save(feed);
@@ -95,7 +95,7 @@ public class CommunityFeedService {
 
 
         // 구독자 체크
-        checkSubscriptionList(userId);
+        checkSubscriptionList(userId, artistGroup.getId());
         List<CommunityFeed> feedList = feedRepository.findAll();
 
         if (feedList.isEmpty()) {
@@ -114,7 +114,7 @@ public class CommunityFeedService {
                 -> new CustomException(NOT_FOUND_FEED));
 
         // 구독자 체크
-        checkSubscriptionList(userId);
+        checkSubscriptionList(userId, artistGroup.getId());
 
         return feed;
     }
@@ -269,14 +269,26 @@ public class CommunityFeedService {
     }
 
     //구독자 체크
-    private void checkSubscriptionList(Long userId) {
+    private void checkSubscriptionList(Long userId, Long artistGroupId) {
         List<Subscription> subscriptionList = subscriptionRepository
                 .findAllByUserId(userId).orElseThrow(()
                         -> new CustomException(USER_NOT_FOUND));
+        boolean isSubscribed = false;
         for (Subscription subscription : subscriptionList) {
             if (!subscription.getUser().getId().equals(userId)) {
                 throw new CustomException(UNAUTHORIZED_FEED_ACCESS);
             }
+
+            // 구독한 아티스트인지 확인
+            if (subscription.getArtistGroup().getId().equals(artistGroupId)) {
+                isSubscribed = true;
+                break;
+            }
+        }
+
+        // 구독하지 않은 아티스트인 경우 예외 발생
+        if (!isSubscribed) {
+            throw new CustomException(ARTIST_NOT_SUBSCRIBED);
         }
     }
 }

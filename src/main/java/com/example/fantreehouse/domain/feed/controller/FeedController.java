@@ -48,7 +48,7 @@ public class FeedController {
             @PathVariable final String groupName,
             @RequestPart(value = "file", required = false) List<MultipartFile> files,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestPart CreateFeedRequestDto requestDto
+            @Valid @ModelAttribute CreateFeedRequestDto requestDto
     ) {
         if (files != null && files.size() > 10) {
             throw new S3Exception(MAX_IMAGES_EXCEEDED);
@@ -71,7 +71,7 @@ public class FeedController {
             @RequestPart(value = "file", required = false) List<MultipartFile> files,
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestPart final UpdateFeedRequestDto requestDto
+            @Valid @ModelAttribute final UpdateFeedRequestDto requestDto
     ) {
         if (files != null && files.size() > 10) {
             throw new S3Exception(MAX_IMAGES_EXCEEDED);
