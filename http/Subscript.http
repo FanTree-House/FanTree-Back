@@ -1,7 +1,7 @@
 ### 구독하기 (Subscript)
 
-POST http://localhost:8080/artistGroup/subscript/seventeen
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsImF1dGgiOiJVU0VSIiwic3RhdHVzIjoiQUNUSVZFX1VTRVIiLCJleHAiOjE3MjIzMzU2ODUsImlhdCI6MTcyMjMzMzg4NX0.3AoSHv2rUE-gPSGok-AHWOdTcX3B9SBFqdT3zzp19G0
+POST http://localhost:8080/artistGroup/subscript/aespa
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMzEiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIzNTI4NzcwLCJpYXQiOjE3MjM1MjY5NzB9.vcLe3IFJ7SLXhaoszvMztAFjeVMMT_bDKLkIfBelwVM
 Content-Type: application/json
 
 
@@ -13,5 +13,5 @@ Content-Type: application/json
 ### 구독한 아티스트그룹 전체보기
 
 GET http://localhost:8080/artistGroup/subscript
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VydGVzdDIiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIyMDA2NjQyLCJpYXQiOjE3MjIwMDQ4NDJ9.r4HdabeIK06LarG7hquqW60uj2giMG_m-QrKOmVhGVs
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMzEiLCJhdXRoIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRV9VU0VSIiwiZXhwIjoxNzIzNTI4NzcwLCJpYXQiOjE3MjM1MjY5NzB9.vcLe3IFJ7SLXhaoszvMztAFjeVMMT_bDKLkIfBelwVM
 Content-Type: application/json
