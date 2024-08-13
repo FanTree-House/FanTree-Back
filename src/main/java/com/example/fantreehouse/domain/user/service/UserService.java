@@ -153,14 +153,11 @@ public class UserService {
         User user = findById(userId);
         String newEncodePw = null;
 
-        log.info("서비스단 진입");
         if (requestDto.getPassword() != null) {
-            log.info("패스워드 검증 진입");
             if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
                 newEncodePw = passwordEncoder.encode(requestDto.getNewPassword());
             }
         }
-        log.info("패스워드 검증 통과");
 
         if (requestDto.getNickname() != null) {
             if (duplicatedNickName(requestDto.getNickname())){

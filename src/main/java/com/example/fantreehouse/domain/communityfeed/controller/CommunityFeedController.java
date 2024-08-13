@@ -7,6 +7,7 @@ import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDto;
+import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDtoExtension;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.service.CommunityFeedService;
@@ -95,6 +96,19 @@ public class CommunityFeedController {
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         List<CommunityFeedResponseDto> responseDtoList = feedService.findAllMyFeeds(userDetails.getUser());
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDtoList));
+    }
+
+    /**
+     * 개인별 좋아요 누른 커뮤피드 전체 조회
+     * @param userDetails
+     * @return
+     */
+    @GetMapping("feeds/likes")
+    public ResponseEntity<ResponseDataDto<List<CommunityFeedResponseDtoExtension>>> findAllLikeFeeds(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        List<CommunityFeedResponseDtoExtension> responseDtoList = feedService.findAllLikeFeeds(userDetails.getUser());
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDtoList));
     }
 

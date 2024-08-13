@@ -247,7 +247,6 @@ public class FeedService {
     public List<FeedResponseDto> getLikeFeeds(User user) {
         user.activateUser();
 
-        //좋아요 누른 feed 찾기
         List<FeedLike> foundFeedLikeList = feedLikeRepository.findAllFeedLikeByUserId(user.getId());
         if (foundFeedLikeList.isEmpty()) {
             throw new NotFoundException(NOT_FOUND_FEED_LIKES);
