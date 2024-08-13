@@ -6,6 +6,7 @@
 //import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 //import com.example.fantreehouse.domain.comment.repository.CommentRepository;
 //import com.example.fantreehouse.domain.commentLike.repository.CommentLikeRepository;
+//import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 //import com.example.fantreehouse.domain.communityLike.repository.CommunityLikeRepository;
 //import com.example.fantreehouse.domain.communitycomment.repository.CommunityCommentRepository;
 //import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
@@ -295,13 +296,21 @@
 //                "user31", imageUrl2, user31, artistGroup1);
 //        CommunityFeed communityFeed2 = new CommunityFeed(
 //                "지금은 자동 줄넘김과 스크롤바 생성여부에 대한 테스트를 진행하고 있습니다. 그야 지금 이순간만은 프론트 개발자니까요!",
-//                "user31", imageUrl2, user31, artistGroup1);
+//                        "user31", imageUrl2, user31, artistGroup1);
 //        CommunityFeed communityFeed3 = new CommunityFeed(
 //                "aespa의 스토리텔링에 대해서는 '현실 세계'에 존재하는 아티스트 멤버와 '가상 세계'에 존재하는 아바타 멤버가 현실과 가상의 중간 세계인 디지털 세계를 통해 소통하고 교감하며 성장해가는 스토리텔링을 가지고 있다.",
 //                "user31", imageUrl2, user31, artistGroup1);
 //        communityFeedRepository.save(communityFeed1);
 //        communityFeedRepository.save(communityFeed2);
 //        communityFeedRepository.save(communityFeed3);
+//
+//        //커뮤게시글 좋아요 추가
+//        CommunityLike communityLike1 = new CommunityLike(user32, communityFeed1);
+//        CommunityLike communityLike2 = new CommunityLike(user32, communityFeed2);
+//        CommunityLike communityLike3 = new CommunityLike(user32, communityFeed3);
+//        communityLikeRepository.save(communityLike1);
+//        communityLikeRepository.save(communityLike2);
+//        communityLikeRepository.save(communityLike3);
 //
 //    }
 //}
