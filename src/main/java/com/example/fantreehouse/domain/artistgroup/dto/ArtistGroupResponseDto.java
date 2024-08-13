@@ -25,7 +25,7 @@ public class ArtistGroupResponseDto {
         this.entertainmentDto = entertainmentDto;
         this.artistDtos = artistDtos;
         this.enterName = enterName;
-        this.groupInfo = groupInfo;  // groupInfo 필드 초기화
+        this.groupInfo = groupInfo;
     }
 
     public ArtistGroupResponseDto(ArtistGroupResponseDto ag, Long subscribeCount) {

@@ -7,6 +7,7 @@ import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDto;
+import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDtoExtension;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.service.CommunityFeedService;
@@ -23,7 +24,7 @@ import java.util.List;
 import static com.example.fantreehouse.common.enums.ErrorType.MAX_IMAGES_EXCEEDED;
 
 @RestController
-@RequestMapping("/artist/{groupName}/feeds")
+@RequestMapping
 @RequiredArgsConstructor
 
 public class CommunityFeedController {
@@ -37,9 +38,9 @@ public class CommunityFeedController {
      * @param groupName
      * @return
      */
-    @PostMapping
+    @PostMapping("/artist/{groupName}/feeds")
     public ResponseEntity<?> createFeed(
-        @RequestPart CommunityFeedRequestDto requestDto,
+        @Valid @ModelAttribute CommunityFeedRequestDto requestDto,
         @RequestPart(value = "file", required = false) List<MultipartFile> files,
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable String groupName
@@ -57,7 +58,7 @@ public class CommunityFeedController {
      * @param groupName
      * @return
      */
-    @GetMapping
+    @GetMapping("/artist/{groupName}/feeds")
     public ResponseEntity<?> findAllFeed(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable String groupName) {
@@ -74,7 +75,7 @@ public class CommunityFeedController {
      * @param groupName
      * @return
      */
-    @GetMapping("/{feedId}")
+    @GetMapping("/artist/{groupName}/feeds/{feedId}")
      public ResponseEntity<?> findFeed(
          @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long feedId,
@@ -90,11 +91,24 @@ public class CommunityFeedController {
      * @param userDetails
      * @return
      */
-    @GetMapping("/myFeeds")
+    @GetMapping("feeds/myFeeds")
     public ResponseEntity<ResponseDataDto> findAllMyFeeds(
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         List<CommunityFeedResponseDto> responseDtoList = feedService.findAllMyFeeds(userDetails.getUser());
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDtoList));
+    }
+
+    /**
+     * 개인별 좋아요 누른 커뮤피드 전체 조회
+     * @param userDetails
+     * @return
+     */
+    @GetMapping("feeds/likes")
+    public ResponseEntity<ResponseDataDto<List<CommunityFeedResponseDtoExtension>>> findAllLikeFeeds(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        List<CommunityFeedResponseDtoExtension> responseDtoList = feedService.findAllLikeFeeds(userDetails.getUser());
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDtoList));
     }
 
@@ -106,9 +120,9 @@ public class CommunityFeedController {
      * @param groupName
      * @return
      */
-    @PatchMapping("/{feedId}")
+    @PatchMapping("/artist/{groupName}/feeds/{feedId}")
     public ResponseEntity<ResponseMessageDto> updateFeed(
-            @Valid @RequestPart CommunityFeedUpdateRequestDto requestDto,
+            @Valid @ModelAttribute CommunityFeedUpdateRequestDto requestDto,
             @RequestPart(value = "file", required = false) List<MultipartFile> files,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long feedId,
@@ -130,7 +144,7 @@ public class CommunityFeedController {
      * @param groupName
      * @return
      */
-    @DeleteMapping("/{feedId}")
+    @DeleteMapping("/artist/{groupName}/feeds/{feedId}")
     public ResponseEntity<ResponseMessageDto> deleteFeed(
         @PathVariable Long feedId,
         @AuthenticationPrincipal UserDetailsImpl userDetails,

@@ -59,7 +59,7 @@ public class ArtistController {
             @PathVariable Long artistId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart(required = false) MultipartFile file,
-            @Valid @RequestPart final ArtistRequestDto requestDto
+            @Valid @ModelAttribute final ArtistRequestDto requestDto
     ) {
         if (file != null && file.getSize() > 10 * 1024 * 1024) {
             throw new S3Exception(OVER_LOAD);
@@ -112,6 +112,12 @@ public class ArtistController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_DELETED));
     }
 
+    /**
+     * 아티스트가 속한 그룹 이름 조회
+     *
+     * @param userDetails
+     * @return
+     */
     @GetMapping("/group")
     public ResponseEntity<ResponseDataDto> getArtistGroupName(
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -119,6 +125,5 @@ public class ArtistController {
         String groupName = artistService.getArtistGroupName(userDetails);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.ARTIST_READ_SUCCESS, groupName));
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.example.fantreehouse.domain.communityfeed.service;
 
+import com.example.fantreehouse.common.dto.ResponseDataDto;
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
@@ -12,10 +13,13 @@ import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 import com.example.fantreehouse.domain.communityLike.repository.CommunityLikeRepository;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDto;
+import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDtoExtension;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
+import com.example.fantreehouse.domain.feed.dto.response.FeedResponseDto;
 import com.example.fantreehouse.domain.feed.entity.Feed;
+import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.s3.service.S3FileUploader;
 import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
@@ -60,7 +64,7 @@ public class CommunityFeedService {
         ArtistGroup artistGroup = findArtistGroup(groupName);
 
         // 구독자 체크
-        checkSubscriptionList(userId);
+        checkSubscriptionList(userId,artistGroup.getId());
 
         CommunityFeed feed = new CommunityFeed(requestDto, user, artistGroup);
         feedRepository.save(feed);
@@ -91,7 +95,7 @@ public class CommunityFeedService {
 
 
         // 구독자 체크
-        checkSubscriptionList(userId);
+        checkSubscriptionList(userId, artistGroup.getId());
         List<CommunityFeed> feedList = feedRepository.findAll();
 
         if (feedList.isEmpty()) {
@@ -110,7 +114,7 @@ public class CommunityFeedService {
                 -> new CustomException(NOT_FOUND_FEED));
 
         // 구독자 체크
-        checkSubscriptionList(userId);
+        checkSubscriptionList(userId, artistGroup.getId());
 
         return feed;
     }
@@ -142,6 +146,27 @@ public class CommunityFeedService {
                 .stream().sorted(Comparator.comparing(CommunityFeed::getCreatedAt)
                 .reversed()).map(CommunityFeedResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public List<CommunityFeedResponseDtoExtension> findAllLikeFeeds(User user) {
+
+        //좋아요 누른 feed 찾기
+        List<CommunityLike> communityLikeList = likeRepository.findAllByUserId(user.getId());
+        if (communityLikeList.isEmpty()) {
+            throw new NotFoundException(NOT_FOUND_FEED_LIKES);
+        }
+
+        List<CommunityFeed> foundFeedList = communityLikeList.stream().map(CommunityLike::getCommunityFeed)
+                .sorted(Comparator.comparing(CommunityFeed::getCreatedAt).reversed())
+                .toList();
+
+        List<CommunityFeedResponseDtoExtension> feedResponseDtoList = new ArrayList<>();
+
+        for (CommunityFeed feed : foundFeedList) {
+            Long likeCount = likeRepository.countByCommunityFeedId(feed.getId());
+            feedResponseDtoList.add(CommunityFeedResponseDtoExtension.of(feed, likeCount));
+        }
+        return feedResponseDtoList;
     }
 
     //피드 업데이트
@@ -244,14 +269,26 @@ public class CommunityFeedService {
     }
 
     //구독자 체크
-    private void checkSubscriptionList(Long userId) {
+    private void checkSubscriptionList(Long userId, Long artistGroupId) {
         List<Subscription> subscriptionList = subscriptionRepository
                 .findAllByUserId(userId).orElseThrow(()
                         -> new CustomException(USER_NOT_FOUND));
+        boolean isSubscribed = false;
         for (Subscription subscription : subscriptionList) {
             if (!subscription.getUser().getId().equals(userId)) {
                 throw new CustomException(UNAUTHORIZED_FEED_ACCESS);
             }
+
+            // 구독한 아티스트인지 확인
+            if (subscription.getArtistGroup().getId().equals(artistGroupId)) {
+                isSubscribed = true;
+                break;
+            }
+        }
+
+        // 구독하지 않은 아티스트인 경우 예외 발생
+        if (!isSubscribed) {
+            throw new CustomException(ARTIST_NOT_SUBSCRIBED);
         }
     }
 }

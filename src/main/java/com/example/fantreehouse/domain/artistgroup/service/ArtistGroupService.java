@@ -43,7 +43,7 @@ public class ArtistGroupService {
     private final S3FileUploader s3FileUploader;
 
     /**
-     * [createArtistGroup] 아티스트 그룹 생성
+     * 아티스트 그룹 생성
      *
      * @param request 요청 객체
      * @param user    로그인한 사용자 정보
@@ -91,7 +91,7 @@ public class ArtistGroupService {
 
 
     /**
-     * [getArtistGroupResponseDto] 아티스트 그룹 DTO 조회
+     * 아티스트 그룹 DTO 조회
      *
      * @param groupName 그룹 이름
      * @return 아티스트 그룹 응답 DTO
@@ -102,7 +102,7 @@ public class ArtistGroupService {
     }
 
     /**
-     * [getAllArtistGroupResponseDtos] 모든 아티스트 그룹 DTO 조회
+     * 모든 아티스트 그룹 DTO 조회
      *
      * @return 아티스트 그룹 응답 DTO 리스트
      */
@@ -141,7 +141,7 @@ public class ArtistGroupService {
     }
 
     /**
-     * [updateArtistGroup] 아티스트 그룹 수정
+     * 아티스트 그룹 수정
      *
      * @param groupName 그룹 이름
      * @param request   요청 객체
@@ -194,7 +194,7 @@ public class ArtistGroupService {
     }
 
     /**
-     * [removeArtistFromGroup] 아티스트 그룹에서 아티스트 탈퇴
+     * 아티스트 그룹에서 아티스트 탈퇴
      *
      * @param groupName 그룹 이름
      * @param artistId  아티스트 ID
@@ -222,7 +222,7 @@ public class ArtistGroupService {
 
 
     /**
-     * [deleteArtistGroup] 아티스트 그룹 삭제
+     * 아티스트 그룹 삭제
      *
      * @param groupName 그룹 이름
      * @param user      로그인한 사용자 정보
@@ -248,7 +248,7 @@ public class ArtistGroupService {
     }
 
     /**
-     * [verifyEntertainmentAuthority] 엔터테인먼트 권한 확인
+     * 엔터테인먼트 권한 확인
      *
      * @param user 로그인한 사용자 정보
      */
@@ -259,7 +259,7 @@ public class ArtistGroupService {
     }
 
     /**
-     * [verifyEntertainmentAuthority] 엔터테인먼트 권한 확인
+     * 엔터테인먼트 권한 확인
      *
      * @param user 로그인한 사용자 정보
      */
@@ -278,7 +278,7 @@ public class ArtistGroupService {
     }
 
     /**
-     * [getArtistGroup] 아티스트 그룹 조회
+     * 아티스트 그룹 조회
      *
      * @param groupName 그룹 이름
      * @return 아티스트 그룹
@@ -289,7 +289,7 @@ public class ArtistGroupService {
     }
 
     /**
-     * [getAllArtistGroups] 모든 아티스트 그룹 조회
+     * 모든 아티스트 그룹 조회
      *
      * @return 아티스트 그룹 리스트
      */
@@ -298,7 +298,7 @@ public class ArtistGroupService {
     }
 
     /**
-     * [convertToResponseDto] 아티스트 그룹 엔티티를 응답 DTO로 변환
+     * 아티스트 그룹 엔티티를 응답 DTO로 변환
      *
      * @param artistGroup 아티스트 그룹
      * @return 아티스트 그룹 응답 DTO
