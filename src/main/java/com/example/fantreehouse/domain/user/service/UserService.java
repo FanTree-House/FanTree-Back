@@ -181,6 +181,18 @@ public class UserService {
         return new ProfileResponseDto(user);
     }
 
+    //프로필 이미지 수정
+    @Transactional
+    public void updateProfileImage(MultipartFile file, Long userId) {
+        User user = findById(userId);
+
+        String newImageUrl = controlS3Images(file, user);
+        ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), newImageUrl);
+        updateUserImageUrl(carrier);
+
+        userRepository.save(user);
+    }
+
     //유저 프로필 조회
     public ProfileResponseDto getProfile(Long userId) {
         return new ProfileResponseDto(findById(userId));
