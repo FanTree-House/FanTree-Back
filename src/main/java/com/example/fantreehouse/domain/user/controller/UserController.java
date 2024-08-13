@@ -30,58 +30,58 @@ import static com.example.fantreehouse.common.enums.ErrorType.OVER_LOAD;
 @RequestMapping("/users")
 public class UserController {
 
-  private final UserService userService;
-  private final JwtTokenHelper jwtTokenHelper;
+    private final UserService userService;
+    private final JwtTokenHelper jwtTokenHelper;
 
-  @PostMapping(value = {"", "/invite/entertainment", "/invite/artist", "/admin"})
-  public ResponseEntity<ResponseMessageDto> signUp(
-          @RequestPart(value = "file", required = false) MultipartFile file,
-          @Valid @ModelAttribute SignUpRequestDto requestDto) {
+    @PostMapping(value = {"", "/invite/entertainment", "/invite/artist", "/admin"})
+    public ResponseEntity<ResponseMessageDto> signUp(
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @Valid @ModelAttribute SignUpRequestDto requestDto) {
 
-      if (file != null && !file.isEmpty()) {
-          if (file.getSize() > 10 * 1024 * 1024) {
-              throw new S3Exception(OVER_LOAD);
-          }
-      }
-      userService.signUp(file, requestDto);
-      return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
-  }
+        if (file != null && !file.isEmpty()) {
+            if (file.getSize() > 10 * 1024 * 1024) {
+                throw new S3Exception(OVER_LOAD);
+            }
+        }
+        userService.signUp(file, requestDto);
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SIGNUP_SUCCESS));
+    }
 
-  @PutMapping("/withDraw")
-  public ResponseEntity<ResponseMessageDto> withDraw(
-      @AuthenticationPrincipal UserDetailsImpl userDetails,
-      @Valid @RequestBody WithdrawRequestDto requestDto) {
-      userService.withDraw(userDetails.getUser().getId(),requestDto.getPassword());
-      return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.WITHDRAW_SUCCESS));
-  }
+    @PutMapping("/withDraw")
+    public ResponseEntity<ResponseMessageDto> withDraw(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @Valid @RequestBody WithdrawRequestDto requestDto) {
+        userService.withDraw(userDetails.getUser().getId(), requestDto.getPassword());
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.WITHDRAW_SUCCESS));
+    }
 
-  @PostMapping("/logout")
-  public ResponseEntity<ResponseMessageDto> logout(
-      @AuthenticationPrincipal UserDetailsImpl userDetails) {
-      userService.logout(userDetails.getUser().getId());
-      return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.LOGOUT_SUCCESS));
-  }
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseMessageDto> logout(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.logout(userDetails.getUser().getId());
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.LOGOUT_SUCCESS));
+    }
 
-  @GetMapping("/refresh")
-  public ResponseEntity<ResponseDataDto> refresh(
-      @RequestHeader(JwtTokenHelper.AUTHORIZATION_HEADER) String accessToken,
-      @RequestHeader(JwtTokenHelper.REFRESH_TOKEN_HEADER) String refreshToken) {
+    @GetMapping("/refresh")
+    public ResponseEntity<ResponseDataDto> refresh(
+            @RequestHeader(JwtTokenHelper.AUTHORIZATION_HEADER) String accessToken,
+            @RequestHeader(JwtTokenHelper.REFRESH_TOKEN_HEADER) String refreshToken) {
 
-    Claims claims = jwtTokenHelper.getExpiredAccessToken(accessToken);
-    String username = claims.getSubject();
-    String status = claims.get("status").toString();
-    String role = claims.get("auth").toString();
+        Claims claims = jwtTokenHelper.getExpiredAccessToken(accessToken);
+        String username = claims.getSubject();
+        String status = claims.get("status").toString();
+        String role = claims.get("auth").toString();
 
-    UserStatusEnum statusEnum = UserStatusEnum.valueOf(status);
-    UserRoleEnum roleEnum = UserRoleEnum.valueOf(role);
+        UserStatusEnum statusEnum = UserStatusEnum.valueOf(status);
+        UserRoleEnum roleEnum = UserRoleEnum.valueOf(role);
 
-    userService.refreshTokenCheck(username, refreshToken);
+        userService.refreshTokenCheck(username, refreshToken);
 
-    String newAccessToken = jwtTokenHelper.createToken(username, statusEnum, roleEnum);
-    return ResponseEntity.ok()
-        .header(JwtTokenHelper.AUTHORIZATION_HEADER, newAccessToken)
-        .body(new ResponseDataDto(ResponseStatus.UPDATE_TOKEN_SUCCESS_MESSAGE, newAccessToken));
-  }
+        String newAccessToken = jwtTokenHelper.createToken(username, statusEnum, roleEnum);
+        return ResponseEntity.ok()
+                .header(JwtTokenHelper.AUTHORIZATION_HEADER, newAccessToken)
+                .body(new ResponseDataDto(ResponseStatus.UPDATE_TOKEN_SUCCESS_MESSAGE, newAccessToken));
+    }
 
     @PutMapping
     public ResponseEntity<ResponseDataDto> updateProfile(
@@ -89,57 +89,69 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @ModelAttribute ProfileRequestDto requestDto) {
 
-      if (file != null && !file.isEmpty()) {
-          if (file.getSize() > 10 * 1024 * 1024) {
-              throw new S3Exception(OVER_LOAD);
-          }
-      }
-      Long userId = userDetails.getUser().getId();
-      ProfileResponseDto updateProfile = userService.updateProfile(file, userId, requestDto);
+        if (file != null && !file.isEmpty()) {
+            if (file.getSize() > 10 * 1024 * 1024) {
+                throw new S3Exception(OVER_LOAD);
+            }
+        }
+        Long userId = userDetails.getUser().getId();
+        ProfileResponseDto updateProfile = userService.updateProfile(file, userId, requestDto);
 
-      return ResponseEntity.ok()
-              .body(new ResponseDataDto(ResponseStatus.PROFILE_UPDATE, updateProfile));
-  }
-
-  @GetMapping
-  public ResponseEntity<ProfileResponseDto> getProfile(
-      @RequestHeader(JwtTokenHelper.AUTHORIZATION_HEADER) String accessToken,
-      @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-    log.debug(accessToken);
-    return ResponseEntity.ok()
-        .body(userService.getProfile(userDetails.getUser().getId()));
-  }
-
-  @PostMapping("/checkId")
-  public ResponseEntity<ResponseBooleanDto> duplicateId(@Valid @RequestBody DuplicateIdRequestDto requestDto){
-    boolean result = userService.duplicatedId(requestDto.getId());
-    if (result){
-      return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.DUPLICATE_ID,result));
+        return ResponseEntity.ok()
+                .body(new ResponseDataDto(ResponseStatus.PROFILE_UPDATE, updateProfile));
     }
-    else return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.UNIQUE_ID,result));
-    //버튼을 눌렀을 때 사용할 수 있다라고 나오는데 만약에 DB에 겹치면 가입하기에서 오류가나요
-  }
 
-  @PostMapping("/checkNickname")
-  public ResponseEntity<ResponseBooleanDto> duplicateNickname(@Valid @RequestBody
-      DuplicatedNicknameRequestDto requestDto){
-    boolean result = userService.duplicatedNickName(requestDto.getNickname());
-    if (result){
-      return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.DUPLICATE_NICKNAME,result));
+    @PutMapping("/image")
+    public ResponseEntity<ResponseMessageDto> updateProfileImage(
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new S3Exception(OVER_LOAD);
+        }
+        Long userId = userDetails.getUser().getId();
+        userService.updateProfileImage(file, userId);
+
+        return ResponseEntity.ok()
+                .body(new ResponseMessageDto(ResponseStatus.PROFILE_UPDATE));
     }
-    else return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.UNIQUE_NICKNAME,result));
-  }
 
-  @PostMapping("/checkPassword")
-  public ResponseEntity<ResponseBooleanDto> checkPassword(@Valid @RequestBody
-      checkPasswordRequestDto requestDto){
-    boolean result = userService.checkPassword(requestDto.getPassword(),
-        requestDto.getCheckPassword());
-    if (result){
-        return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.CHECK_PASSWORD, result));
+    @GetMapping
+    public ResponseEntity<ProfileResponseDto> getProfile(
+            @RequestHeader(JwtTokenHelper.AUTHORIZATION_HEADER) String accessToken,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        log.debug(accessToken);
+        return ResponseEntity.ok()
+                .body(userService.getProfile(userDetails.getUser().getId()));
     }
-    else return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.MISMATCH_PASSWORD, result));
 
-  }
+    @PostMapping("/checkId")
+    public ResponseEntity<ResponseBooleanDto> duplicateId(@Valid @RequestBody DuplicateIdRequestDto requestDto) {
+        boolean result = userService.duplicatedId(requestDto.getId());
+        if (result) {
+            return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.DUPLICATE_ID, result));
+        } else return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.UNIQUE_ID, result));
+        //버튼을 눌렀을 때 사용할 수 있다라고 나오는데 만약에 DB에 겹치면 가입하기에서 오류가나요
+    }
+
+    @PostMapping("/checkNickname")
+    public ResponseEntity<ResponseBooleanDto> duplicateNickname(@Valid @RequestBody
+                                                                DuplicatedNicknameRequestDto requestDto) {
+        boolean result = userService.duplicatedNickName(requestDto.getNickname());
+        if (result) {
+            return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.DUPLICATE_NICKNAME, result));
+        } else return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.UNIQUE_NICKNAME, result));
+    }
+
+    @PostMapping("/checkPassword")
+    public ResponseEntity<ResponseBooleanDto> checkPassword(@Valid @RequestBody
+                                                            checkPasswordRequestDto requestDto) {
+        boolean result = userService.checkPassword(requestDto.getPassword(),
+                requestDto.getCheckPassword());
+        if (result) {
+            return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.CHECK_PASSWORD, result));
+        } else return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.MISMATCH_PASSWORD, result));
+
+    }
 }

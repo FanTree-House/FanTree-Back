@@ -62,7 +62,6 @@ public class CommunityFeedService {
             String groupName) {
         User user = findUser(userId);
         ArtistGroup artistGroup = findArtistGroup(groupName);
-        user.activateUser();
 
         // 구독자 체크
         checkSubscriptionList(userId);
@@ -147,6 +146,27 @@ public class CommunityFeedService {
                 .stream().sorted(Comparator.comparing(CommunityFeed::getCreatedAt)
                 .reversed()).map(CommunityFeedResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public List<CommunityFeedResponseDtoExtension> findAllLikeFeeds(User user) {
+
+        //좋아요 누른 feed 찾기
+        List<CommunityLike> communityLikeList = likeRepository.findAllByUserId(user.getId());
+        if (communityLikeList.isEmpty()) {
+            throw new NotFoundException(NOT_FOUND_FEED_LIKES);
+        }
+
+        List<CommunityFeed> foundFeedList = communityLikeList.stream().map(CommunityLike::getCommunityFeed)
+                .sorted(Comparator.comparing(CommunityFeed::getCreatedAt).reversed())
+                .toList();
+
+        List<CommunityFeedResponseDtoExtension> feedResponseDtoList = new ArrayList<>();
+
+        for (CommunityFeed feed : foundFeedList) {
+            Long likeCount = likeRepository.countByCommunityFeedId(feed.getId());
+            feedResponseDtoList.add(CommunityFeedResponseDtoExtension.of(feed, likeCount));
+        }
+        return feedResponseDtoList;
     }
 
     //피드 업데이트
