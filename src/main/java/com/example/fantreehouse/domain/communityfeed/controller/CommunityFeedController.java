@@ -40,7 +40,7 @@ public class CommunityFeedController {
      */
     @PostMapping("/artist/{groupName}/feeds")
     public ResponseEntity<?> createFeed(
-        @RequestPart CommunityFeedRequestDto requestDto,
+        @Valid @ModelAttribute CommunityFeedRequestDto requestDto,
         @RequestPart(value = "file", required = false) List<MultipartFile> files,
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable String groupName
@@ -122,7 +122,7 @@ public class CommunityFeedController {
      */
     @PatchMapping("/artist/{groupName}/feeds/{feedId}")
     public ResponseEntity<ResponseMessageDto> updateFeed(
-            @Valid @RequestPart CommunityFeedUpdateRequestDto requestDto,
+            @Valid @ModelAttribute CommunityFeedUpdateRequestDto requestDto,
             @RequestPart(value = "file", required = false) List<MultipartFile> files,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long feedId,

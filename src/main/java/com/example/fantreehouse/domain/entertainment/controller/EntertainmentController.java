@@ -92,7 +92,8 @@ public class EntertainmentController {
     @DeleteMapping("/{enterName}")
     public ResponseEntity<ResponseMessageDto> deleteEnter(
         @PathVariable String enterName,
-        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        @AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
         entertainmentService.deleteEnter(enterName, userDetails.getUser());
         return ResponseEntity
             .ok(new ResponseMessageDto(ResponseStatus.ENTERTAINMENT_DELETE_SUCCESS));
