@@ -6,8 +6,12 @@
 //import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 //import com.example.fantreehouse.domain.comment.repository.CommentRepository;
 //import com.example.fantreehouse.domain.commentLike.repository.CommentLikeRepository;
+//import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 //import com.example.fantreehouse.domain.communityLike.repository.CommunityLikeRepository;
 //import com.example.fantreehouse.domain.communitycomment.repository.CommunityCommentRepository;
+//import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
+//import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDto;
+//import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 //import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
 //import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 //import com.example.fantreehouse.domain.enterfeed.entity.FeedCategory;
@@ -18,7 +22,6 @@
 //import com.example.fantreehouse.domain.feed.repository.FeedRepository;
 //import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 //import com.example.fantreehouse.domain.feedlike.repository.FeedLikeRepository;
-//import com.example.fantreehouse.domain.product.repository.ProductRepository;
 //import com.example.fantreehouse.domain.subscription.entity.Subscription;
 //import com.example.fantreehouse.domain.subscription.repository.SubscriptionRepository;
 //import com.example.fantreehouse.domain.user.entity.User;
@@ -40,7 +43,6 @@
 //@RequiredArgsConstructor
 //public class InitData {
 //    private final UserRepository userRepository;
-//    private final ProductRepository productRepository;
 //    private final PasswordEncoder passwordEncoder;
 //    private final SubscriptionRepository subscriptionRepository;
 //    private final FeedLikeRepository feedLikeRepository;
@@ -253,8 +255,7 @@
 //
 //        //엔터피드 생성
 //        EnterFeed smEnterFeed = new EnterFeed(entertainment1, user2, "aespa 스케쥴 공지사항 입니다.",
-//                "스케쥴이 변동되었습니다.", entertainment1.getEnterName(), FeedCategory.NOTICE, LocalDate.now(),
-//                artistGroup1, artistGroup1.getGroupName());
+//                "스케쥴이 변동되었습니다.", FeedCategory.NOTICE, LocalDate.now());
 //
 //        enterFeedRepository.save(smEnterFeed);
 //
@@ -265,12 +266,12 @@
 //        subscriptionRepository.save(subscription2);
 //
 //        //아티스트 피드 생성
-//        List<String> imageUrl = new ArrayList<>();
-//        imageUrl.add(START_PROFILE_URL);
-//        imageUrl.add(START_PROFILE_URL);
-//        Feed feed1 = new Feed("카리나", "안녕하세요.", imageUrl, user27, artistGroup1);
-//        Feed feed2 = new Feed("카리나", "반갑습니다.", imageUrl, user27, artistGroup1);
-//        Feed feed3 = new Feed("카리나", "컴백했어요.", imageUrl, user27, artistGroup1);
+//        List<String> imageUrl1 = new ArrayList<>();
+//        imageUrl1.add(START_PROFILE_URL);
+//        imageUrl1.add(START_PROFILE_URL);
+//        Feed feed1 = new Feed("카리나", "안녕하세요.", imageUrl1, user27, artistGroup1);
+//        Feed feed2 = new Feed("카리나", "반갑습니다.", imageUrl1, user27, artistGroup1);
+//        Feed feed3 = new Feed("카리나", "컴백했어요.", imageUrl1, user27, artistGroup1);
 //        feedRepository.save(feed1);
 //        feedRepository.save(feed2);
 //        feedRepository.save(feed3);
@@ -287,6 +288,29 @@
 //        feedLikeRepository.save(feedLike4);
 //
 //        //커뮤게시글 생성
+//        List<String> imageUrl2 = new ArrayList<>();
+//        imageUrl2.add(START_PROFILE_URL);
+//        imageUrl2.add(START_PROFILE_URL);
+//        CommunityFeed communityFeed1 = new CommunityFeed(
+//                "카리나는 하트(❤\uFE0F), 지젤은 달(\uD83C\uDF19), 윈터는 별(⭐), 닝닝은 나비(\uD83E\uDD8B)",
+//                "user31", imageUrl2, user31, artistGroup1);
+//        CommunityFeed communityFeed2 = new CommunityFeed(
+//                "지금은 자동 줄넘김과 스크롤바 생성여부에 대한 테스트를 진행하고 있습니다. 그야 지금 이순간만은 프론트 개발자니까요!",
+//                        "user31", imageUrl2, user31, artistGroup1);
+//        CommunityFeed communityFeed3 = new CommunityFeed(
+//                "aespa의 스토리텔링에 대해서는 '현실 세계'에 존재하는 아티스트 멤버와 '가상 세계'에 존재하는 아바타 멤버가 현실과 가상의 중간 세계인 디지털 세계를 통해 소통하고 교감하며 성장해가는 스토리텔링을 가지고 있다.",
+//                "user31", imageUrl2, user31, artistGroup1);
+//        communityFeedRepository.save(communityFeed1);
+//        communityFeedRepository.save(communityFeed2);
+//        communityFeedRepository.save(communityFeed3);
+//
+//        //커뮤게시글 좋아요 추가
+//        CommunityLike communityLike1 = new CommunityLike(user32, communityFeed1);
+//        CommunityLike communityLike2 = new CommunityLike(user32, communityFeed2);
+//        CommunityLike communityLike3 = new CommunityLike(user32, communityFeed3);
+//        communityLikeRepository.save(communityLike1);
+//        communityLikeRepository.save(communityLike2);
+//        communityLikeRepository.save(communityLike3);
 //
 //    }
 //}

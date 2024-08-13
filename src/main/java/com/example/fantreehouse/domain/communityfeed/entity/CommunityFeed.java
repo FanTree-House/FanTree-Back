@@ -55,6 +55,14 @@ public class CommunityFeed extends Timestamped {
         this.imageUrls = new ArrayList<>();
     }
 
+    public CommunityFeed(String contents, String nickname, List<String> imageUrls, User user, ArtistGroup artistGroup) {
+        this.contents = contents;
+        this.nickname = nickname;
+        this.imageUrls = imageUrls;
+        this.user = user;
+        this.artistGroup = artistGroup;
+    }
+
     public void updateFeed(CommunityFeedUpdateRequestDto requestDto) {
         this.contents = requestDto.getContents();
     }

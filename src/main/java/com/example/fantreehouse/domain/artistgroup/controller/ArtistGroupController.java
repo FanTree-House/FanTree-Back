@@ -27,13 +27,8 @@ public class ArtistGroupController {
 
     private final ArtistGroupService artistGroupService;
 
-//    @Autowired
-//    public ArtistGroupController(ArtistGroupService artistGroupService) {
-//        this.artistGroupService = artistGroupService;
-//    }
-
     /**
-     * [createArtistGroup] 아티스트 그룹 생성
+     * 아티스트 그룹 생성
      * @param request 요청 객체
      * @param userDetails 로그인한 사용자 정보
      * @return 응답 메시지 DTO
@@ -54,7 +49,7 @@ public class ArtistGroupController {
     }
 
     /**
-     * [getArtistGroup] 아티스트 그룹 조회
+     * 아티스트 그룹 조회
      * @param groupName 그룹 이름
      * @return 아티스트 그룹 응답 DTO
      */
@@ -67,7 +62,7 @@ public class ArtistGroupController {
     }
 
     /**
-     * [getAllArtistGroups] 모든 아티스트 그룹 조회
+     * 모든 아티스트 그룹 조회
      * @return 아티스트 그룹 응답 DTO 리스트
      */
     @GetMapping
@@ -104,7 +99,7 @@ public class ArtistGroupController {
 
 
     /**
-     * [updateArtistGroup] 아티스트 그룹 수정
+     * 아티스트 그룹 수정
      * @param groupName 그룹 이름
      * @param request 요청 객체
      * @param userDetails 로그인한 사용자 정보
@@ -125,7 +120,7 @@ public class ArtistGroupController {
     }
 
     /**
-     * [removeArtistFromGroup] 아티스트 그룹에서 아티스트 탈퇴
+     * 아티스트 그룹에서 아티스트 탈퇴
      * @param groupName 그룹 이름
      * @param artistId 아티스트 ID
      * @param userDetails 로그인한 사용자 정보
@@ -142,7 +137,7 @@ public class ArtistGroupController {
     }
 
     /**
-     * [deleteArtistGroup] 아티스트 그룹 삭제
+     * 아티스트 그룹 삭제
      * @param groupName 그룹 이름
      * @param userDetails 로그인한 사용자 정보
      * @return 응답 메시지 DTO

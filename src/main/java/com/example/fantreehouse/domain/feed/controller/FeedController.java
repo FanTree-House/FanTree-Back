@@ -48,7 +48,7 @@ public class FeedController {
             @PathVariable final String groupName,
             @RequestPart(value = "file", required = false) List<MultipartFile> files,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestPart final CreateFeedRequestDto requestDto
+            @Valid @ModelAttribute CreateFeedRequestDto requestDto
     ) {
         if (files != null && files.size() > 10) {
             throw new S3Exception(MAX_IMAGES_EXCEEDED);
@@ -71,7 +71,7 @@ public class FeedController {
             @RequestPart(value = "file", required = false) List<MultipartFile> files,
             @PathVariable final Long artistFeedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestPart final UpdateFeedRequestDto requestDto
+            @Valid @ModelAttribute final UpdateFeedRequestDto requestDto
     ) {
         if (files != null && files.size() > 10) {
             throw new S3Exception(MAX_IMAGES_EXCEEDED);
@@ -128,7 +128,11 @@ public class FeedController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_DELETED));
     }
 
-    //개인별 좋아요 누른 feed 모아보기
+    /**
+     * 개인별 좋아요 누른 feed 모아보기
+     * @param userDetails
+     * @return
+     */
     @GetMapping("/feed/likes")
     public ResponseEntity<ResponseDataDto<List<FeedResponseDto>>> getLikeFeeds(
             @AuthenticationPrincipal UserDetailsImpl userDetails

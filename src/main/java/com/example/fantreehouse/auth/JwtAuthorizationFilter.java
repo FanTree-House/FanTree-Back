@@ -38,20 +38,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     String refreshValue = jwtTokenHelper.getJwtFromHeader(req,
         JwtTokenHelper.REFRESH_TOKEN_HEADER);
 
-    log.debug("access token {}", accessValue);
-    if (StringUtils.hasText(accessValue)) {
+    if (StringUtils.hasText(refreshValue)) {
+      if (!jwtTokenHelper.validateToken(refreshValue)) {
+        log.error("RefreshToken Error");
+        return;
+      }
+    }
+    else if (StringUtils.hasText(accessValue)) {
       if (!jwtTokenHelper.validateToken(accessValue)) {
         log.error("AccessToken Error");
         return;
       }
-
-      if (StringUtils.hasText(refreshValue)) {
-        if (!jwtTokenHelper.validateToken(refreshValue)) {
-          log.error("RefreshToken Error");
-          return;
-        }
-      }
-
       Claims info = jwtTokenHelper.getUserInfoFromToken(accessValue);
 
       try {
@@ -62,8 +59,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         res.setCharacterEncoding("utf-8");
         res.getWriter().write("상태 : " + res.getStatus() + e.getMessage());
       }
-
     }
+
     filterChain.doFilter(req, res);
   }
 

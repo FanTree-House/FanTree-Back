@@ -76,8 +76,8 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "id": "user1",
-  "password": "test1234"
+  "id": "user31",
+  "password": "31313131"
 }
 
 > {%
@@ -163,7 +163,7 @@ POST http://localhost:8080/Inactive
 Content-Type: application/json
 
 {
-  "loginId": "SMenterManger",
+  "loginId": "tripleS1",
   "email": "zergskybmw@gmail.com"
 }
 
@@ -172,7 +172,7 @@ POST http://localhost:8080/fromInactiveToActive
 Content-Type: application/json
 
 {
-  "loginId": "SMenterManger",
+  "loginId": "tripleS1",
   "email": "zergskybmw@gmail.com",
-  "authNum": "439358"
+  "authNum": "505342s"
 }

@@ -1,7 +1,7 @@
 package com.example.fantreehouse.domain.user.service;
 
+import ch.qos.logback.classic.Logger;
 import com.example.fantreehouse.auth.RedisUtil;
-import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.DuplicatedException;
 import com.example.fantreehouse.common.exception.errorcode.MismatchException;
@@ -9,20 +9,13 @@ import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.domain.s3.service.S3FileUploader;
 import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
-import com.example.fantreehouse.domain.user.dto.EmailCheckRequestDto;
-import com.example.fantreehouse.domain.user.dto.EmailRequestDto;
-import com.example.fantreehouse.domain.user.dto.ProfileRequestDto;
-import com.example.fantreehouse.domain.user.dto.ProfileResponseDto;
-import com.example.fantreehouse.domain.user.dto.SignUpRequestDto;
-import com.example.fantreehouse.domain.user.dto.SignUpResponseDto;
+import com.example.fantreehouse.domain.user.dto.*;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,9 +25,8 @@ import java.util.Optional;
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.domain.s3.service.S3FileUploader.BASIC_DIR;
 import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
-import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.*;
+import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -58,22 +50,22 @@ public class UserService {
 
         //ID 중복 확인
         if (duplicatedId(id)){
-            throw new DuplicatedException(ErrorType.DUPLICATE_ID);
+            throw new DuplicatedException(DUPLICATE_ID);
         }
         // 닉네임 중복 확인
         if (duplicatedNickName(nickname)){
-            throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
+            throw new DuplicatedException(DUPLICATE_NICKNAME);
         }
         //비밀번호 재입력 및 확인
         if (!checkPassword(password, checkPassowrd)){
-            throw new MismatchException(ErrorType.MISMATCH_PASSWORD);
+            throw new MismatchException(MISMATCH_PASSWORD);
         }
 
         String encodePassword = passwordEncoder.encode(password);
 
         // 블랙리스트 검증
         if (userRepository.findByEmailAndStatus(email, UserStatusEnum.BLACK_LIST).isPresent()) {
-            throw new CustomException(ErrorType.BLACKLIST_EMAIL);
+            throw new CustomException(BLACKLIST_EMAIL);
         }
 
        verifyEmail(id,email);
@@ -109,10 +101,10 @@ public class UserService {
     public void withDraw(Long userId, String password) {
         User user = findById(userId);
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new MismatchException(ErrorType.MISMATCH_PASSWORD);
+            throw new MismatchException(MISMATCH_PASSWORD);
         }
         if (user.getStatus().equals(UserStatusEnum.WITHDRAW_USER)) {
-            throw new NotFoundException(ErrorType.WITHDRAW_USER);
+            throw new NotFoundException(WITHDRAW_USER);
         }
 
         String imageUrl = user.getProfileImageUrl();
@@ -140,11 +132,11 @@ public class UserService {
     //refreshToken 확인
     public void refreshTokenCheck(String id, String refreshToken) {
         User user = userRepository.findByLoginId(id).orElseThrow(
-                () -> new NotFoundException(ErrorType.USER_NOT_FOUND)
+                () -> new NotFoundException(USER_NOT_FOUND)
         );
 
         if (!user.getRefreshToken().equals(refreshToken)) {
-            throw new MismatchException(ErrorType.REFRESH_TOKEN_MISMATCH);
+            throw new MismatchException(REFRESH_TOKEN_MISMATCH);
         }
     }
 
@@ -154,18 +146,15 @@ public class UserService {
         User user = findById(userId);
         String newEncodePw = null;
 
-        log.info("서비스단 진입");
         if (requestDto.getPassword() != null) {
-            log.info("패스워드 검증 진입");
             if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
                 newEncodePw = passwordEncoder.encode(requestDto.getNewPassword());
             }
         }
-        log.info("패스워드 검증 통과");
 
         if (requestDto.getNickname() != null) {
             if (duplicatedNickName(requestDto.getNickname())){
-                throw new DuplicatedException(ErrorType.DUPLICATE_NICKNAME);
+                throw new DuplicatedException(DUPLICATE_NICKNAME);
             }
         }
 
@@ -176,29 +165,25 @@ public class UserService {
 
         if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
 
-            try {
-                s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
-            } catch (NotFoundException e) {
-                user.updateImageUrl(START_PROFILE_URL);
-                userRepository.save(user);
-            } catch (Exception e) {
-                throw new S3Exception(DELETE_ERROR);
-            }
-
-            String newImageUrl;
-            try {
-                newImageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
-            } catch (Exception e) {
-                s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
-                throw new S3Exception(UPLOAD_ERROR);
-            }
-
+            String newImageUrl = controlS3Images(file, user);
             ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), newImageUrl);
             updateUserImageUrl(carrier);
         }
         userRepository.save(user);
 
         return new ProfileResponseDto(user);
+    }
+
+    //프로필 이미지 수정
+    @Transactional
+    public void updateProfileImage(MultipartFile file, Long userId) {
+        User user = findById(userId);
+
+        String newImageUrl = controlS3Images(file, user);
+        ImageUrlCarrier carrier = new ImageUrlCarrier(user.getId(), newImageUrl);
+        updateUserImageUrl(carrier);
+
+        userRepository.save(user);
     }
 
     //유저 프로필 조회
@@ -208,7 +193,7 @@ public class UserService {
 
     private User findById(Long id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(ErrorType.USER_NOT_FOUND)
+                () -> new NotFoundException(USER_NOT_FOUND)
         );
     }
 
@@ -241,13 +226,12 @@ public class UserService {
         User user = userRepository.findByLoginIdAndEmailAndStatus(requestDto.getLoginId(),
             requestDto.getEmail(), UserStatusEnum.INACTIVE_USER).orElseThrow(()
                 -> new NotFoundException(USER_NOT_FOUND));
+
         mailSendService.CheckAuthNum(requestDto.getLoginId(),requestDto);
         verifyEmail(requestDto.getLoginId(), requestDto.getEmail());
 
-        User findUser = userRepository.findById(user.getId()).orElseThrow(()
-            -> new NotFoundException(USER_NOT_FOUND));
-       findUser.activateUser();
-        userRepository.save(findUser);
+        user.fromInactiveToActive();
+        userRepository.save(user);
         redisUtil.deleteData(requestDto.getLoginId());
     }
 
@@ -255,16 +239,37 @@ public class UserService {
         //이메일 검증 -> Null 검사
         if (redisUtil.getData(id) == null || !UserStatusEnum.ACTIVE_USER.
             equals(redisUtil.getData(id).getStatus())){
-            throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
+            throw new CustomException(NOT_AUTH_EMAIL);
         }
         //redis에 저장된 이메일과 응답받은 이메일이 동일한지 체크
         if (!email.equals(redisUtil.getData(id).getEmail())) {
-            throw new CustomException(ErrorType.NOT_AUTH_EMAIL);
+            throw new CustomException(NOT_AUTH_EMAIL);
         }
     }
 
     public boolean checkPassword (String password, String checkPassword) {
         return password.equals(checkPassword);
+    }
+
+    //S3에 프로필 이미지 삭제 및 저장
+    private String controlS3Images(MultipartFile file, User user) {
+        try {
+            s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
+        } catch (NotFoundException e) {
+            user.updateImageUrl(START_PROFILE_URL);
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new S3Exception(DELETE_ERROR);
+        }
+
+        String newImageUrl;
+        try {
+            newImageUrl = s3FileUploader.saveProfileImage(file, user.getId(), user.getUserRole());
+        } catch (Exception e) {
+            s3FileUploader.deleteFileInBucket(user.getProfileImageUrl());
+            throw new S3Exception(UPLOAD_ERROR);
+        }
+        return newImageUrl;
     }
 
 }

@@ -54,6 +54,17 @@ public class CommunityLikeService {
         likeRepository.delete(feedLike);
     }
 
+    //커뮤 피드 좋아요 취소 (프론트 적용)
+    public void cancelFeedLike(Long id, Long communityFeedId) {
+        User user = findUser(id);
+        CommunityFeed feed = findFeed(communityFeedId);
+        CommunityLike feedLike = likeRepository.findByUserIdAndCommunityFeedId(id, communityFeedId).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_FEED_LIKE));
+
+        feed.pressFeedIsLike(user, feed);
+        likeRepository.delete(feedLike);
+    }
+
     // 댓글 좋아요기능
     public void pressCommentLike(Long userId, Long feedId, String groupName, Long commentId) {
         User user = findUser(userId);
@@ -110,4 +121,6 @@ public class CommunityLikeService {
         return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
     }
+
+
 }
