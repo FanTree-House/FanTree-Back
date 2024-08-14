@@ -8,11 +8,13 @@
 <table>
   <tbody>
     <tr>
-      <td align="center"><a href="https://github.com/silicao3o"><img src="" width="100px;" alt=""/><br /><sub><b> 팀장 : 이시영 </b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/silicao3o"><img src="https://github.com/user-attachments/assets/dd9305d6-f1df-4303-a119-cbc3c852cf91" width="100px;" alt=""/><br /><sub><b> 팀장 : 이시영 </b></sub></a><br /></td>
       <td align="center"><a href="gaeun7"><img src="https://github.com/user-attachments/assets/0c263f93-444c-4beb-bb45-6563bf972e9f" width="100px;" alt=""/><br /><sub><b> 부팀장 : 김가은 </b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/MonGrony"><img src= width="100px;" alt=""/><br /><sub><b> 팀원 : 김나영 </b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/kwj0605"><img src="https://github.com/user-attachments/assets/f45111c2-d572-4f41-a0ad-009da8b37cb9" width="100px;" alt=""/><br /><sub><b> 팀원 : 김우진 </b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/Wooseok1213"><img src="" width="100px;" alt=""/><br /><sub><b> 팀원 : 김우석 </b></sub></a><br /></td>
+      
+      <td align="center"><a href="https://github.com/Wooseok1213"><img src="https://github.com/user-attachments/assets/cfc3cd07-cc3d-4320-ab12-62010aff84fa" width="100px;" alt=""/><br /><sub><b> 팀원 : 김우석 </b></sub></a><br /></td>
+
     </tr>
   </tbody>
 </table>
@@ -23,20 +25,23 @@
 
 # **FANTREE HOUSE**
 
-🌟 **프로젝트 시작 동기** 🌟JD 직무분석 및 기획 아이디어
+
+🌟 **프로젝트 시작 동기** 🌟
+JD 직무분석 및 기획 아이디어
 
 - 대용량 트래픽 관리 경험에 대한 질문 빈번
 - 기존 학습한 기능들을 K-POP과 결합한 서비스 기획 필요성 인식
 - 핵심 문화산업인 K-POP을 활용한 서비스 개발 아이디어 제안
 
-**🔎 프로젝트 소개**
+### **🔎 프로젝트 소개**
 
 팬과 아티스트가 함께 소통하고, 구독을 통한 개인화된 서비스를 제공하여 더욱 가까운 관계를 형성할 수 있는 플랫폼
 
-**📝 프로젝트 목표**
+### **📝 프로젝트 목표**
 
 - 실 사용자 / 휴면 계정 / 블랙리스트에 관한 관리 기능 구현
 - 유저 권한에 따른 사용할 수 있는 기능 제한
+
 
 🌟 **주요 기능**
 - 그룹 페이지
@@ -63,9 +68,9 @@
 * <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
 * <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
 * <img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white">
-
-
-
+* <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
+* <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black">
+* <img src="https://img.shields.io/badge/IntelliJIDEA-000000?style=for-the-badge&logo=IntelliJIDEA&logoColor=white">
 
 ---
 ### 실행환경
@@ -82,7 +87,7 @@ SpringBoot 3.3
 
 ---
 ## API 명세서
-  [API 명세서](https://www.notion.so/teamsparta/8726a50848b84392992f4c9d7281cbe4?v=f346494e067c4471ab4e70997ccc8a25)
+[API 명세서](https://www.notion.so/teamsparta/8726a50848b84392992f4c9d7281cbe4?v=f346494e067c4471ab4e70997ccc8a25)
   
 ---
 ## ERD
@@ -90,12 +95,10 @@ SpringBoot 3.3
 
 ---
 # ⚖️기술적 의사결정
-<details>
-<summary>열기</summary>
 <div markdown="1">
   
   |**분류**|                                                   도구/기술                                                    |선택이유|
-  |:---:|:----------------------------------------------------------------------------------------------------------:|---|
+
   |<br> |MySQL |지금까지 학습한 데이터베이스라 새로운 데이터베이스로 넘어가면 러닝 커브가 커질 것을 우려하였고, 특히 읽기 작업에 최적화되어 대량의 데이터를 다루는 웹 애플리케이션에서 빠른 응답 속도를 유지할 수 있기 때문에 MySQL을 선택  |
   | |Java 17 |Spring Boot 3.0부터 지원되며, 장기 지원(LTS) 버전으로 안정성과 긴 지원 기간을 제공하기 때문에 선택 |
   | | Redis| 메일 인증에 필요한 인증 데이터를 잠깐 사용하기 위해 Redis를 캐시에 저장하여, 효율적으로 관리하고 데이터베이스 부하를 줄이기 위해 선택|
@@ -104,4 +107,3 @@ SpringBoot 3.3
   ||S3|높은 내구성과 가용성을 제공하여 대량의 사진 데이터를 저장하기 위해 사용|
 
 </div>
-</details>

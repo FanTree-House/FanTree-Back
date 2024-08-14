@@ -1,5 +1,6 @@
 package com.example.fantreehouse.domain.communityLike.entitiy;
 
+import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.communitycomment.entity.CommunityComment;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.user.entity.User;
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Table(name = "communityLikes")
 
-public class CommunityLike {
+public class CommunityLike extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)

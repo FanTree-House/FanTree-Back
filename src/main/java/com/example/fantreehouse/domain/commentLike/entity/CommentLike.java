@@ -1,5 +1,6 @@
 package com.example.fantreehouse.domain.commentLike.entity;
 
+import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.domain.comment.entity.Comment;
 import com.example.fantreehouse.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Table(name = "comment_like")
-public class CommentLike {
+public class CommentLike extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
