@@ -1,42 +1,32 @@
 package com.example.fantreehouse.domain.communityfeed.service;
 
-import com.example.fantreehouse.common.dto.ResponseDataDto;
-import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.S3Exception;
-import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
-import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.communityLike.entitiy.CommunityLike;
 import com.example.fantreehouse.domain.communityLike.repository.CommunityLikeRepository;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDto;
-import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDtoExtension;
+import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDtoExtention;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
-import com.example.fantreehouse.domain.feed.dto.response.FeedResponseDto;
-import com.example.fantreehouse.domain.feed.entity.Feed;
-import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.s3.service.S3FileUploader;
 import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import com.example.fantreehouse.domain.subscription.repository.SubscriptionRepository;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
-import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ssl.DefaultSslBundleRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
@@ -64,7 +54,7 @@ public class CommunityFeedService {
         ArtistGroup artistGroup = findArtistGroup(groupName);
 
         // 구독자 체크
-        checkSubscriptionList(userId,artistGroup.getId());
+        checkSubscriptionList(userId, artistGroup.getId());
 
         CommunityFeed feed = new CommunityFeed(requestDto, user, artistGroup);
         feedRepository.save(feed);
@@ -120,7 +110,7 @@ public class CommunityFeedService {
     }
 
     // 개인별 피드 전체 조회
-    public List<CommunityFeedResponseDto> findAllMyFeeds(User user) {
+    public List<CommunityFeedResponseDtoExtention> findAllMyFeeds(User user) {
 
         List<Subscription> subscriptionList = user.getSubscriptions();
 
@@ -142,13 +132,20 @@ public class CommunityFeedService {
             throw new NotFoundException(NOT_FOUND_FEED); //이 경우 프론트에서 받아서 메세지 전달 가능
         }
 
-        return allMyFeeds
-                .stream().sorted(Comparator.comparing(CommunityFeed::getCreatedAt)
-                .reversed()).map(CommunityFeedResponseDto::new)
-                .collect(Collectors.toList());
+        List<CommunityFeed> sortedFeeds = allMyFeeds.stream().sorted(Comparator.comparing(CommunityFeed::getCreatedAt)
+                        .reversed()).toList();
+
+        List<CommunityFeedResponseDtoExtention> feedResponseDtoList = new ArrayList<>();
+
+        for (CommunityFeed feed : sortedFeeds) {
+            Long likeCount = likeRepository.countByCommunityFeedId(feed.getId());
+            feedResponseDtoList.add(CommunityFeedResponseDtoExtention.of(feed, likeCount));
+        }
+
+        return feedResponseDtoList;
     }
 
-    public List<CommunityFeedResponseDtoExtension> findAllLikeFeeds(User user) {
+    public List<CommunityFeedResponseDtoExtention> findAllLikeFeeds(User user) {
 
         //좋아요 누른 feed 찾기
         List<CommunityLike> communityLikeList = likeRepository.findAllByUserId(user.getId());
@@ -160,11 +157,11 @@ public class CommunityFeedService {
                 .sorted(Comparator.comparing(CommunityFeed::getCreatedAt).reversed())
                 .toList();
 
-        List<CommunityFeedResponseDtoExtension> feedResponseDtoList = new ArrayList<>();
+        List<CommunityFeedResponseDtoExtention> feedResponseDtoList = new ArrayList<>();
 
         for (CommunityFeed feed : foundFeedList) {
             Long likeCount = likeRepository.countByCommunityFeedId(feed.getId());
-            feedResponseDtoList.add(CommunityFeedResponseDtoExtension.of(feed, likeCount));
+            feedResponseDtoList.add(CommunityFeedResponseDtoExtention.of(feed, likeCount));
         }
         return feedResponseDtoList;
     }

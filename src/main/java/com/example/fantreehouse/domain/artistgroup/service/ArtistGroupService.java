@@ -127,12 +127,10 @@ public class ArtistGroupService {
         // 전체 아티스트 그룹을 변환하는 부분
         Page<ArtistGroupResponseDto> allArtistGroup = artistGroupRepository.findAll(pageable)
                 .map(this::convertToResponseDto);
-
         // 검색된 아티스트 그룹을 변환하는 부분
         List<ArtistGroupResponseDto> searchArtistGroup = artistGroupRepository.findByGroupNameContaining(groupName, pageable).stream()
                 .map(this::convertToResponseDto)
                 .toList();
-
         // 검색어가 없으면 전체를 반환, 아니면 검색 결과를 반환
         if (groupName.isEmpty()) {
             return allArtistGroup;
@@ -316,7 +314,6 @@ public class ArtistGroupService {
                 artistGroup.getArtistGroupProfileImageUrl(),
                 entertainmentDto,
                 artistDtos,
-                artistGroup.getEnterName(),
                 artistGroup.getGroupInfo()
         );
     }

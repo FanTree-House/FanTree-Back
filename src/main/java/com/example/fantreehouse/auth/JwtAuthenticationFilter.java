@@ -36,7 +36,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     this.jwtTokenHelper = jwtTokenHelper;
     setFilterProcessesUrl("/users/login");
   }
-
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request,
       HttpServletResponse response) throws AuthenticationException {
