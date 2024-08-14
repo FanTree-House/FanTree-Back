@@ -63,9 +63,9 @@
 * <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
 * <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
 * <img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white">
-
-
-
+* <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
+* <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black">
+* <img src="https://img.shields.io/badge/IntelliJIDEA-000000?style=for-the-badge&logo=IntelliJIDEA&logoColor=white">
 
 ---
 ### 실행환경
@@ -82,7 +82,7 @@ SpringBoot 3.3
 
 ---
 ## API 명세서
-  [API 명세서](https://www.notion.so/teamsparta/8726a50848b84392992f4c9d7281cbe4?v=f346494e067c4471ab4e70997ccc8a25)
+[API 명세서](https://www.notion.so/teamsparta/8726a50848b84392992f4c9d7281cbe4?v=f346494e067c4471ab4e70997ccc8a25)
   
 ---
 ## ERD
@@ -102,4 +102,3 @@ SpringBoot 3.3
   ||S3|높은 내구성과 가용성을 제공하여 대량의 사진 데이터를 저장하기 위해 사용|
 
 </div>
-</details>
