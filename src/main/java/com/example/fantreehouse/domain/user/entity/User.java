@@ -3,6 +3,7 @@ package com.example.fantreehouse.domain.user.entity;
 
 import static com.example.fantreehouse.common.enums.ErrorType.NOT_YOUR_ENTERTAINMENT;
 import static com.example.fantreehouse.common.enums.ErrorType.UNAUTHORIZED;
+import static com.example.fantreehouse.domain.s3.service.S3FileUploader.DEFAULT_URL;
 
 import com.example.fantreehouse.common.entitiy.Timestamped;
 import com.example.fantreehouse.common.enums.ErrorType;
@@ -117,7 +118,7 @@ public class User extends Timestamped {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
-        this.profileImageUrl = "default";
+        this.profileImageUrl = DEFAULT_URL;
         this.status = UserStatusEnum.ACTIVE_USER;
         this.userRole = userRole;
     }

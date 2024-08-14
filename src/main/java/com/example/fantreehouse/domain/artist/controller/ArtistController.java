@@ -68,6 +68,22 @@ public class ArtistController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_UPDATED));
     }
 
+    //프로필 이미지만 수정
+    @PutMapping("/image")
+    public ResponseEntity<ResponseMessageDto> updateProfileImage(
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new S3Exception(OVER_LOAD);
+        }
+        Long userId = userDetails.getUser().getId();
+        artistService.updateProfileImage(file, userId);
+
+        return ResponseEntity.ok()
+                .body(new ResponseMessageDto(ResponseStatus.PROFILE_UPDATE));
+    }
+
     /**
      * 아티스트 단건 조회 / 비가입자 가능
      *
