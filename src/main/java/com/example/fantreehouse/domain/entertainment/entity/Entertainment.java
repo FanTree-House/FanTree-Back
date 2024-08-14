@@ -23,7 +23,7 @@ public class Entertainment extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20, nullable = false, unique = true)
+    @Column(length = 40, nullable = false, unique = true)
     private String enterName;
 
     @Column(nullable = false, unique = true)
