@@ -6,6 +6,7 @@ import com.example.fantreehouse.common.enums.ResponseStatus;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.enterfeed.dto.EnterFeedRequestDto;
 import com.example.fantreehouse.domain.enterfeed.dto.EnterFeedResponseDto;
+import com.example.fantreehouse.domain.enterfeed.dto.EnterFeedResponseDtoExtension;
 import com.example.fantreehouse.domain.enterfeed.entity.FeedCategory;
 import com.example.fantreehouse.domain.enterfeed.service.EnterFeedService;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,21 @@ public class EnterFeedController {
             .getAllFeeds(groupName, FeedCategory.NOTICE);
         return ResponseEntity.ok
             (new ResponseDataDto<>(ResponseStatus.NOTICE_RETRIEVE_SUCCESS, notices));
+    }
+
+    /**
+     * 특정 그룹 소속사의 모든 공지사항 조회 (createdAt 포함)
+     * @param groupName
+     * @return
+     */
+    @GetMapping("/{groupName}/notices/createdAt")
+    public ResponseEntity<ResponseDataDto<List<EnterFeedResponseDtoExtension>>> getSortedAllNotices(
+            @PathVariable String groupName) {
+
+        List<EnterFeedResponseDtoExtension> sortedNotices = enterFeedService
+                .getSortedAllNotices(groupName);
+        return ResponseEntity.ok
+                (new ResponseDataDto<>(ResponseStatus.NOTICE_RETRIEVE_SUCCESS, sortedNotices));
     }
 
     /**
@@ -157,6 +173,20 @@ public class EnterFeedController {
             getAllFeeds(groupName, FeedCategory.SCHEDULE);
         return ResponseEntity.ok
             (new ResponseDataDto<>(ResponseStatus.SCHEDULE_RETRIEVE_SUCCESS, schedules));
+    }
+
+    /**
+     * 특정 그룹 소속사의 모든 일정 조회 (createdAt 포함)
+     * @param groupName
+     * @return
+     */
+    @GetMapping("/{groupName}/schedule/createdAt")
+    public ResponseEntity<ResponseDataDto<List<EnterFeedResponseDtoExtension>>> getSortedAllSchedules(
+            @PathVariable String groupName) {
+        List<EnterFeedResponseDtoExtension> sortedSchedules = enterFeedService
+                .getSortedAllSchedules(groupName);
+        return ResponseEntity.ok
+                (new ResponseDataDto<>(ResponseStatus.NOTICE_RETRIEVE_SUCCESS, sortedSchedules));
     }
 
     /**

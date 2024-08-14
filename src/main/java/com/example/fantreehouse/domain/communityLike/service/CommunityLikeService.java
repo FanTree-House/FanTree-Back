@@ -42,6 +42,19 @@ public class CommunityLikeService {
         return feedLike;
     }
 
+    //피드 좋아요 추가 (프론트용)
+    public void addFeedLike(Long userId, Long feedId) {
+        User user = findUser(userId);
+        CommunityFeed feed = findFeed(feedId);
+
+        if (likeRepository.findByUserIdAndCommunityFeedId(userId, feedId).isPresent()) {
+            throw new CustomException(ErrorType.DUPLICATE_LIKE);
+        }
+        CommunityLike feedLike = new CommunityLike(user, feed);
+        feed.pressFeedLike(user, feed);
+        likeRepository.save(feedLike);
+    }
+
     //피드 좋아요 취소
     public void pressFeedIsLike(Long userId, Long feedId, String groupName) {
         ArtistGroup artistGroup = findArtistGroup(groupName);
@@ -123,4 +136,8 @@ public class CommunityLikeService {
     }
 
 
+    public boolean getIsLiked(Long communityFeedId, User user) {
+        return likeRepository.existsByCommunityFeedIdAndUserId(communityFeedId, user.getId());
+
+    }
 }
