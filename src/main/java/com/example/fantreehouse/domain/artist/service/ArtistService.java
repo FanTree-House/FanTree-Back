@@ -30,6 +30,7 @@ import java.util.List;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.common.enums.PageSize.ARTIST_PAGE_SIZE;
+import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
 import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
 import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
 
@@ -200,4 +201,42 @@ public class ArtistService {
     }
 
 
+    //프로필 이미지 수정
+    @Transactional
+    public void updateProfileImage(MultipartFile file, Long userId) {
+        Artist artist = findById(userId);
+
+        String newImageUrl = controlS3Images(file, artist);
+        ImageUrlCarrier carrier = new ImageUrlCarrier(artist.getId(), newImageUrl);
+        updateArtistImageUrl(carrier);
+
+        artistRepository.save(artist);
+
+    }
+
+    private String controlS3Images(MultipartFile file, Artist artist) {
+
+        try {
+            s3FileUploader.deleteFileInBucket(artist.getArtistProfileImageUrl());
+        } catch (NotFoundException e) {
+            artist.updateImageUrl(START_PROFILE_URL);
+            artistRepository.save(artist);
+        } catch (Exception e) {
+            throw new S3Exception(DELETE_ERROR);
+        }
+
+        String newImageUrl;
+        try {
+            newImageUrl = s3FileUploader.saveProfileImage(file, artist.getId(), artist.getUser().getUserRole());
+        } catch (Exception e) {
+            s3FileUploader.deleteFileInBucket(artist.getArtistProfileImageUrl());
+            throw new S3Exception(UPLOAD_ERROR);
+        }
+        return newImageUrl;
+    }
+
+    private Artist findById(Long userId) {
+        return artistRepository.findByUserId(userId)
+                .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
+    }
 }
