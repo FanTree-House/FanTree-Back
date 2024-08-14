@@ -26,7 +26,6 @@ public class CommentLikeController {
      * @param artistFeedId
      * @param artistFeedCommentId
      * @param userDetails
-     * @return id, isLiked, likeCount;
      */
     @PostMapping("/{groupName}/feed/{artistFeedId}/comment/{artistFeedCommentId}")
     public ResponseEntity<ResponseMessageDto> addOrDeleteLike (
@@ -52,7 +51,12 @@ public class CommentLikeController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.SUCCESS_GET_COMMENT_LIKE_COUNT, responseDto));
     }
 
-    // 좋아요 유무 조회
+    /**
+     * 좋아요 유무 조회
+     * @param artistFeedCommentId
+     * @param userDetails
+     * @return
+     */
     @GetMapping("/feed/comment/{artistFeedCommentId}/like")
     public ResponseEntity<ResponseDataDto<CommentLikeResponseDto>> getIsLiked(
             @PathVariable final Long artistFeedCommentId,
