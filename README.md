@@ -1,8 +1,8 @@
 # FanTree-House
-![image (6)](https://github.com/user-attachments/assets/7379998e-11df-4555-b00f-df245f764962)
+![image (6)](https://github.com/user-attachments/assets/20afa277-ccb4-47fe-b094-f24d82640f12)
 
 ## 배포 주소
-
+| [백엔드 배포 주소]() | [프론트 배포 주소]() |
 
 ## 👩‍💻 팀원
 <table>
