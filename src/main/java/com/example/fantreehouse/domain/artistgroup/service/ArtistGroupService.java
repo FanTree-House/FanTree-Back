@@ -314,7 +314,6 @@ public class ArtistGroupService {
                 artistGroup.getArtistGroupProfileImageUrl(),
                 entertainmentDto,
                 artistDtos,
-                artistGroup.getEnterName(),
                 artistGroup.getGroupInfo()
         );
     }

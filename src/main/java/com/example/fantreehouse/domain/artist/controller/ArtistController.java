@@ -109,7 +109,7 @@ public class ArtistController {
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         artistService.deleteFeed(artistId, userDetails);
-        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEED_DELETED));
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_DELETED));
     }
 
     /**

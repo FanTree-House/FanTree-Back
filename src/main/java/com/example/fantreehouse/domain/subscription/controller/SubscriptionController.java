@@ -6,6 +6,7 @@ import com.example.fantreehouse.common.enums.ResponseStatus;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.feed.dto.response.FeedResponseDto;
 import com.example.fantreehouse.domain.feed.entity.Feed;
+import com.example.fantreehouse.domain.subscription.dto.IsSubscribeDto;
 import com.example.fantreehouse.domain.subscription.dto.SubscriptionResponseDto;
 import com.example.fantreehouse.domain.subscription.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
@@ -71,9 +72,9 @@ public class SubscriptionController {
 
     // 아티스트 그룹을 구독 유무
     @GetMapping("/{groupName}")
-    public boolean getIsSubscribe(
-        @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable String groupName) {
-        return subscriptionService.getIsSubscribe(userDetails.getUser(), groupName);
+    public ResponseEntity<ResponseDataDto<IsSubscribeDto>> getIsSubscribe(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable String groupName) {
+        IsSubscribeDto isSubscribeDto = subscriptionService.getIsSubscribe(userDetails.getUser(), groupName);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.SUBSCRIBED_ARTIST_GROUP, isSubscribeDto));
     }
 
 }

@@ -10,6 +10,7 @@ import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feed.repository.FeedRepository;
 import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.feedlike.repository.FeedLikeRepository;
+import com.example.fantreehouse.domain.subscription.dto.IsSubscribeDto;
 import com.example.fantreehouse.domain.subscription.dto.SubscriptionResponseDto;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import com.example.fantreehouse.domain.subscription.repository.SubscriptionRepository;
@@ -112,8 +113,12 @@ public class SubscriptionService {
     }
 
     // 아티스트 그룹을 구독 유무
-    public boolean getIsSubscribe(User user, String groupName) {
+    public IsSubscribeDto getIsSubscribe(User user, String groupName) {
         ArtistGroup artistGroup = findArtistGroup(groupName);
+        return new IsSubscribeDto(isSubscribe(user, artistGroup));
+    }
+
+    private boolean isSubscribe(User user, ArtistGroup artistGroup) {
         return subscriptionRepository.findByUserIdAndArtistGroupId(user.getId(), artistGroup.getId()).isPresent();
     }
 
@@ -124,7 +129,7 @@ public class SubscriptionService {
 
     public ArtistGroup findArtistGroup(String groupName) {
         return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
-                -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
+                -> new CustomException(ErrorType.NOT_SUBSCRIBED_ARTIST_GROUP));
     }
 
 }

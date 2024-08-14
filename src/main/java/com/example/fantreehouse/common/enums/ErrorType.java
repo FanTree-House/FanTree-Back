@@ -24,6 +24,7 @@ public enum ErrorType implements ErrorCode {
     USER_MISMATCH(HttpStatus.NOT_ACCEPTABLE, "유저와 좋아요가 일치하지 않습니다."),
     CONTENT_TYPE_MISMATCH(HttpStatus.NOT_ACCEPTABLE, "컨텐츠 타입이 일치하지 않습니다."),
     NOT_AVAILABLE_PERMISSION(HttpStatus.LOCKED, "권한이 없습니다."),
+    NOT_SUBSCRIBED_ARTIST_GROUP(HttpStatus.NOT_FOUND, "구독하지 않은 그룹입니다."),
 
     //user
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
