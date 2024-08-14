@@ -127,7 +127,8 @@ public class UserController {
     }
 
     @PostMapping("/checkId")
-    public ResponseEntity<ResponseBooleanDto> duplicateId(@Valid @RequestBody DuplicateIdRequestDto requestDto) {
+    public ResponseEntity<ResponseBooleanDto> duplicateId(
+        @Valid @RequestBody DuplicateIdRequestDto requestDto) {
         boolean result = userService.duplicatedId(requestDto.getId());
         if (result) {
             return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.DUPLICATE_ID, result));
@@ -136,8 +137,8 @@ public class UserController {
     }
 
     @PostMapping("/checkNickname")
-    public ResponseEntity<ResponseBooleanDto> duplicateNickname(@Valid @RequestBody
-                                                                DuplicatedNicknameRequestDto requestDto) {
+    public ResponseEntity<ResponseBooleanDto> duplicateNickname(
+        @Valid @RequestBody DuplicatedNicknameRequestDto requestDto) {
         boolean result = userService.duplicatedNickName(requestDto.getNickname());
         if (result) {
             return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.DUPLICATE_NICKNAME, result));
@@ -145,8 +146,8 @@ public class UserController {
     }
 
     @PostMapping("/checkPassword")
-    public ResponseEntity<ResponseBooleanDto> checkPassword(@Valid @RequestBody
-                                                            checkPasswordRequestDto requestDto) {
+    public ResponseEntity<ResponseBooleanDto> checkPassword(
+        @Valid @RequestBody checkPasswordRequestDto requestDto) {
         boolean result = userService.checkPassword(requestDto.getPassword(),
                 requestDto.getCheckPassword());
         if (result) {
