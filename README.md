@@ -90,8 +90,6 @@ SpringBoot 3.3
 
 ---
 # ⚖️기술적 의사결정
-<details>
-<summary>열기</summary>
 <div markdown="1">
   
   |**분류**|                                                   도구/기술                                                    |선택이유|
