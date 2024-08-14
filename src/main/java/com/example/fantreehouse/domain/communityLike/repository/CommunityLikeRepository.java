@@ -16,4 +16,6 @@ public interface CommunityLikeRepository extends JpaRepository<CommunityLike, Lo
     List<CommunityLike> findAllByUserId(Long id);
 
     Long countByCommunityFeedId(Long id);
+
+    Boolean existsByCommunityFeedIdAndUserId(Long communityFeedId, Long id);
 }

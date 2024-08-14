@@ -42,12 +42,36 @@ public class CommunityLikeService {
         return feedLike;
     }
 
+    //피드 좋아요 추가 (프론트용)
+    public void addFeedLike(Long userId, Long feedId) {
+        User user = findUser(userId);
+        CommunityFeed feed = findFeed(feedId);
+
+        if (likeRepository.findByUserIdAndCommunityFeedId(userId, feedId).isPresent()) {
+            throw new CustomException(ErrorType.DUPLICATE_LIKE);
+        }
+        CommunityLike feedLike = new CommunityLike(user, feed);
+        feed.pressFeedLike(user, feed);
+        likeRepository.save(feedLike);
+    }
+
     //피드 좋아요 취소
     public void pressFeedIsLike(Long userId, Long feedId, String groupName) {
         ArtistGroup artistGroup = findArtistGroup(groupName);
         User user = findUser(userId);
         CommunityFeed feed = findFeed(feedId);
         CommunityLike feedLike = likeRepository.findByUserIdAndCommunityFeedId(userId, feedId).orElseThrow(()
+                -> new CustomException(ErrorType.NOT_FOUND_FEED_LIKE));
+
+        feed.pressFeedIsLike(user, feed);
+        likeRepository.delete(feedLike);
+    }
+
+    //커뮤 피드 좋아요 취소 (프론트 적용)
+    public void cancelFeedLike(Long id, Long communityFeedId) {
+        User user = findUser(id);
+        CommunityFeed feed = findFeed(communityFeedId);
+        CommunityLike feedLike = likeRepository.findByUserIdAndCommunityFeedId(id, communityFeedId).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_FEED_LIKE));
 
         feed.pressFeedIsLike(user, feed);
@@ -109,5 +133,11 @@ public class CommunityLikeService {
     public ArtistGroup findArtistGroup(String groupName) {
         return artistGroupRepository.findByGroupName(groupName).orElseThrow(()
                 -> new CustomException(ErrorType.NOT_FOUND_ARTISTGROUP));
+    }
+
+
+    public boolean getIsLiked(Long communityFeedId, User user) {
+        return likeRepository.existsByCommunityFeedIdAndUserId(communityFeedId, user.getId());
+
     }
 }

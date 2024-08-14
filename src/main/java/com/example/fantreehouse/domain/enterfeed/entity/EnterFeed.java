@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "enter_feed")
-
 public class EnterFeed extends Timestamped {
 
     @Id

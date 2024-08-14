@@ -53,7 +53,7 @@ public class SubscriptionController {
 
     //구독리스트조회
     @GetMapping
-    public ResponseEntity<?> findAllSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<List<SubscriptionResponseDto>> findAllSubscript(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<SubscriptionResponseDto> responseDto = subscriptionService
             .findAllSubscript(userDetails.getUser().getId());
         return ResponseEntity.ok(responseDto);

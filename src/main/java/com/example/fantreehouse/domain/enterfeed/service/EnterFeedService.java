@@ -2,8 +2,10 @@ package com.example.fantreehouse.domain.enterfeed.service;
 
 import com.example.fantreehouse.common.enums.ErrorType;
 import com.example.fantreehouse.common.exception.CustomException;
+import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.domain.enterfeed.dto.EnterFeedRequestDto;
 import com.example.fantreehouse.domain.enterfeed.dto.EnterFeedResponseDto;
+import com.example.fantreehouse.domain.enterfeed.dto.EnterFeedResponseDtoExtension;
 import com.example.fantreehouse.domain.enterfeed.entity.EnterFeed;
 import com.example.fantreehouse.domain.enterfeed.entity.FeedCategory;
 import com.example.fantreehouse.domain.enterfeed.repository.EnterFeedRepository;
@@ -12,15 +14,16 @@ import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRep
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.user.entity.User;
-import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.fantreehouse.common.enums.ErrorType.NOT_FOUND_ARTISTGROUP;
+import static com.example.fantreehouse.common.enums.ErrorType.NOT_FOUND_FEED;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class EnterFeedService {
 
     private final EnterFeedRepository enterFeedRepository;
     private final EntertainmentRepository entertainmentRepository;
+    private final ArtistGroupRepository artistGroupRepository;
 
     /**
      *  엔터피드를 생성
@@ -75,6 +79,32 @@ public class EnterFeedService {
         return enterFeeds.stream()
                 .map(this::convertToResponseDto)
                 .toList();
+    }
+
+    //특정 그룹과 NOTICE 카테고리에 해당하는 모든 피드 조회
+    public List<EnterFeedResponseDtoExtension> getSortedAllNotices(String groupName) {
+        ArtistGroup artistGroup = artistGroupRepository.findByGroupName(groupName)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTISTGROUP));
+
+        List<EnterFeed> enterFeeds = enterFeedRepository.findAllByEntertainmentIdAndCategory(artistGroup.getEntertainment().getId(), FeedCategory.NOTICE)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_FEED));
+
+        return enterFeeds.stream().map(feed -> EnterFeedResponseDtoExtension.ofNotice(feed, groupName))
+                .sorted(Comparator.comparing(EnterFeedResponseDtoExtension::getCreatedAt))
+                .collect(Collectors.toList());
+    }
+
+    //특정 그룹과 SCHEDULE 카테고리에 해당하는 모든 피드 조회
+    public List<EnterFeedResponseDtoExtension> getSortedAllSchedules(String groupName) {
+        ArtistGroup artistGroup = artistGroupRepository.findByGroupName(groupName)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTISTGROUP));
+
+        List<EnterFeed> enterFeeds = enterFeedRepository.findAllByEntertainmentIdAndCategory(artistGroup.getEntertainment().getId(), FeedCategory.SCHEDULE)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_FEED));
+
+        return enterFeeds.stream().map(feed -> EnterFeedResponseDtoExtension.ofNotice(feed, groupName))
+                .sorted(Comparator.comparing(EnterFeedResponseDtoExtension::getCreatedAt))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -150,4 +180,7 @@ public class EnterFeedService {
                 enterFeed.getScheduleDate()
         );
     }
+
+
+
 }

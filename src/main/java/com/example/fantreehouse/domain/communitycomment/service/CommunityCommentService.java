@@ -30,7 +30,13 @@ public class CommunityCommentService {
     private final ArtistGroupRepository artistGroupRepository;
 
 
-    //댓글생성
+    /**
+     * 코멘트생성
+     * @param requestDto
+     * @param userId
+     * @param feedId
+     * @return
+     */
     public CommunityCommentResponseDto creatComment(
         CommunityCommentRequestDto requestDto,
         Long userId,
