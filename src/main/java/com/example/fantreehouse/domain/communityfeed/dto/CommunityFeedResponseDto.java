@@ -11,12 +11,13 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class CommunityFeedResponseDto {
-
+    Long id;
     String nickname;
     String contents;
     List<String> imageUrls = new ArrayList<>();
 
     public CommunityFeedResponseDto(CommunityFeed feed) {
+        this.id = feed.getId();
         this.nickname = feed.getNickname();
         this.contents = feed.getContents();
         this.imageUrls = feed.getImageUrls();

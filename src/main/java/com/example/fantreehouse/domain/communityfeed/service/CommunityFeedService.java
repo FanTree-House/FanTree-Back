@@ -83,7 +83,6 @@ public class CommunityFeedService {
         User user = findUser(userId);
         ArtistGroup artistGroup = findArtistGroup(gruopName);
 
-
         // 구독자 체크
         checkSubscriptionList(userId, artistGroup.getId());
         List<CommunityFeed> feedList = feedRepository.findAll();
