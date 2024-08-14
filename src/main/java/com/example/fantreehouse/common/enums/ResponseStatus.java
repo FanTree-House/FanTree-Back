@@ -91,6 +91,9 @@ public enum ResponseStatus {
     PRODUCT_UPDATE_SUCCESS(HttpStatus.OK, "상품 수정에 성공하였습니다."),
     PRODUCT_DELETE_SUCCESS(HttpStatus.OK, "상품 삭제에 성공하였습니다."),
 
+    // 구독
+    SUBSCRIBED_ARTIST_GROUP(HttpStatus.OK, "구독한 그룹입니다."),
+
     // 어드민 권한
     TRANSFORM_BLACKLIST_SUCCESS(HttpStatus.OK, "블랙리스트 전환에 성공하였습니다."),
     USER_ROLE_UPDATE_SUCCESS(HttpStatus.OK, "회원권환 수정에 성공하였습니다."),
@@ -100,6 +103,7 @@ public enum ResponseStatus {
     CHECK_PASSWORD(HttpStatus.OK, "비밀번호가 일치합니다."),
 
     SUCCESS_ACTIVATE_USER(HttpStatus.OK, "계정이 활성화되었습니다.");
+
     private final HttpStatus httpStatus;
     private final String message;
 }
