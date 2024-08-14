@@ -71,6 +71,8 @@ JD 직무분석 및 기획 아이디어
 * <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
 * <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black">
 * <img src="https://img.shields.io/badge/IntelliJIDEA-000000?style=for-the-badge&logo=IntelliJIDEA&logoColor=white">
+* <img src="https://img.shields.io/badge/Flyway-cc0200?style=for-the-badge&logo=Flyway&logoColor=white">
+
 
 ---
 ### 실행환경
