@@ -32,6 +32,16 @@ public class CommunityLikeController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SUCCESS_FEED_LIKE));
     }
 
+    //피드 좋아요 (프론트 적용)
+    @PostMapping("/addLike/{communityFeedId}")
+    public ResponseEntity<ResponseMessageDto> addFeedLike(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long communityFeedId
+    ) {
+        likeService.addFeedLike(userDetails.getUser().getId(), communityFeedId);
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.SUCCESS_FEED_LIKE));
+    }
+
     /**
      * 피드 좋아요 취소 기능
      * @param userDetails
@@ -47,8 +57,8 @@ public class CommunityLikeController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.DELETE_FEED_LIKE));
     }
 
-    //커뮤피드 좋아요 취소 기능 (groupName) 없는 ver.
-    @DeleteMapping("/artist/cancelLike/{communityFeedId}")
+    //커뮤피드 좋아요 취소 기능 (groupName 없는 ver.)
+    @DeleteMapping("/cancelLike/{communityFeedId}")
     public ResponseEntity<ResponseMessageDto> cancelFeedLike(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long communityFeedId
@@ -89,6 +99,15 @@ public class CommunityLikeController {
         @PathVariable Long commentId) {
         likeService.pressCommentIsLike(userDetails.getUser().getId(), feedId, groupName, commentId);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.DELETE_COMMENT_LIKE));
+    }
+
+    // 좋아요 유무
+    @GetMapping("/check/{communityFeedId}")
+    public boolean getIsLiked(
+            @PathVariable final Long communityFeedId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return likeService.getIsLiked(communityFeedId, userDetails.getUser());
     }
 
 }

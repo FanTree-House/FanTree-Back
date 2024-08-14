@@ -7,7 +7,7 @@ import com.example.fantreehouse.common.exception.errorcode.S3Exception;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedRequestDto;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDto;
-import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDtoExtension;
+import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDtoExtention;
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.service.CommunityFeedService;
@@ -92,10 +92,10 @@ public class CommunityFeedController {
      * @return
      */
     @GetMapping("/communityFeed/myFeeds")
-    public ResponseEntity<ResponseDataDto> findAllMyFeeds(
+    public ResponseEntity<ResponseDataDto<List<CommunityFeedResponseDtoExtention>>> findAllMyFeeds(
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        List<CommunityFeedResponseDto> responseDtoList = feedService.findAllMyFeeds(userDetails.getUser());
+        List<CommunityFeedResponseDtoExtention> responseDtoList = feedService.findAllMyFeeds(userDetails.getUser());
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDtoList));
     }
 
@@ -105,10 +105,10 @@ public class CommunityFeedController {
      * @return
      */
     @GetMapping("/communityFeed/likes")
-    public ResponseEntity<ResponseDataDto<List<CommunityFeedResponseDtoExtension>>> findAllLikeFeeds(
+    public ResponseEntity<ResponseDataDto<List<CommunityFeedResponseDtoExtention>>> findAllLikeFeeds(
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        List<CommunityFeedResponseDtoExtension> responseDtoList = feedService.findAllLikeFeeds(userDetails.getUser());
+        List<CommunityFeedResponseDtoExtention> responseDtoList = feedService.findAllLikeFeeds(userDetails.getUser());
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEED_READ_SUCCESS, responseDtoList));
     }
 
