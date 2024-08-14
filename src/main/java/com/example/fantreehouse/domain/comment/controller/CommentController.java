@@ -99,7 +99,6 @@ public class CommentController {
             @PathVariable final Long feedId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam int page
-
     ) {
         Page<CommentResponseDto> pageComment = commentService
             .getAllComment(groupName, feedId, userDetails, page);
