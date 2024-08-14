@@ -33,7 +33,7 @@ public class CommunityLikeController {
     }
 
     //피드 좋아요 (프론트 적용)
-    @PostMapping("/cancelLike/{communityFeedId}")
+    @PostMapping("/addLike/{communityFeedId}")
     public ResponseEntity<ResponseMessageDto> addFeedLike(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long communityFeedId
