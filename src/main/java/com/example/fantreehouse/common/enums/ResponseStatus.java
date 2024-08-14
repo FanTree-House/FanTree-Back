@@ -73,6 +73,8 @@ public enum ResponseStatus {
     FEED_LIKE_CHANGED(HttpStatus.OK, "Like 상태가 변경되었습니다."),
     COMMENT_LIKE_CHANGED(HttpStatus.OK, "Like 상태가 변경되었습니다."),
     SUCCESS_GET_FEED_LIKE_USERS(HttpStatus.OK, "조회되었습니다."),
+    SUCCESS_GET_COMMENT_LIKE_COUNT(HttpStatus.OK, "Like 개수가 조회되었습니다."),
+    SUCCESS_GET_COMMENT_ISLIKED(HttpStatus.OK, "좋아요 유무가 조회되었습니다."),
 
 
     // 엔터 피드

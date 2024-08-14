@@ -39,9 +39,19 @@ public class CommentLikeServiceSupport {
         }
     }
 
+    // 좋아요 유무
+    public Boolean isLiked(User loginUser, Long artistFeedCommentId) {
+        return commentLikeRepository.findByUserIdAndCommentId(loginUser.getId(), artistFeedCommentId).isPresent();
+    }
+
     private void cancelFeedLike(User loginUser, CommentLike commentLike) {
         if (loginUser != null && loginUser.getFeedLikeList() != null) {
             commentLikeRepository.delete(commentLike);
         }
+    }
+
+    // 좋아요 개수
+    public Long likeCount(Long artistFeedCommentId) {
+        return commentLikeRepository.countByCommentId(artistFeedCommentId);
     }
 }
