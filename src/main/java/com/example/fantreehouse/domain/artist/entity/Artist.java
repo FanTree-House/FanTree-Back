@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.example.fantreehouse.domain.s3.service.S3FileUploader.DEFAULT_URL;
+
 @Entity
 @Getter
 @Table(name = "artist")
@@ -50,7 +52,7 @@ public class Artist extends Timestamped {
     public static Artist of(ArtistRequestDto requestDto, User loginUser) {
         return Artist.builder()
                 .artistName(requestDto.getArtistName())
-                .artistProfileImageUrl("default")
+                .artistProfileImageUrl(DEFAULT_URL)
                 .introduction(requestDto.getIntroduction())
                 .user(loginUser)
                 .build();
