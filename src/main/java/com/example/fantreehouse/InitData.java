@@ -62,129 +62,91 @@
 //    public void init() {
 //
 //        //엔터
-//        User user1 = new User("ModhauseManager", "모드하우스", "Modhaus", "modhausmanager@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ENTERTAINMENT);
+//        User user1 = new User("JYPEnter", "제이와이피엔터", "JYPEntertainment", "Jypmanager@gmail.com",
+//                passwordEncoder.encode("enter123!"), UserRoleEnum.ENTERTAINMENT);
 //
-//        User user2 = new User("SMenterManger", "에스엠엔터", "SM Entertainment", "smentermanager@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ENTERTAINMENT);
+//        User user2 = new User("PLEDISEnter", "플레디스엔터", "PLEDISEntertainment", "PLEDISEntertainment@gmail.com",
+//                passwordEncoder.encode("enter123!"), UserRoleEnum.ENTERTAINMENT);
 //
-//        //아티스트
-//        User user3 = new User("tripleS1", "윤서연", "서연", "ModhausS1@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
+//        //아티스트 세븐틴
+//        User user3 = new User("SEVENTEEN", "최승철", "에스쿱스", "seventeen1@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user4 = new User("SEVENTEEN1", "정한", "정한", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user5 = new User("SEVENTEEN2", "조슈아", "조슈아", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user6 = new User("SEVENTEEN3", "준", "준", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user7 = new User("SEVENTEEN4", "호시", "호시", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user8 = new User("SEVENTEEN5", "원우", "원우", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user9 = new User("SEVENTEEN6", "우지", "우지", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user10 = new User("SEVENTEEN7", "디에잇", "디에잇", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user11 = new User("SEVENTEEN8", "디에잇", "디에잇", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user12 = new User("SEVENTEEN9", "민규", "민규", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user13 = new User("SEVENTEEN10", "도겸", "도겸", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user14 = new User("SEVENTEEN11", "승관", "승관", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user15 = new User("SEVENTEEN12", "버논", "버논", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user16 = new User("SEVENTEEN13", "디노", "디노", "seventeen2@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
 //
-//        User user4 = new User("tripleS2", "정혜린", "혜린", "ModhausS2@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
+//        //아티스트 잇지
+//        User user17 = new User("ITZY", "예지", "예지", "ITZY1@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user18 = new User("ITZY1", "리아", "리아", "ITZY1@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user19 = new User("ITZY2", "류진", "류진", "ITZY1@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user20 = new User("ITZY3", "채령", "채령", "ITZY1@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user21 = new User("ITZY4", "유나", "유나", "ITZY1@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
 //
-//        User user5 = new User("tripleS3", "이지우", "지우", "ModhausS3@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
+//        // 아티스트 데이식스
+//        User user22 = new User("DAY6", "성진", "성진", "DAY6@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user23 = new User("DAY62", "영케이", "Young K", "DAY6@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user24 = new User("DAY63", "원필", "원필", "DAY6@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
+//        User user25 = new User("DAY64", "도운", "도운", "DAY6@gmail.com",
+//                passwordEncoder.encode("artist123!"), UserRoleEnum.ARTIST);
 //
-//        User user6 = new User("tripleS4", "김채연", "채연", "ModhausS4@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user7 = new User("tripleS5", "김유연", "유연", "ModhausS5@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user8 = new User("tripleS6", "김수민", "수민", "ModhausS6@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user9 = new User("tripleS7", "김나경", "나경", "ModhausS7@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user10 = new User("tripleS8", "공유빈", "유빈", "ModhausS8@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user11 = new User("tripleS9", "야마다 카에데", "카에데", "ModhausS9@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user12 = new User("tripleS10", "서다현", "다현", "ModhausS10@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user13 = new User("tripleS11", "카미모토 코토네", "코토네", "ModhausS11@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user14 = new User("tripleS12", "곽연지", "연지", "ModhausS12@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user15 = new User("tripleS13", "쉬니엔츠", "니엔", "ModhausS13@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user16 = new User("tripleS14", "박소현", "소현", "ModhausS14@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user17 = new User("tripleS15", "저우신위", "신위", "ModhausS15@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user18 = new User("tripleS16", "코우마 마유", "마유", "ModhausS16@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user19 = new User("tripleS17", "카와가미 린", "린", "ModhausS17@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user20 = new User("tripleS18", "주빈", "주빈", "ModhausS18@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user21 = new User("tripleS19", "정하연", "하연", "ModhausS19@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user22 = new User("tripleS20", "박시온", "시온", "ModhausS20@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user23 = new User("tripleS21", "김채원", "채원", "ModhausS21@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user24 = new User("tripleS22", "정해린", "서아", "ModhausS22@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user25 = new User("tripleS23", "피라다 분락사", "설린", "ModhausS23@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user26 = new User("tripleS24", "지서연", "서연", "ModhausS24@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user27 = new User("SMaespa1", "유지민", "카리나", "SM-aespaK@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user28 = new User("SMaespa2", "우치나가 애리", "지젤", "SM-aespaG@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user29 = new User("SMaespa3", "김민정", "윈터", "SM-aespaW@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        User user30 = new User("SMaespa4", "닝이줘", "닝닝", "SM-aespaN@gmail.com",
-//                passwordEncoder.encode("12345678"), UserRoleEnum.ARTIST);
-//
-//        //유저
-//        User user31 = new User("user31", "username31", "usernick31", "user31@gmail.com",
-//                passwordEncoder.encode("31313131"), UserRoleEnum.USER);
-//        user31.updateImageUrl(START_PROFILE_URL);
-//
-//        User user32 = new User("user32", "username32", "usernick32", "user32@gmail.com",
-//                passwordEncoder.encode("32323232"), UserRoleEnum.USER);
-//        user32.updateImageUrl(START_PROFILE_URL);
 //
 //        //엔터, 아티스트, 유저 저장
 //        List<User> userList = List.of(user1, user2, user3, user4, user5, user6, user7, user8,
 //                user9, user10, user11, user12, user13, user14, user15, user16, user17, user18, user19, user20,
-//                user21, user22, user23, user24, user25, user26, user27, user28, user29, user30, user31, user32);
+//                user21, user22, user23, user24, user25);
 //        userRepository.saveAll(userList);
 //
 //        //엔터계정 생성
-//        Entertainment entertainment1 = new Entertainment("SM Entertainment", 102951344L, user2);
-//        Entertainment entertainment2 = new Entertainment("Modhaus", 1534122412L, user1);
+//        Entertainment entertainment1 = new Entertainment("JYP Entertainment", 102951344L, user1);
+//        Entertainment entertainment2 = new Entertainment("PLEDIS Entertainment", 1534122412L, user2);
 //
 //        List<Entertainment> entertainmentList = List.of(entertainment1, entertainment2);
 //        entertainmentRepository.saveAll(entertainmentList);
 //
 //        //아티스트그룹 생성
-//        ArtistGroup artistGroup1 = new ArtistGroup("aespa", "null"
-//                , "SM 4인 다국적 걸그룹", entertainment1, "SM");
+//        ArtistGroup artistGroup1 = new ArtistGroup("SEVENTEEN", "null"
+//                , "2015년 5월 26일 데뷔한 플레디스 엔터테인먼트 소속 대한민국의 13인조 다국적 보이그룹", entertainment2, "PLEDIS Entertainment");
 //
-//        ArtistGroup artistGroup2 = new ArtistGroup("tripleS", "null"
-//                , "걸그룹 최초 24인조 그룹", entertainment2, "Modhaus");
+//        ArtistGroup artistGroup2 = new ArtistGroup("ITZY", "null"
+//                , "2019년 2월 12일에 데뷔한 JYP엔터테인먼트 소속 5인조 걸그룹", entertainment1, "JYP Entertainment");
 //
-//        List<ArtistGroup> artistGroupList = List.of(artistGroup1, artistGroup2);
+//        ArtistGroup artistGroup3 = new ArtistGroup("DAY6", "null"
+//                , "2015년 9월 7일에 데뷔한 JYP엔터테인먼트 소속 4인조 밴드. JYP에서 밴드로 데뷔한 최초의 아티스트.", entertainment1, "JYP Entertainment");
+//
+//        List<ArtistGroup> artistGroupList = List.of(artistGroup1, artistGroup2, artistGroup3);
 //        artistGroupRepository.saveAll(artistGroupList);
-//
+
 //        //아티스트 계정 생성
 //        Artist artist = new Artist("서연", "",
 //                "WAV들 안녕~!", artistGroup2, user3);
@@ -196,44 +158,7 @@
 //                "WAV들 안녕~!", artistGroup2, user6);
 //        Artist artist4 = new Artist("유연", "",
 //                "WAV들 안녕~!", artistGroup2, user7);
-//        Artist artist5 = new Artist("수민", "",
-//                "WAV들 안녕~!", artistGroup2, user8);
-//        Artist artist6 = new Artist("나경", "",
-//                "WAV들 안녕~!", artistGroup2, user9);
-//        Artist artist7 = new Artist("유빈", "",
-//                "WAV들 안녕~!", artistGroup2, user10);
-//        Artist artist8 = new Artist("카에데", "",
-//                "WAV들 안녕~!", artistGroup2, user11);
-//        Artist artist9 = new Artist("다현", "",
-//                "WAV들 안녕~!", artistGroup2, user12);
-//        Artist artist10 = new Artist("코토네", "",
-//                "WAV들 안녕~!", artistGroup2, user13);
-//        Artist artist11 = new Artist("연지", "",
-//                "WAV들 안녕~!", artistGroup2, user14);
-//        Artist artist12 = new Artist("니엔", "",
-//                "WAV들 안녕~!", artistGroup2, user15);
-//        Artist artist13 = new Artist("소현", "",
-//                "WAV들 안녕~!", artistGroup2, user16);
-//        Artist artist14 = new Artist("신위", "",
-//                "WAV들 안녕~!", artistGroup2, user17);
-//        Artist artist15 = new Artist("마유", "",
-//                "WAV들 안녕~!", artistGroup2, user18);
-//        Artist artist16 = new Artist("린", "",
-//                "WAV들 안녕~!", artistGroup2, user19);
-//        Artist artist17 = new Artist("주빈", "",
-//                "WAV들 안녕~!", artistGroup2, user20);
-//        Artist artist18 = new Artist("하연", "",
-//                "WAV들 안녕~!", artistGroup2, user21);
-//        Artist artist19 = new Artist("시온", "",
-//                "WAV들 안녕~!", artistGroup2, user22);
-//        Artist artist20 = new Artist("채원", "",
-//                "WAV들 안녕~!", artistGroup2, user23);
-//        Artist artist21 = new Artist("서아", "",
-//                "WAV들 안녕~!", artistGroup2, user24);
-//        Artist artist22 = new Artist("설린", "",
-//                "WAV들 안녕~!", artistGroup2, user25);
-//        Artist artist23 = new Artist("지연", "",
-//                "WAV들 안녕~!", artistGroup2, user26);
+//
 //
 //        Artist artist24 = new Artist("카리나", "",
 //                "수수수퍼 노바", artistGroup1, user27);
