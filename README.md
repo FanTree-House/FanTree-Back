@@ -12,7 +12,7 @@
       <td align="center"><a href="gaeun7"><img src="https://github.com/user-attachments/assets/0c263f93-444c-4beb-bb45-6563bf972e9f" width="100px;" alt=""/><br /><sub><b> 부팀장 : 김가은 </b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/MonGrony"><img src= width="100px;" alt=""/><br /><sub><b> 팀원 : 김나영 </b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/kwj0605"><img src="https://github.com/user-attachments/assets/f45111c2-d572-4f41-a0ad-009da8b37cb9" width="100px;" alt=""/><br /><sub><b> 팀원 : 김우진 </b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/Wooseok1213"><img src="" width="100px;" alt=""/><br /><sub><b> 팀원 : 김우석 </b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/Wooseok1213"><img src="https://github.com/user-attachments/assets/cfc3cd07-cc3d-4320-ab12-62010aff84fa" width="100px;" alt=""/><br /><sub><b> 팀원 : 김우석 </b></sub></a><br /></td>
     </tr>
   </tbody>
 </table>
