@@ -12,7 +12,9 @@
       <td align="center"><a href="gaeun7"><img src="https://github.com/user-attachments/assets/0c263f93-444c-4beb-bb45-6563bf972e9f" width="100px;" alt=""/><br /><sub><b> 부팀장 : 김가은 </b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/MonGrony"><img src= width="100px;" alt=""/><br /><sub><b> 팀원 : 김나영 </b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/kwj0605"><img src="https://github.com/user-attachments/assets/f45111c2-d572-4f41-a0ad-009da8b37cb9" width="100px;" alt=""/><br /><sub><b> 팀원 : 김우진 </b></sub></a><br /></td>
+      
       <td align="center"><a href="https://github.com/Wooseok1213"><img src="https://github.com/user-attachments/assets/cfc3cd07-cc3d-4320-ab12-62010aff84fa" width="100px;" alt=""/><br /><sub><b> 팀원 : 김우석 </b></sub></a><br /></td>
+
     </tr>
   </tbody>
 </table>
@@ -23,9 +25,10 @@
 
 # **FANTREE HOUSE**
 
-### 🌟 **프로젝트 시작 동기** 🌟
 
+🌟 **프로젝트 시작 동기** 🌟
 JD 직무분석 및 기획 아이디어
+
 - 대용량 트래픽 관리 경험에 대한 질문 빈번
 - 기존 학습한 기능들을 K-POP과 결합한 서비스 기획 필요성 인식
 - 핵심 문화산업인 K-POP을 활용한 서비스 개발 아이디어 제안
@@ -39,7 +42,8 @@ JD 직무분석 및 기획 아이디어
 - 실 사용자 / 휴면 계정 / 블랙리스트에 관한 관리 기능 구현
 - 유저 권한에 따른 사용할 수 있는 기능 제한
 
-### 🌟 **주요 기능**
+
+🌟 **주요 기능**
 - 그룹 페이지
     - 그룹 피드 작성, 수정, 삭제 (아티스트만)
     - 그룹 피드 조회 (모든 사용자)
@@ -94,8 +98,8 @@ SpringBoot 3.3
 <div markdown="1">
   
   |**분류**|                                                   도구/기술                                                    |선택이유|
-  |:---:|:----------------------------------------------------------------------------------------------------------:|---|
-  |<br> |MySQL|지금까지 학습한 데이터베이스라 새로운 데이터베이스로 넘어가면 러닝 커브가 커질 것을 우려하였고, 특히 읽기 작업에 최적화되어 대량의 데이터를 다루는 웹 애플리케이션에서 빠른 응답 속도를 유지할 수 있기 때문에 MySQL을 선택 |
+
+  |<br> |MySQL |지금까지 학습한 데이터베이스라 새로운 데이터베이스로 넘어가면 러닝 커브가 커질 것을 우려하였고, 특히 읽기 작업에 최적화되어 대량의 데이터를 다루는 웹 애플리케이션에서 빠른 응답 속도를 유지할 수 있기 때문에 MySQL을 선택  |
   | |Java 17 |Spring Boot 3.0부터 지원되며, 장기 지원(LTS) 버전으로 안정성과 긴 지원 기간을 제공하기 때문에 선택 |
   | | Redis| 메일 인증에 필요한 인증 데이터를 잠깐 사용하기 위해 Redis를 캐시에 저장하여, 효율적으로 관리하고 데이터베이스 부하를 줄이기 위해 선택|
   | |Docker |애플리케이션을 컨테이너화하여 환경에 구애받지 않고 일관되게 배포할 수 있어, 개발과 운영 간의 불일치를 줄이고 효율성을 높이기 위해 선택 |
