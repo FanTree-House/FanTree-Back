@@ -80,7 +80,7 @@ public class ArtistService {
         checkUserRole(loginUser.getUserRole());
 
         Artist foundArtist = checkHimself(userDetails.getUser().getId(), artistId);
-        checkDuplicateName(requestDto.getArtistName(), foundArtist);
+//        checkDuplicateName(requestDto.getArtistName(), foundArtist);
         foundArtist.updateArtist(requestDto);
 
         if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
@@ -172,16 +172,16 @@ public class ArtistService {
         return foundArtist;
     }
 
-    // 활동명 중복 등록 확인
-    private void checkDuplicateName(String artistName, Artist artist) {
-
-        if (!artistName.equals(artist.getArtistName())) {
-            boolean isExistName = artistRepository.existsByArtistName(artistName);
-            if (isExistName) {
-                throw new DuplicatedException(ENROLLED_ARTIST_NAME);
-            }
-        }
-    }
+//    // 활동명 중복 등록 확인
+//    private void checkDuplicateName(String artistName, Artist artist) {
+//
+//        if (!artistName.equals(artist.getArtistName())) {
+//            boolean isExistName = artistRepository.existsByArtistName(artistName);
+//            if (isExistName) {
+//                throw new DuplicatedException(ENROLLED_ARTIST_NAME);
+//            }
+//        }
+//    }
 
     // 아티스트인지 확인
     private void checkUserRole(UserRoleEnum userRoleEnum) {

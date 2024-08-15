@@ -14,6 +14,7 @@ public class FeedResponseDto {
     private List<String> imageUrls;
     private Long likesCount;
 
+
     public FeedResponseDto(Long id, String contents, List<String> imageUrls, Long likesCount, String artistName) {
         this.id = id;
         this.contents = contents;
@@ -30,7 +31,6 @@ public class FeedResponseDto {
                 feedLikeCount,
                 artistName
         );
-
     }
 
     public static FeedResponseDto of(Feed feed, Long feedLikeCount) {

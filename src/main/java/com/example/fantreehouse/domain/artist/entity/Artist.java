@@ -22,7 +22,7 @@ public class Artist extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String artistName; //활동명
 
     @Column(nullable = false)
