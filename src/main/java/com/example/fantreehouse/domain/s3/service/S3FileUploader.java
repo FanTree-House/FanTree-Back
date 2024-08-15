@@ -41,6 +41,7 @@ public class S3FileUploader {
     private final String mainUrl = "https://fantree.s3.ap-northeast-2.amazonaws.com/";
     public static final String BASIC_DIR = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/";
     public static final String START_PROFILE_URL = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/Start.png";
+    public static final String DEFAULT_URL = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/Default.png";
     private final String USER_PROFILE_URL = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/User.png";
     private final String ARTIST_PROFILE_URL = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/Artist.png";
     private final String ENTER_PROFILE_URL = "https://fantree.s3.ap-northeast-2.amazonaws.com/Fantree/ProfileDefaultImage/Entertainment.png";
@@ -203,6 +204,7 @@ public class S3FileUploader {
                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
         } catch (IOException e) {
+            log.error("IOException 발생");
             e.printStackTrace();
 
         } catch (Exception e) {

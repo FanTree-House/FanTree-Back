@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.fantreehouse.domain.s3.service.S3FileUploader.DEFAULT_URL;
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -63,7 +65,7 @@ public class Entertainment extends Timestamped {
     public Entertainment(String enterName, Long enterNumber, User user) {
         this.enterName = enterName;
         this.enterNumber = enterNumber;
-        this.enterLogo = "default";
+        this.enterLogo = DEFAULT_URL;
         this.user = user;
     }
 

@@ -111,7 +111,7 @@ public class CommentService {
                 .map(comment -> {
                     List<CommentLike> commentLikeList = commentLikeRepository.findAllCommentLikeByCommentId(comment.getId());
                     int feedLikeCount = commentLikeList.size();
-                    return CommentResponseDto.of(comment, feedLikeCount);
+                    return CommentResponseDto.of(comment, feedLikeCount, comment.getUser().getNickname(), comment.getUser().getProfileImageUrl());
                 })
                 .toList();
         return new PageImpl<>(commentLikeResponseDtoList, pageRequest, pageComment.getTotalElements());

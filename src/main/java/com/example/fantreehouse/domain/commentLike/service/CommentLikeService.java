@@ -6,6 +6,7 @@ import com.example.fantreehouse.common.security.UserDetailsImpl;
 import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupRepository;
 import com.example.fantreehouse.domain.comment.entity.Comment;
 import com.example.fantreehouse.domain.comment.repository.CommentRepository;
+import com.example.fantreehouse.domain.commentLike.dto.CommentLikeResponseDto;
 import com.example.fantreehouse.domain.feed.repository.FeedRepository;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
@@ -67,5 +68,19 @@ public class CommentLikeService {
     private void existFeed(Long artistFeedId) {
         feedRepository.findById(artistFeedId)
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
+    }
+
+    // 좋아요 개수
+    public CommentLikeResponseDto getLikeCount(Long artistFeedCommentId) {
+        // 좋아요 개수
+        Long likeCount = commentLikeServiceSupport.likeCount(artistFeedCommentId);
+        return new CommentLikeResponseDto(likeCount);
+    }
+
+    // 좋아요 유무
+    public CommentLikeResponseDto getIsLiked(Long artistFeedCommentId, User loginUser) {
+        // 좋아요 유무
+        Boolean isLiked = commentLikeServiceSupport.isLiked(loginUser, artistFeedCommentId);
+        return new CommentLikeResponseDto(isLiked);
     }
 }

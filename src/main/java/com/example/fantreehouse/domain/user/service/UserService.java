@@ -212,7 +212,6 @@ public class UserService {
             User user = userRepository.findById(carrier.getId())
                     .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
             user.updateImageUrl(carrier.getImageUrl());
-            userRepository.save(user);
         }
     }
 
