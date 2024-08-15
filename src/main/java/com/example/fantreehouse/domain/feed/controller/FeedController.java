@@ -48,7 +48,7 @@ public class FeedController {
             @PathVariable final String groupName,
             @RequestPart(value = "file", required = false) List<MultipartFile> files,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart("requestDto") @Valid CreateFeedRequestDto requestDto
+            @Valid @ModelAttribute CreateFeedRequestDto requestDto
     ) {
         if (files != null && files.size() > 10) {
             throw new S3Exception(MAX_IMAGES_EXCEEDED);
