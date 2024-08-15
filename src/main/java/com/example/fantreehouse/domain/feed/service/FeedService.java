@@ -193,6 +193,7 @@ public class FeedService {
         ArtistGroup artistGroup = artistGroupRepository.findByGroupName(groupName)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTISTGROUP));
 
+
         PageRequest pageRequest = PageRequest.of(page, FEED_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Feed> pagedFeed = feedRepository.findByArtistGroup(artistGroup, pageRequest);
 
@@ -239,7 +240,6 @@ public class FeedService {
 
     // 개인별 좋아요 누른 Feed 모아보기
     public List<FeedResponseDto> getLikeFeeds(User user) {
-
         List<FeedLike> foundFeedLikeList = feedLikeRepository.findAllFeedLikeByUserId(user.getId());
         if (foundFeedLikeList.isEmpty()) {
             throw new NotFoundException(NOT_FOUND_FEED_LIKES);
@@ -257,15 +257,6 @@ public class FeedService {
         }
         return feedResponseDtoList;
     }
-
-
-    //유저 status 확인 (활동 여부)
-    private void checkUserStatus(UserStatusEnum userStatusEnum) {
-        if (!userStatusEnum.equals(UserStatusEnum.ACTIVE_USER)) {
-            throw new UnAuthorizedException(UNAUTHORIZED);
-        }
-    }
-
 
     //요청하는 feed 찾기
     private Feed findFeed(Long artistFeedId) {
