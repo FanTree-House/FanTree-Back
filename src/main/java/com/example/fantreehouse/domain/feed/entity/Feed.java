@@ -39,6 +39,8 @@ public class Feed extends Timestamped {
 
     private int feedLikeCount;
 
+
+
     // 댓글이랑 일대다
     @OneToMany(mappedBy = "feed")
     private List<Comment> comments = new ArrayList<>();
