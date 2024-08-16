@@ -114,6 +114,9 @@ public class SubscriptionService {
 
     // 아티스트 그룹을 구독 유무
     public IsSubscribeDto getIsSubscribe(User user, String groupName) {
+        if(null == user) {
+            throw new CustomException(ErrorType.USER_NOT_FOUND);
+        }
         ArtistGroup artistGroup = findArtistGroup(groupName);
         return new IsSubscribeDto(isSubscribe(user, artistGroup));
     }
