@@ -70,7 +70,9 @@ jobs:
             fi
             # 여기서의 환경 변수도 여러분 상황에 맞게 작성하시면 됩니다!!!
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
-            sudo docker run -d -p 8080:8080 \
+            sudo docker run -d \ 
+                -v /home/ubuntu/logs:/logs \
+                -p 8080:8080 \
                 -e DATASOURCE_USERNAME=${{secrets.DATASOURCE_USERNAME}} \
                 -e DATASOURCE_PASSWORD=${{secrets.DATASOURCE_PASSWORD}} \
                 -e DATASOURCE_URL=${{secrets.DATASOURCE_URL}} \
