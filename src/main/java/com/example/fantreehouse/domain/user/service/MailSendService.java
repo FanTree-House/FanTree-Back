@@ -61,7 +61,7 @@ public class MailSendService {
     String randomNumber = String.valueOf(makeRandomNumber());
     String loginId = requestDto.getLoginId();
     // 환경변수 설정
-    String setFrom = "zergskybmw@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
+    String setFrom = "fantreecompany@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
     String toMail = requestDto.getEmail();
     String title = "회원 가입 인증 이메일 입니다."; // 이메일 제목
     MailAuth mailAuth = new MailAuth(loginId,toMail,randomNumber);
@@ -84,7 +84,7 @@ public class MailSendService {
     User inactiveUser = userRepository.findByLoginIdAndEmailAndStatus(loginId,
         requestDto.getEmail(), status).orElseThrow(()->  new NotFoundException(USER_NOT_FOUND));
 
-    String setFrom = "zergskybmw@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
+    String setFrom = "fantreecompany@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
     String toMail = requestDto.getEmail();
     String title = "휴면 계정 해제 이메일입니다."; // 이메일 제목
     MailAuth mailAuth = new MailAuth(inactiveUser.getLoginId(),
