@@ -183,7 +183,7 @@ public class FeedService {
             imageUrls.add(imageUrl);
         }
 
-        return FeedResponseDto.of(foundFeed, feedLikeCount, imageUrls, foundFeed.getId(), foundFeed.getArtistName());
+        return FeedResponseDto.of(foundFeed, feedLikeCount, imageUrls, foundFeed.getId(), foundFeed.getArtistName(), foundFeed.getUser().getProfileImageUrl());
     }
 
 
@@ -253,7 +253,7 @@ public class FeedService {
             Long likeCount = feedLikeRepository.countByFeedId(feed.getId());
             List<String> feedImageUrls = feed.getImageUrls();
 
-            feedResponseDtoList.add(FeedResponseDto.of(feed, likeCount, feedImageUrls, feed.getId(), feed.getArtistName()));
+            feedResponseDtoList.add(FeedResponseDto.of(feed, likeCount, feedImageUrls, feed.getId(), feed.getArtistName(), feed.getUser().getProfileImageUrl()));
         }
         return feedResponseDtoList;
     }
