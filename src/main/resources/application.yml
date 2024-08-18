@@ -64,7 +64,7 @@ logging:
     com.example.log: debug
   logback:
     rollingpolicy:
-      max-file-size: 10MB
-      max-history: 7
+      max-file-size: 50MB
+      max-history: 30
   file:
     name: /var/log/server.log
