@@ -271,4 +271,8 @@ public class UserService {
         return newImageUrl;
     }
 
+    public boolean checkCurrentPassword( String inputPassword, String currentPassword) {
+
+        return passwordEncoder.matches(inputPassword, currentPassword);
+    }
 }
