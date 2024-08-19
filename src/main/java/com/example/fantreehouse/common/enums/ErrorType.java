@@ -17,6 +17,9 @@ public enum ErrorType implements ErrorCode {
     NOT_AVAILABLE_PERMISSION(HttpStatus.LOCKED, "권한이 없습니다.")
      */
 
+    // common
+    PAYLOAD_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE, "255자 이내로 입력해주세요."),
+
     // like
     LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "좋아요가 없습니다."),
     SELF_LIKE(HttpStatus.NOT_ACCEPTABLE, "자신의 글/댓글에 좋아요 사용 불가"),
