@@ -1,5 +1,6 @@
 package com.example.fantreehouse.domain.comment.service;
 
+import com.example.fantreehouse.common.exception.CustomException;
 import com.example.fantreehouse.common.exception.errorcode.NotFoundException;
 import com.example.fantreehouse.common.exception.errorcode.UnAuthorizedException;
 import com.example.fantreehouse.common.security.UserDetailsImpl;
@@ -48,6 +49,11 @@ public class CommentService {
         Feed foundFeed = feedRepository.findById(feedId).orElseThrow(
                 () -> new NotFoundException(FEED_NOT_FOUND)
         );
+
+        // 내용은 최대 255자
+        if(requestDto.getContents().length() > 255) {
+            throw new CustomException(PAYLOAD_TOO_LARGE);
+        }
 
         User feedWriter = foundFeed.getUser();
 
