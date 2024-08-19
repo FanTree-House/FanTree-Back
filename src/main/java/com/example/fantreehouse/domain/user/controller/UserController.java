@@ -153,6 +153,16 @@ public class UserController {
         if (result) {
             return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.CHECK_PASSWORD, result));
         } else return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.MISMATCH_PASSWORD, result));
+    }
 
+    @PostMapping("/checkCurrentPassword")
+    public ResponseEntity<ResponseBooleanDto> checkCurrentPassword(
+            @Valid @RequestBody PasswordCheckRequestDto passwordCheckDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boolean result = userService.checkCurrentPassword(passwordCheckDto.getPassword(),
+                userDetails.getPassword());
+        if (result) {
+            return ResponseEntity.ok(new ResponseBooleanDto(ResponseStatus.CHECK_PASSWORD, result));
+        } else return ResponseEntity.ok(new ResponseBooleanDto(ErrorType.MISMATCH_PASSWORD, result));
     }
 }
