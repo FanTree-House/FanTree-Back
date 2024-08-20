@@ -11,4 +11,6 @@ public interface CommunityFeedRepository extends JpaRepository<CommunityFeed, Lo
    Optional<List<CommunityFeed>> findAllByUserId(Long userId);
 
     Optional<List<CommunityFeed>> findAllByArtistGroupId(Long ArtistGroupId);
+
+    Optional<List<CommunityFeed>> findAllByOrderByCreatedAtDesc();
 }

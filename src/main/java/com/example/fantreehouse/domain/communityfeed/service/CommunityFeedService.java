@@ -85,7 +85,7 @@ public class CommunityFeedService {
 
         // 구독자 체크
         checkSubscriptionList(userId, artistGroup.getId());
-        List<CommunityFeed> feedList = feedRepository.findAll();
+        List<CommunityFeed> feedList = feedRepository.findAllByOrderByCreatedAtDesc().get();
 
         if (feedList.isEmpty()) {
             throw new CustomException(NOT_FOUND_FEED);
