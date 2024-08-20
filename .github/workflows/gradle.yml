@@ -51,7 +51,7 @@ jobs:
 
 
   deploy-to-ec2:
-    needs: build-and-docker-push # 위의 build-and-docker-push 이 끝나고 실행
+    needs: build-and-docker-push # 위의 build-and-docker-push 끝나고 실행
     runs-on: ubuntu-latest
 
     steps:
@@ -69,6 +69,7 @@ jobs:
               sudo docker rm $CONTAINER_ID
             fi
             # 여기서의 환경 변수도 여러분 상황에 맞게 작성하시면 됩니다!!!
+            sudo docker image prune
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
             sudo docker run -d \
                 -v /home/ubuntu/logs:/var/log \
