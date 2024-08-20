@@ -47,6 +47,7 @@ jobs:
           file: ./docker/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
+          no-cache: true
 
 
 
