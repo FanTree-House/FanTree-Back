@@ -71,7 +71,6 @@ public class CommunityFeedService {
                 throw new S3Exception(UPLOAD_ERROR);
             }
         }
-
         ImageUrlCarrier carrier = new ImageUrlCarrier(feed.getId(), imageUrls);
         updateCommunityFeedImageUrls(carrier);
 
@@ -108,7 +107,7 @@ public class CommunityFeedService {
         return feed;
     }
 
-    // 개인별 피드 전체 조회
+    // 개인별 구독한 커뮤에 작성한 내피드 전체 조회
     public List<CommunityFeedResponseDtoExtention> findAllMyFeeds(User user) {
 
         List<Subscription> subscriptionList = user.getSubscriptions();
@@ -131,7 +130,14 @@ public class CommunityFeedService {
             throw new NotFoundException(NOT_FOUND_FEED); //이 경우 프론트에서 받아서 메세지 전달 가능
         }
 
-        List<CommunityFeed> sortedFeeds = allMyFeeds.stream().sorted(Comparator.comparing(CommunityFeed::getCreatedAt)
+        List<CommunityFeed> myCommunityFeeds = new ArrayList<>();
+        for (CommunityFeed communityFeed : allMyFeeds) {
+            if (communityFeed.getUser().getId().equals(user.getId())) {
+                myCommunityFeeds.add(communityFeed);
+            }
+        }
+
+        List<CommunityFeed> sortedFeeds = myCommunityFeeds.stream().sorted(Comparator.comparing(CommunityFeed::getCreatedAt)
                         .reversed()).toList();
 
         List<CommunityFeedResponseDtoExtention> feedResponseDtoList = new ArrayList<>();
