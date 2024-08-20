@@ -46,7 +46,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:1.0
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
           no-cache: true
 
 
@@ -70,7 +70,8 @@ jobs:
               sudo docker rm $CONTAINER_ID
             fi
             # 여기서의 환경 변수도 여러분 상황에 맞게 작성하시면 됩니다!!!
-            sudo docker image prune
+            sudo docker image prune -a #캐시 지우는
+            sudo docker system prune -a
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_TAG_NAME }}:latest
             sudo docker run -d \
                 -v /home/ubuntu/logs:/var/log \
