@@ -8,9 +8,9 @@ import com.example.fantreehouse.domain.entertainment.dto.EntertainmentRequestDto
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentResponseDto;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRepository;
-import com.example.fantreehouse.domain.s3.service.S3FileUploader;
-import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
-import com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil;
+//import com.example.fantreehouse.domain.s3.service.S3FileUploader;
+//import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
+//import com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.repository.UserRepository;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
-import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
+//import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class EntertainmentService {
 
     private final EntertainmentRepository enterRepository;
     private final UserRepository userRepository;
-    private final S3FileUploader s3FileUploader;
+//    private final S3FileUploader s3FileUploader;
 
     /**
      * 엔터 계정 생성
@@ -53,16 +53,16 @@ public class EntertainmentService {
 
         enterRepository.save(enter);
 
-        String imageUrl = "";
-        try {
-            imageUrl = s3FileUploader.saveProfileImage(file, enter.getId(), UserRoleEnum.ENTERTAINMENT);
-        } catch (Exception e) {
-            s3FileUploader.deleteFileInBucket(imageUrl);
-            throw new S3Exception(UPLOAD_ERROR);
-        }
-
-        ImageUrlCarrier carrier = new ImageUrlCarrier(enter.getId(), imageUrl);
-        updateEnterLogoUrl(carrier);
+//        String imageUrl = "";
+//        try {
+//            imageUrl = s3FileUploader.saveProfileImage(file, enter.getId(), UserRoleEnum.ENTERTAINMENT);
+//        } catch (Exception e) {
+//            s3FileUploader.deleteFileInBucket(imageUrl);
+//            throw new S3Exception(UPLOAD_ERROR);
+//        }
+//
+//        ImageUrlCarrier carrier = new ImageUrlCarrier(enter.getId(), imageUrl);
+//        updateEnterLogoUrl(carrier);
     }
 
 
@@ -109,27 +109,27 @@ public class EntertainmentService {
 
         enterRepository.save(enter);
 
-        if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
-            try {
-                s3FileUploader.deleteFileInBucket(enter.getEnterLogo());
-            } catch (NotFoundException e) {
-                enter.updateEnterLogo("");
-                enterRepository.save(enter);
-            } catch (Exception e) {
-                throw new S3Exception(DELETE_ERROR);
-            }
-
-            String newImageUrl = "";
-            try {
-                newImageUrl = s3FileUploader.saveProfileImage(file, enter.getId(), UserRoleEnum.ENTERTAINMENT);
-            } catch (Exception e) {
-                s3FileUploader.deleteFileInBucket(newImageUrl);
-                throw new S3Exception(UPLOAD_ERROR);
-            }
-
-            ImageUrlCarrier carrier = new ImageUrlCarrier(enter.getId(), newImageUrl);
-            updateEnterLogoUrl(carrier);
-        }
+//        if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
+//            try {
+//                s3FileUploader.deleteFileInBucket(enter.getEnterLogo());
+//            } catch (NotFoundException e) {
+//                enter.updateEnterLogo("");
+//                enterRepository.save(enter);
+//            } catch (Exception e) {
+//                throw new S3Exception(DELETE_ERROR);
+//            }
+//
+//            String newImageUrl = "";
+//            try {
+//                newImageUrl = s3FileUploader.saveProfileImage(file, enter.getId(), UserRoleEnum.ENTERTAINMENT);
+//            } catch (Exception e) {
+//                s3FileUploader.deleteFileInBucket(newImageUrl);
+//                throw new S3Exception(UPLOAD_ERROR);
+//            }
+//
+//            ImageUrlCarrier carrier = new ImageUrlCarrier(enter.getId(), newImageUrl);
+//            updateEnterLogoUrl(carrier);
+//        }
     }
 
 
@@ -149,14 +149,14 @@ public class EntertainmentService {
         // [예외 2] - 존재하지 않는 엔터테이먼트 계정
         Entertainment enter = enterRepository.findByEnterName(enterName).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ENTER));
 
-        try {
-            s3FileUploader.deleteFileInBucket(enter.getEnterLogo());
-        } catch (NotFoundException e) {
-            enter.updateEnterLogo("");//실체 없는 url 테이블에서 삭제
-            enterRepository.save(enter);
-        } catch (Exception e) {
-            throw new S3Exception(DELETE_ERROR);
-        }
+//        try {
+//            s3FileUploader.deleteFileInBucket(enter.getEnterLogo());
+//        } catch (NotFoundException e) {
+//            enter.updateEnterLogo("");//실체 없는 url 테이블에서 삭제
+//            enterRepository.save(enter);
+//        } catch (Exception e) {
+//            throw new S3Exception(DELETE_ERROR);
+//        }
         enterRepository.delete(enter);
     }
 
@@ -176,12 +176,12 @@ public class EntertainmentService {
         }
     }
 
-    private void updateEnterLogoUrl(ImageUrlCarrier carrier) {
-        if (!carrier.getImageUrl().isEmpty()) {
-            Entertainment entertainment = enterRepository.findById(carrier.getId())
-                    .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
-            entertainment.updateEnterLogo(carrier.getImageUrl());
-            enterRepository.save(entertainment);
-        }
-    }
+//    private void updateEnterLogoUrl(ImageUrlCarrier carrier) {
+//        if (!carrier.getImageUrl().isEmpty()) {
+//            Entertainment entertainment = enterRepository.findById(carrier.getId())
+//                    .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
+//            entertainment.updateEnterLogo(carrier.getImageUrl());
+//            enterRepository.save(entertainment);
+//        }
+//    }
 }

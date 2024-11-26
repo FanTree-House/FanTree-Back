@@ -20,8 +20,8 @@ import com.example.fantreehouse.domain.feed.entity.Feed;
 import com.example.fantreehouse.domain.feed.repository.FeedRepository;
 import com.example.fantreehouse.domain.feedlike.entity.FeedLike;
 import com.example.fantreehouse.domain.feedlike.repository.FeedLikeRepository;
-import com.example.fantreehouse.domain.s3.service.S3FileUploader;
-import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
+//import com.example.fantreehouse.domain.s3.service.S3FileUploader;
+//import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
@@ -40,7 +40,7 @@ import java.util.List;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.common.enums.PageSize.FEED_PAGE_SIZE;
-import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
+//import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
 
 @Service
 @RequiredArgsConstructor
@@ -51,8 +51,8 @@ public class FeedService {
     private final ArtistRepository artistRepository;
     private final ArtistGroupRepository artistGroupRepository;
     private final FeedLikeRepository feedLikeRepository;
-    private final S3FileUploader s3FileUploader;
-    private final AmazonS3Client amazonS3Client;
+//    private final S3FileUploader s3FileUploader;
+//    private final AmazonS3Client amazonS3Client;
 
 
     /**
@@ -82,20 +82,20 @@ public class FeedService {
         Feed newFeed = Feed.of(requestDto, loginUser, artistGroup);
         feedRepository.save(newFeed);
 
-        List<String> imageUrls = new ArrayList<>();
-        if (areFilesExist(files)) {
-            try {
-                for (MultipartFile file : files) {
-                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, loginArtist.getArtistName(), newFeed.getId());
-                    imageUrls.add(imageUrl);
-                }
-            } catch (Exception e) {
-                s3FileUploader.deleteFilesInBucket(imageUrls);
-                throw new S3Exception(UPLOAD_ERROR);
-            }
-            ImageUrlCarrier carrier = new ImageUrlCarrier(newFeed.getId(), imageUrls);
-            updateFeedImageUrls(carrier);
-        }
+//        List<String> imageUrls = new ArrayList<>();
+//        if (areFilesExist(files)) {
+//            try {
+//                for (MultipartFile file : files) {
+//                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, loginArtist.getArtistName(), newFeed.getId());
+//                    imageUrls.add(imageUrl);
+//                }
+//            } catch (Exception e) {
+//                s3FileUploader.deleteFilesInBucket(imageUrls);
+//                throw new S3Exception(UPLOAD_ERROR);
+//            }
+//            ImageUrlCarrier carrier = new ImageUrlCarrier(newFeed.getId(), imageUrls);
+//            updateFeedImageUrls(carrier);
+//        }
 
 
         return CreateFeedResponseDto.of(newFeed);
@@ -129,33 +129,33 @@ public class FeedService {
 
         foundFeed.updateFeed(requestDto);
 
-        if (areFilesExist(files)) {
-            List<String> foundFeedImageUrls = foundFeed.getImageUrls();
-            for (String imageUrl : foundFeedImageUrls) {
-                try {
-                    s3FileUploader.deleteFileInBucket(imageUrl);
-                } catch (NotFoundException e) {
-                    foundFeedImageUrls.remove(imageUrl);
-                    foundFeed.updateImageUrls(foundFeedImageUrls);
-                    feedRepository.save(foundFeed);
-                } catch (Exception e) {
-                    throw new S3Exception(DELETE_ERROR);
-                }
-            }
-
-            List<String> newImageUrls = new ArrayList<>();
-            try {
-                for (MultipartFile file : files) {
-                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, loginUser.getArtist().getArtistName(), foundFeed.getId());
-                    newImageUrls.add(imageUrl);
-                }
-            } catch (Exception e) {
-                s3FileUploader.deleteFilesInBucket(newImageUrls);
-                throw new S3Exception(UPLOAD_ERROR);
-            }
-            ImageUrlCarrier carrier = new ImageUrlCarrier(foundFeed.getId(), newImageUrls);
-            updateFeedImageUrls(carrier);
-        }
+//        if (areFilesExist(files)) {
+//            List<String> foundFeedImageUrls = foundFeed.getImageUrls();
+//            for (String imageUrl : foundFeedImageUrls) {
+//                try {
+//                    s3FileUploader.deleteFileInBucket(imageUrl);
+//                } catch (NotFoundException e) {
+//                    foundFeedImageUrls.remove(imageUrl);
+//                    foundFeed.updateImageUrls(foundFeedImageUrls);
+//                    feedRepository.save(foundFeed);
+//                } catch (Exception e) {
+//                    throw new S3Exception(DELETE_ERROR);
+//                }
+//            }
+//
+//            List<String> newImageUrls = new ArrayList<>();
+//            try {
+//                for (MultipartFile file : files) {
+//                    String imageUrl = s3FileUploader.saveArtistFeedImage(file, loginUser.getArtist().getArtistName(), foundFeed.getId());
+//                    newImageUrls.add(imageUrl);
+//                }
+//            } catch (Exception e) {
+//                s3FileUploader.deleteFilesInBucket(newImageUrls);
+//                throw new S3Exception(UPLOAD_ERROR);
+//            }
+//            ImageUrlCarrier carrier = new ImageUrlCarrier(foundFeed.getId(), newImageUrls);
+//            updateFeedImageUrls(carrier);
+//        }
 
         return UpdateFeedResponseDto.of(foundFeed);
     }
@@ -223,19 +223,20 @@ public class FeedService {
         //유저 검증
         feedWriter.validationUser(loginUser);
 
-        List<String> foundFeedImageUrls = foundFeed.getImageUrls();
-        for (String imageUrl : foundFeedImageUrls) {
-            try {
-                s3FileUploader.deleteFileInBucket(imageUrl);
-            } catch (NotFoundException e) {
-                foundFeedImageUrls.remove(imageUrl);
-                foundFeed.updateImageUrls(foundFeedImageUrls);//실체 없는 url 테이블에서 삭제
-                feedRepository.save(foundFeed);
-            } catch (Exception e) {
-                throw new S3Exception(DELETE_ERROR);
-            }
-            feedRepository.delete(foundFeed);
-        }
+//        List<String> foundFeedImageUrls = foundFeed.getImageUrls();
+//        for (String imageUrl : foundFeedImageUrls) {
+//            try {
+//                s3FileUploader.deleteFileInBucket(imageUrl);
+//            } catch (NotFoundException e) {
+//                foundFeedImageUrls.remove(imageUrl);
+//                foundFeed.updateImageUrls(foundFeedImageUrls);//실체 없는 url 테이블에서 삭제
+//                feedRepository.save(foundFeed);
+//            } catch (Exception e) {
+//                throw new S3Exception(DELETE_ERROR);
+//            }
+//
+//        }
+        feedRepository.delete(foundFeed);
     }
 
     // 개인별 좋아요 누른 Feed 모아보기
@@ -264,14 +265,14 @@ public class FeedService {
                 .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
     }
 
-    private void updateFeedImageUrls(ImageUrlCarrier carrier) {
-        if (!carrier.getImageUrls().isEmpty()) {
-            Feed feed = feedRepository.findById(carrier.getId())
-                    .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
-            feed.updateImageUrls(carrier.getImageUrls());
-            feedRepository.save(feed);
-        }
-    }
+//    private void updateFeedImageUrls(ImageUrlCarrier carrier) {
+//        if (!carrier.getImageUrls().isEmpty()) {
+//            Feed feed = feedRepository.findById(carrier.getId())
+//                    .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
+//            feed.updateImageUrls(carrier.getImageUrls());
+//            feedRepository.save(feed);
+//        }
+//    }
 
     private Artist checkLoginUserRole(Long userId) {
         return artistRepository.findByUserId(userId)

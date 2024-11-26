@@ -78,6 +78,7 @@ public class SubscriptionService {
                 .toList();
     }
 
+    //todo : 아티스트별 파싱
     //구독한 그룹의 피드 모두 보기(최신순)
     public List<FeedResponseDto> getSubscribedGroupFeeds(User user) {
 

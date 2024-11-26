@@ -50,10 +50,10 @@ public class ArtistGroupController {
 
     /**
      * 아티스트 그룹 조회
-     * @param groupName 그룹 이름
+     * @param groupId 그룹 이름
      * @return 아티스트 그룹 응답 DTO
      */
-    @GetMapping("/{groupName}")
+    @GetMapping("/{groupId}")
     public ResponseEntity<ResponseDataDto<ArtistGroupResponseDto>> getArtistGroup(
             @PathVariable String groupName) {
 

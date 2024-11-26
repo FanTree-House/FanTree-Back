@@ -14,8 +14,8 @@ import com.example.fantreehouse.domain.artistgroup.repository.ArtistGroupReposit
 import com.example.fantreehouse.domain.entertainment.dto.EntertainmentResponseDto;
 import com.example.fantreehouse.domain.entertainment.entity.Entertainment;
 import com.example.fantreehouse.domain.entertainment.repository.EntertainmentRepository;
-import com.example.fantreehouse.domain.s3.service.S3FileUploader;
-import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
+//import com.example.fantreehouse.domain.s3.service.S3FileUploader;
+//import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
 import com.example.fantreehouse.domain.subscription.repository.SubscriptionRepository;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
-import static com.example.fantreehouse.domain.s3.service.S3FileUploader.BASIC_DIR;
-import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
-import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
+//import static com.example.fantreehouse.domain.s3.service.S3FileUploader.BASIC_DIR;
+//import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
+//import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +40,7 @@ public class ArtistGroupService {
     private final ArtistGroupRepository artistGroupRepository;
     private final EntertainmentRepository entertainmentRepository;
     private final ArtistRepository artistRepository;
-    private final S3FileUploader s3FileUploader;
+//    private final S3FileUploader s3FileUploader;
 
     /**
      * 아티스트 그룹 생성
@@ -75,16 +75,16 @@ public class ArtistGroupService {
 
         artistGroupRepository.save(artistGroup);
 
-        String imageUrl = START_PROFILE_URL;
-        try {
-            imageUrl = s3FileUploader.saveArtistGroupImage(file, artistGroup.getId());
-        } catch (Exception e) {
-            s3FileUploader.deleteFileInBucket(imageUrl);
-            throw new S3Exception(UPLOAD_ERROR);
-        }
-
-        ImageUrlCarrier carrier = new ImageUrlCarrier(artistGroup.getId(), imageUrl);
-        updateArtistGroupImageUrl(carrier);
+//        String imageUrl = START_PROFILE_URL;
+//        try {
+//            imageUrl = s3FileUploader.saveArtistGroupImage(file, artistGroup.getId());
+//        } catch (Exception e) {
+//            s3FileUploader.deleteFileInBucket(imageUrl);
+//            throw new S3Exception(UPLOAD_ERROR);
+//        }
+//
+//        ImageUrlCarrier carrier = new ImageUrlCarrier(artistGroup.getId(), imageUrl);
+//        updateArtistGroupImageUrl(carrier);
 
         return artistGroup;
     }
@@ -165,28 +165,28 @@ public class ArtistGroupService {
             }
         }
 
-        if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
-
-            try {
-                s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
-            } catch (NotFoundException e) {
-                artistGroup.updateImageUrl("");
-                artistGroupRepository.save(artistGroup);
-            } catch (Exception e) {
-                throw new S3Exception(DELETE_ERROR);
-            }
-
-            String newImageUrl;
-            try {
-                newImageUrl = s3FileUploader.saveArtistGroupImage(file, artistGroup.getId());
-            } catch (Exception e) {
-                s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
-                throw new S3Exception(UPLOAD_ERROR);
-            }
-
-            ImageUrlCarrier carrier = new ImageUrlCarrier(artistGroup.getId(), newImageUrl);
-            updateArtistGroupImageUrl(carrier);
-        }
+//        if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
+//
+//            try {
+//                s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
+//            } catch (NotFoundException e) {
+//                artistGroup.updateImageUrl("");
+//                artistGroupRepository.save(artistGroup);
+//            } catch (Exception e) {
+//                throw new S3Exception(DELETE_ERROR);
+//            }
+//
+//            String newImageUrl;
+//            try {
+//                newImageUrl = s3FileUploader.saveArtistGroupImage(file, artistGroup.getId());
+//            } catch (Exception e) {
+//                s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
+//                throw new S3Exception(UPLOAD_ERROR);
+//            }
+//
+//            ImageUrlCarrier carrier = new ImageUrlCarrier(artistGroup.getId(), newImageUrl);
+//            updateArtistGroupImageUrl(carrier);
+//        }
 
         return artistGroupRepository.save(artistGroup);
     }
@@ -231,17 +231,17 @@ public class ArtistGroupService {
 
         ArtistGroup artistGroup = getArtistGroup(groupName);
 
-        String imageUrl = user.getProfileImageUrl();
-        if (!imageUrl.startsWith(BASIC_DIR)) {
-            try {
-                s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
-            } catch (NotFoundException e) {
-                artistGroup.updateImageUrl(START_PROFILE_URL);
-                artistGroupRepository.save(artistGroup);
-            } catch (Exception e) {
-                throw new S3Exception(DELETE_ERROR);
-            }
-        }
+//        String imageUrl = user.getProfileImageUrl();
+//        if (!imageUrl.startsWith(BASIC_DIR)) {
+//            try {
+//                s3FileUploader.deleteFileInBucket(artistGroup.getArtistGroupProfileImageUrl());
+//            } catch (NotFoundException e) {
+//                artistGroup.updateImageUrl(START_PROFILE_URL);
+//                artistGroupRepository.save(artistGroup);
+//            } catch (Exception e) {
+//                throw new S3Exception(DELETE_ERROR);
+//            }
+//        }
         artistGroupRepository.delete(artistGroup);
     }
 
@@ -267,13 +267,13 @@ public class ArtistGroupService {
         }
     }
 
-    private void updateArtistGroupImageUrl(ImageUrlCarrier carrier) {
-        if (!carrier.getImageUrl().isEmpty()) {
-            ArtistGroup artistGroup = artistGroupRepository.findById(carrier.getId())
-                    .orElseThrow(() -> new NotFoundException(ARTIST_GROUP_NOT_FOUND));
-            artistGroup.updateImageUrl(carrier.getImageUrl());
-        }
-    }
+//    private void updateArtistGroupImageUrl(ImageUrlCarrier carrier) {
+//        if (!carrier.getImageUrl().isEmpty()) {
+//            ArtistGroup artistGroup = artistGroupRepository.findById(carrier.getId())
+//                    .orElseThrow(() -> new NotFoundException(ARTIST_GROUP_NOT_FOUND));
+//            artistGroup.updateImageUrl(carrier.getImageUrl());
+//        }
+//    }
 
     /**
      * 아티스트 그룹 조회

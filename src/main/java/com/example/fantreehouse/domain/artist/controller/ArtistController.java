@@ -61,9 +61,9 @@ public class ArtistController {
             @RequestPart(required = false) MultipartFile file,
             @Valid @ModelAttribute final ArtistRequestDto requestDto
     ) {
-        if (file != null && file.getSize() > 10 * 1024 * 1024) {
-            throw new S3Exception(OVER_LOAD);
-        }
+//        if (file != null && file.getSize() > 10 * 1024 * 1024) {
+//            throw new S3Exception(OVER_LOAD);
+//        }
         artistService.updateArtist(artistId, userDetails, file, requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.ARTIST_UPDATED));
     }
@@ -84,6 +84,7 @@ public class ArtistController {
                 .body(new ResponseMessageDto(ResponseStatus.PROFILE_UPDATE));
     }
 
+    // 아티스트 조회
     /**
      * 아티스트 단건 조회 / 비가입자 가능
      *

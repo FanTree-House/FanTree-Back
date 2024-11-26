@@ -10,9 +10,9 @@ import com.example.fantreehouse.domain.artist.dto.response.ArtistProfileResponse
 import com.example.fantreehouse.domain.artist.entity.Artist;
 import com.example.fantreehouse.domain.artist.repository.ArtistRepository;
 import com.example.fantreehouse.domain.artistgroup.entity.ArtistGroup;
-import com.example.fantreehouse.domain.s3.service.S3FileUploader;
-import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
-import com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil;
+//import com.example.fantreehouse.domain.s3.service.S3FileUploader;
+//import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
+//import com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil;
 import com.example.fantreehouse.domain.user.entity.User;
 import com.example.fantreehouse.domain.user.entity.UserRoleEnum;
 import com.example.fantreehouse.domain.user.entity.UserStatusEnum;
@@ -30,9 +30,9 @@ import java.util.List;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
 import static com.example.fantreehouse.common.enums.PageSize.ARTIST_PAGE_SIZE;
-import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
-import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
-import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
+//import static com.example.fantreehouse.domain.s3.service.S3FileUploader.START_PROFILE_URL;
+//import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
+//import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileExists;
 
 @Slf4j
 @Service
@@ -41,7 +41,7 @@ import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.isFileE
 public class ArtistService {
 
     private final ArtistRepository artistRepository;
-    private final S3FileUploader s3FileUploader;
+//    private final S3FileUploader s3FileUploader;
 
     // 아티스트 계정 생성
     @Transactional
@@ -60,16 +60,16 @@ public class ArtistService {
         Artist newArtist = Artist.of(requestDto, loginUser);
         artistRepository.save(newArtist);
 
-        String imageUrl = "";
-        try {
-            imageUrl = s3FileUploader.saveProfileImage(file, newArtist.getId(), UserRoleEnum.ARTIST);
-        } catch (Exception e) {
-            s3FileUploader.deleteFileInBucket(imageUrl);
-            throw new S3Exception(UPLOAD_ERROR);
-        }
-
-        ImageUrlCarrier carrier = new ImageUrlCarrier(newArtist.getId(), imageUrl);
-        updateArtistImageUrl(carrier);
+//        String imageUrl = "";
+//        try {
+//            imageUrl = s3FileUploader.saveProfileImage(file, newArtist.getId(), UserRoleEnum.ARTIST);
+//        } catch (Exception e) {
+//            s3FileUploader.deleteFileInBucket(imageUrl);
+//            throw new S3Exception(UPLOAD_ERROR);
+//        }
+//
+//        ImageUrlCarrier carrier = new ImageUrlCarrier(newArtist.getId(), imageUrl);
+//        updateArtistImageUrl(carrier);
     }
 
     // 아티스트 프로필(계정) 수정
@@ -83,28 +83,28 @@ public class ArtistService {
 //        checkDuplicateName(requestDto.getArtistName(), foundArtist);
         foundArtist.updateArtist(requestDto);
 
-        if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
-
-            try {
-                s3FileUploader.deleteFileInBucket(foundArtist.getArtistProfileImageUrl());
-            } catch (NotFoundException e) {
-                foundArtist.updateImageUrl("");//실체 없는 url 테이블에서 삭제
-                artistRepository.save(foundArtist);
-            } catch (Exception e) {
-                throw new S3Exception(DELETE_ERROR);
-            }
-
-            String newImageUrl = "";
-            try {
-                newImageUrl = s3FileUploader.saveProfileImage(file, foundArtist.getId(), UserRoleEnum.ARTIST);
-            } catch (Exception e) {
-                s3FileUploader.deleteFileInBucket(newImageUrl);
-                throw new S3Exception(UPLOAD_ERROR);
-            }
-
-            ImageUrlCarrier carrier = new ImageUrlCarrier(foundArtist.getId(), newImageUrl);
-            updateArtistImageUrl(carrier);
-        }
+//        if (isFileExists(file)) { // S3의 기존 이미지 삭제후 저장
+//
+//            try {
+//                s3FileUploader.deleteFileInBucket(foundArtist.getArtistProfileImageUrl());
+//            } catch (NotFoundException e) {
+//                foundArtist.updateImageUrl("");//실체 없는 url 테이블에서 삭제
+//                artistRepository.save(foundArtist);
+//            } catch (Exception e) {
+//                throw new S3Exception(DELETE_ERROR);
+//            }
+//
+//            String newImageUrl = "";
+//            try {
+//                newImageUrl = s3FileUploader.saveProfileImage(file, foundArtist.getId(), UserRoleEnum.ARTIST);
+//            } catch (Exception e) {
+//                s3FileUploader.deleteFileInBucket(newImageUrl);
+//                throw new S3Exception(UPLOAD_ERROR);
+//            }
+//
+//            ImageUrlCarrier carrier = new ImageUrlCarrier(foundArtist.getId(), newImageUrl);
+//            updateArtistImageUrl(carrier);
+//        }
     }
 
 
@@ -114,9 +114,9 @@ public class ArtistService {
         Artist foundArtist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
 
-        String url = s3FileUploader.getFileUrl(foundArtist.getArtistProfileImageUrl());
+//        String url = s3FileUploader.getFileUrl(foundArtist.getArtistProfileImageUrl());
 
-        return ArtistProfileResponseDto.of(foundArtist, url);
+        return ArtistProfileResponseDto.of(foundArtist);
     }
 
     // 아티스트 프로필 전체 조회 - 비가입자 가능
@@ -135,14 +135,14 @@ public class ArtistService {
         checkUserStatus(loginUser.getStatus());
         Artist foundArtist = checkHimself(userDetails.getUser().getId(), artistId);
 
-        try {
-            s3FileUploader.deleteFileInBucket(foundArtist.getArtistProfileImageUrl());
-        } catch (NotFoundException e) {
-            foundArtist.updateImageUrl("");
-            artistRepository.save(foundArtist);
-        } catch (Exception e) {
-            throw new S3Exception(DELETE_ERROR);
-        }
+//        try {
+//            s3FileUploader.deleteFileInBucket(foundArtist.getArtistProfileImageUrl());
+//        } catch (NotFoundException e) {
+//            foundArtist.updateImageUrl("");
+//            artistRepository.save(foundArtist);
+//        } catch (Exception e) {
+//            throw new S3Exception(DELETE_ERROR);
+//        }
         artistRepository.delete(foundArtist);
     }
 
@@ -190,50 +190,50 @@ public class ArtistService {
         }
     }
 
-    //이미지 업데이트
-    private void updateArtistImageUrl(ImageUrlCarrier carrier) {
-        if (!carrier.getImageUrl().isEmpty()) {
-            Artist artist = artistRepository.findById(carrier.getId())
-                    .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
-            artist.updateImageUrl(carrier.getImageUrl());
-            artistRepository.save(artist);
-        }
-    }
+//    //이미지 업데이트
+//    private void updateArtistImageUrl(ImageUrlCarrier carrier) {
+//        if (!carrier.getImageUrl().isEmpty()) {
+//            Artist artist = artistRepository.findById(carrier.getId())
+//                    .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
+//            artist.updateImageUrl(carrier.getImageUrl());
+//            artistRepository.save(artist);
+//        }
+//    }
 
 
-    //프로필 이미지 수정
-    @Transactional
-    public void updateProfileImage(MultipartFile file, Long userId) {
-        Artist artist = findById(userId);
+//    //프로필 이미지 수정
+//    @Transactional
+//    public void updateProfileImage(MultipartFile file, Long userId) {
+//        Artist artist = findById(userId);
+//
+//        String newImageUrl = controlS3Images(file, artist);
+//        ImageUrlCarrier carrier = new ImageUrlCarrier(artist.getId(), newImageUrl);
+//        updateArtistImageUrl(carrier);
+//
+//        artistRepository.save(artist);
+//
+//    }
 
-        String newImageUrl = controlS3Images(file, artist);
-        ImageUrlCarrier carrier = new ImageUrlCarrier(artist.getId(), newImageUrl);
-        updateArtistImageUrl(carrier);
-
-        artistRepository.save(artist);
-
-    }
-
-    private String controlS3Images(MultipartFile file, Artist artist) {
-
-        try {
-            s3FileUploader.deleteFileInBucket(artist.getArtistProfileImageUrl());
-        } catch (NotFoundException e) {
-            artist.updateImageUrl(START_PROFILE_URL);
-            artistRepository.save(artist);
-        } catch (Exception e) {
-            throw new S3Exception(DELETE_ERROR);
-        }
-
-        String newImageUrl;
-        try {
-            newImageUrl = s3FileUploader.saveProfileImage(file, artist.getId(), artist.getUser().getUserRole());
-        } catch (Exception e) {
-            s3FileUploader.deleteFileInBucket(artist.getArtistProfileImageUrl());
-            throw new S3Exception(UPLOAD_ERROR);
-        }
-        return newImageUrl;
-    }
+//    private String controlS3Images(MultipartFile file, Artist artist) {
+//
+//        try {
+//            s3FileUploader.deleteFileInBucket(artist.getArtistProfileImageUrl());
+//        } catch (NotFoundException e) {
+//            artist.updateImageUrl(START_PROFILE_URL);
+//            artistRepository.save(artist);
+//        } catch (Exception e) {
+//            throw new S3Exception(DELETE_ERROR);
+//        }
+//
+//        String newImageUrl;
+//        try {
+//            newImageUrl = s3FileUploader.saveProfileImage(file, artist.getId(), artist.getUser().getUserRole());
+//        } catch (Exception e) {
+//            s3FileUploader.deleteFileInBucket(artist.getArtistProfileImageUrl());
+//            throw new S3Exception(UPLOAD_ERROR);
+//        }
+//        return newImageUrl;
+//    }
 
     private Artist findById(Long userId) {
         return artistRepository.findByUserId(userId)

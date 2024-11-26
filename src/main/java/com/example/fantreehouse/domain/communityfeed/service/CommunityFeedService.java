@@ -13,8 +13,8 @@ import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedResponseDt
 import com.example.fantreehouse.domain.communityfeed.dto.CommunityFeedUpdateRequestDto;
 import com.example.fantreehouse.domain.communityfeed.entity.CommunityFeed;
 import com.example.fantreehouse.domain.communityfeed.repository.CommunityFeedRepository;
-import com.example.fantreehouse.domain.s3.service.S3FileUploader;
-import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
+//import com.example.fantreehouse.domain.s3.service.S3FileUploader;
+//import com.example.fantreehouse.domain.s3.support.ImageUrlCarrier;
 import com.example.fantreehouse.domain.subscription.entity.Subscription;
 import com.example.fantreehouse.domain.subscription.repository.SubscriptionRepository;
 import com.example.fantreehouse.domain.user.entity.User;
@@ -29,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.*;
 
 import static com.example.fantreehouse.common.enums.ErrorType.*;
-import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
+//import static com.example.fantreehouse.domain.s3.util.S3FileUploaderUtil.areFilesExist;
 
 @Slf4j
 @Service
@@ -42,7 +42,7 @@ public class CommunityFeedService {
     private final ArtistGroupRepository artistGroupRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final CommunityLikeRepository likeRepository;
-    private final S3FileUploader s3FileUploader;
+//    private final S3FileUploader s3FileUploader;
 
     @Transactional //피드생성
     public CommunityFeedResponseDto createFeed(
@@ -59,20 +59,20 @@ public class CommunityFeedService {
         CommunityFeed feed = new CommunityFeed(requestDto, user, artistGroup);
         feedRepository.save(feed);
 
-        List<String> imageUrls = new ArrayList<>();
-        if (areFilesExist(files)) {
-            try {
-                for (MultipartFile file : files) {
-                    String imageUrl = s3FileUploader.saveCommunityImage(file, groupName, feed.getId());
-                    imageUrls.add(imageUrl);
-                }
-            } catch (Exception e) {
-                s3FileUploader.deleteFilesInBucket(imageUrls);
-                throw new S3Exception(UPLOAD_ERROR);
-            }
-        }
-        ImageUrlCarrier carrier = new ImageUrlCarrier(feed.getId(), imageUrls);
-        updateCommunityFeedImageUrls(carrier);
+//        List<String> imageUrls = new ArrayList<>();
+//        if (areFilesExist(files)) {
+//            try {
+//                for (MultipartFile file : files) {
+//                    String imageUrl = s3FileUploader.saveCommunityImage(file, groupName, feed.getId());
+//                    imageUrls.add(imageUrl);
+//                }
+//            } catch (Exception e) {
+//                s3FileUploader.deleteFilesInBucket(imageUrls);
+//                throw new S3Exception(UPLOAD_ERROR);
+//            }
+//        }
+//        ImageUrlCarrier carrier = new ImageUrlCarrier(feed.getId(), imageUrls);
+//        updateCommunityFeedImageUrls(carrier);
 
         return new CommunityFeedResponseDto(feed);
     }
@@ -182,45 +182,45 @@ public class CommunityFeedService {
         }
         feed.updateFeed(requestDto);
 
-        if (areFilesExist(files)) {
-            List<String> foundFeedImageUrls = feed.getImageUrls();
-            for (String imageUrl : foundFeedImageUrls) {
-                try {
-                    s3FileUploader.deleteFileInBucket(imageUrl);
-                } catch (NotFoundException e) {
-                    foundFeedImageUrls.remove(imageUrl);
-                    feed.updateImageUrls(foundFeedImageUrls);
-                    feedRepository.save(feed);
-                } catch (Exception e) {
-                    throw new S3Exception(DELETE_ERROR);
-                }
-            }
-
-            List<String> imageUrls = new ArrayList<>();
-            try {
-                for (MultipartFile file : files) {
-                    String imageUrl = s3FileUploader.saveCommunityImage(file, groupName, feed.getId());
-                    imageUrls.add(imageUrl);
-                }
-            } catch (Exception e) {
-                s3FileUploader.deleteFilesInBucket(imageUrls);
-                throw new S3Exception(UPLOAD_ERROR);
-            }
-            ImageUrlCarrier carrier = new ImageUrlCarrier(feed.getId(), imageUrls);
-            updateCommunityFeedImageUrls(carrier);
-        }
+//        if (areFilesExist(files)) {
+//            List<String> foundFeedImageUrls = feed.getImageUrls();
+//            for (String imageUrl : foundFeedImageUrls) {
+//                try {
+//                    s3FileUploader.deleteFileInBucket(imageUrl);
+//                } catch (NotFoundException e) {
+//                    foundFeedImageUrls.remove(imageUrl);
+//                    feed.updateImageUrls(foundFeedImageUrls);
+//                    feedRepository.save(feed);
+//                } catch (Exception e) {
+//                    throw new S3Exception(DELETE_ERROR);
+//                }
+//            }
+//
+//            List<String> imageUrls = new ArrayList<>();
+//            try {
+//                for (MultipartFile file : files) {
+//                    String imageUrl = s3FileUploader.saveCommunityImage(file, groupName, feed.getId());
+//                    imageUrls.add(imageUrl);
+//                }
+//            } catch (Exception e) {
+//                s3FileUploader.deleteFilesInBucket(imageUrls);
+//                throw new S3Exception(UPLOAD_ERROR);
+//            }
+//            ImageUrlCarrier carrier = new ImageUrlCarrier(feed.getId(), imageUrls);
+//            updateCommunityFeedImageUrls(carrier);
+//        }
     }
 
 
-    private void updateCommunityFeedImageUrls(ImageUrlCarrier carrier) {
-        if (!carrier.getImageUrls().isEmpty()) {
-            CommunityFeed feed = feedRepository.findById(carrier.getId())
-                    .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
-            feed.updateImageUrls(carrier.getImageUrls());
-            feedRepository.save(feed);
-
-        }
-    }
+//    private void updateCommunityFeedImageUrls(ImageUrlCarrier carrier) {
+//        if (!carrier.getImageUrls().isEmpty()) {
+//            CommunityFeed feed = feedRepository.findById(carrier.getId())
+//                    .orElseThrow(() -> new NotFoundException(FEED_NOT_FOUND));
+//            feed.updateImageUrls(carrier.getImageUrls());
+//            feedRepository.save(feed);
+//
+//        }
+//    }
 
     // 피드 삭제 - 작성자와 UserRole이 엔터와 어드민이면 삭제가능
     @Transactional
@@ -231,19 +231,19 @@ public class CommunityFeedService {
 
         user.validationEnterAndAdmin(findUser(userId));
 
-        List<String> foundFeedImageUrls = feed.getImageUrls();
-        for (String imageUrl : foundFeedImageUrls) {
-            try {
-                s3FileUploader.deleteFileInBucket(imageUrl);
-            } catch (NotFoundException e) {
-                foundFeedImageUrls.remove(imageUrl);
-                feed.updateImageUrls(foundFeedImageUrls);//실체 없는 url 테이블에서 삭제
-                feedRepository.save(feed);
-            } catch (Exception e) {
-                throw new S3Exception(DELETE_ERROR);
-            }
-            feedRepository.delete(feed);
-        }
+//        List<String> foundFeedImageUrls = feed.getImageUrls();
+//        for (String imageUrl : foundFeedImageUrls) {
+//            try {
+//                s3FileUploader.deleteFileInBucket(imageUrl);
+//            } catch (NotFoundException e) {
+//                foundFeedImageUrls.remove(imageUrl);
+//                feed.updateImageUrls(foundFeedImageUrls);//실체 없는 url 테이블에서 삭제
+//                feedRepository.save(feed);
+//            } catch (Exception e) {
+//                throw new S3Exception(DELETE_ERROR);
+//            }
+//        }
+        feedRepository.delete(feed);
     }
 
     //유저찾기
